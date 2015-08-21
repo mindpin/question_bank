@@ -71,3 +71,9 @@ end
   question = QuestionBank::Question.where(:id => @question.id).first
   expect(question.class).to eq(NilClass)
 end
+
+假如(/^给填空题录入一项待填空的内容，在内容中标记出零个位置需要填充。$/) do
+  @input[:content] = "我是填空题的题设"
+
+  @fill_attrs[:content] = @input[:content]
+end
