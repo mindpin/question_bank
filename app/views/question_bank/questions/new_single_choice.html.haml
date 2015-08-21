@@ -1,0 +1,48 @@
+#single_choice
+  = form_tag('/questions') do
+    %form.form-horizontal
+      %table.table.table-condensed
+        %tr.form-group
+          %td
+            = label_tag '类型:'
+          %td
+            = text_field_tag '类型名', '单选题', :class => 'form-control'
+        %tr.form-group
+          %td
+            = label_tag '题目:'
+          %td
+            = text_area_tag '题目', '', :class => 'form-control'
+        %tr.form-group
+          %td
+            = label_tag '选项及答案:'
+          %td.radio_inline
+            .radio_inline
+              = text_field_tag '', '', :type => 'radio'
+              = text_field_tag '选项'
+            .radio_inline
+              = text_field_tag '', '', :type => 'radio'  
+              = text_field_tag '选项'
+            %a.btn.btn-default#add_choice
+              = '添加选项'
+        %tr.form-group
+          %td
+            = label_tag '答案解析:'
+          %td
+            = text_area_tag '答案解析', '', :class => 'form-control'
+        %tr.form-group
+          %td
+            = label_tag '难度系数:'
+          %td
+            = select_tag '难度系数', "<option>0.1</option><option>0.2</option><option>0.3</option><option>0.4</option><option>0.5</option><option>0.6</option>",:prompt =>'请选择'
+        %tr.form-group
+          %td
+            = label_tag '状态:'
+          %td
+            = check_box_tag '状态', '启用' , true
+            = '启用'
+            = check_box_tag '状态', '禁用' , false
+            = '禁用'
+      .form-group
+        = submit_tag '添加', :class => 'btn-default'
+        %a.btn.btn-default#preview
+          = '预览'
