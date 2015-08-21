@@ -6,7 +6,7 @@
           %td
             = label_tag '类型:'
           %td
-            = text_field_tag '类型名', '单选题', :class => 'form-control'
+            = select_tag '类型', "<option>多选题</option><option>判断题</option><option>连线题</option><option>论述题</option><option>填空题</option>",:prompt =>'单选题'
         %tr.form-group
           %td
             = label_tag '题目:'
@@ -38,9 +38,9 @@
           %td
             = label_tag '状态:'
           %td
-            = check_box_tag '状态', '启用' , true
+            = check_box_tag '状态', '启用' , true, :type => 'radio'
             = '启用'
-            = check_box_tag '状态', '禁用' , false
+            = check_box_tag '状态', '禁用' , false, :type => 'radio'
             = '禁用'
       .form-group
         = submit_tag '添加', :class => 'btn-default'
