@@ -1,0 +1,53 @@
+= form_tag('/questions') do
+  %table{:class=>'table table-striped'}
+    %tbody
+      %tr
+        %td 
+          类型：
+        %td 
+          = select_tag "count", "<option>连线题</option><option>单选题</option><option>多选题</option><option>判断题</option><option>论述题</option><option>填空题</option>".html_safe
+      %tr
+        %td 
+          题目：
+        %td 
+          = text_area_tag 'body', nil, rows: 3, cols: 55    
+      %tr
+        %td 
+          附件：
+        %td     
+      %tr
+        %td
+          选项及答案:
+        %td
+          .item
+            = text_field_tag 'query'
+            = text_field_tag 'query'
+            %button{:type=>"button", :class=>"delete"}删除连线
+          .item
+            = text_field_tag 'query'
+            = text_field_tag 'query'
+            %button{:type=>"button", :class=>"delete"}删除连线
+          .add_items
+            %button{:type=>"button", :class=>"append"}
+              添加一组选项
+            请将正确答案连接
+      %tr
+        %td
+          答案解析：
+        %td
+          = text_area_tag 'body', nil, rows: 3, cols: 55
+      %tr
+        %td
+          难度系数:
+        %td
+          = select_tag "count", "<option>请选择</option><option>0.1</option><option>0.2</option><option>0.3</option><option>0.4</option><option>0.5</option><option>0.6</option>".html_safe
+      %tr
+        %td
+          状态：
+        %td
+          启用：
+          = radio_button_tag 'zhuangtai', 'a' 
+          禁用：
+          = radio_button_tag 'zhuangtai', 'b',true
+  = submit_tag "添加", class: "btn btn-success"
+  %button{:type=>"button",class: "btn btn-success"}预览
