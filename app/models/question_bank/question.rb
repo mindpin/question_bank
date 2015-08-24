@@ -31,5 +31,7 @@ module QuestionBank
     # 是否启用
     field :enabled, :type => Boolean, :default => false
 
+    validates :content, :presence => true
+    validates :level, :presence => true
   end
 end
