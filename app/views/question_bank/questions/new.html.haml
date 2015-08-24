@@ -1,0 +1,35 @@
+=simple_form_for @question do |f|
+  %table{:class => "table table-bordered table-hover table-condensed"}
+    %tr
+      %td 类型：
+      %td
+        =f.select :kind, [[ "--请选择--","nil"],["单选题", :single_choice], ["判断题",:bool], ["多选题",:multi_choice], ["填空题",:fill], ["论述题",:essay], ["连线题",:mapping]], selected: ["判断题",:bool]
+    %tr
+      %td 题目:
+      %td
+        = f.text_area :content
+    %tr
+      %td 选项及答案:
+      %td 
+        = f.radio_button :bool_answer, [true]
+        正确
+        = f.radio_button :bool_answer, [false]
+        错误
+        %p{:class => "help-block"}请将正确答案设为选中
+    %tr
+      %td 答案解析:
+      %td 
+        = f.text_area :analysis
+    %tr
+      %td 难度系数:
+      %td 
+        = f.select :level, ["--请选择--","1","2","3","4","5","6","7","8","9","10"]
+    %tr
+      %td 状态:
+      %td 
+        = f.radio_button :enabled, [true]
+        启用
+        = f.radio_button :enabled, [false]
+        禁用
+  = f.button :submit, "提交"
+  = f.button :button, "预览"
