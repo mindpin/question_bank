@@ -5,7 +5,14 @@ module QuestionBank
     end
 
     def create
-      
     end
+
+    def index
+    end
+
+    private
+      def question_params
+        params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :choices => [], :choice_answer_indexs => [])
+      end
   end
 end
