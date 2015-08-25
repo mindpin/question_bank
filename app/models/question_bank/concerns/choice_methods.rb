@@ -68,7 +68,7 @@ module QuestionBank
     end
 
     def choice_answer_indexs=(choice_answer_indexs)
-      @choice_answer_indexs = choice_answer_indexs
+      @choice_answer_indexs = choice_answer_indexs.map{|index|index.to_i}
     end
 
     module ClassMethods
