@@ -5,6 +5,7 @@ QuestionBank::Engine.routes.draw do
       get :new_bool
       get :new_single_choice
       get :new_mapping
+      get :new_fill
     end
   end
 end

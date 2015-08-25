@@ -4,9 +4,14 @@ module QuestionBank
     end
 
     def new_bool
+      @question = Question.new
     end
 
     def new_mapping
+      @question = Question.new
+    end
+
+    def new_fill
       @question = Question.new
     end
 
@@ -36,6 +41,10 @@ module QuestionBank
         hash = params.require(:question).permit(:kind, :content, :analysis, :level, :enabled)
         hash[:mapping_answer] = new_mapping_answer
         hash
+      end
+
+      def question_fill_params
+        params.require(:question).permit(:kind, :content, :fill_answer, :analysis, :level, :enabled)
       end
 
   end
