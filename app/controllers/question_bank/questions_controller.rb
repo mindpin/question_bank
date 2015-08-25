@@ -3,6 +3,9 @@ module QuestionBank
     def new_single_choice
     end
 
+    def new_multi_choice
+    end
+
     def new_bool
     end
 
@@ -27,6 +30,10 @@ module QuestionBank
       end
 
       def question_single_choice_params
+        params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :choices => [], :choice_answer_indexs => [])
+      end
+
+      def question_multi_choice_params
         params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :choices => [], :choice_answer_indexs => [])
       end
 
