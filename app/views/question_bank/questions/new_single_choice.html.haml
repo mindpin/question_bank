@@ -1,21 +1,20 @@
 .new-single-choice
   = simple_form_for QuestionBank::Question.new do |f|
-    %form.form-horizontal
-      = f.input :kind, :label => '题目类型', :prompt => '选择题目类型'
-      = f.input :content, as: :text, :label => '题目内容'
-      = f.label '答案及选项'
-      .radio_inline
-        = f.text_field :choice_answer_indexs,:type => 'radio',:value => 0, :name => 'question[choice_answer_indexs]', :id => 'question_choice_answer_indexs_1'
-        = f.text_field :choices, :name => "question[choices][]"
-      .radio_inline
-        = f.text_field :choice_answer_indexs,:type => 'radio',:value => 1, :name => 'question[choice_answer_indexs]', :id => 'question_choice_answer_indexs_2'
-        = f.text_field :choices, :name => "question[choices][]"
-      %a.btn.btn-default.add-choice
-        = '添加选项'
-      = f.input :analysis, as: :text, :label => '答案解析'
-      = f.input :level, collection: [ "1", "2", "3","4","5", "6","7","8","9","10"], :prompt =>'请选择', :label => '难度系数'
-      = f.label '状态'
-      = f.collection_radio_buttons :enabled, [[true, '启用'] ,[false, '禁用']], :first,:last,:type => 'radio'
+    = f.input :kind, :as => :hidden, :input_html => { :value => "single_choice" }
+    = f.input :content, as: :text, :label => '题目内容'
+    = f.label '答案及选项'
+    .radio_inline
+      = f.text_field :choice_answer_indexs,:type => 'radio',:value => 0, :name => 'question[choice_answer_indexs]', :id => 'question_choice_answer_indexs_1'
+      = f.text_field :choices, :name => "question[choices][]"
+    .radio_inline
+      = f.text_field :choice_answer_indexs,:type => 'radio',:value => 1, :name => 'question[choice_answer_indexs]', :id => 'question_choice_answer_indexs_2'
+      = f.text_field :choices, :name => "question[choices][]"
+    %a.btn.btn-default.add-choice
+      = '添加选项'
+    = f.input :analysis, as: :text, :label => '答案解析'
+    = f.input :level, collection: [ "1", "2", "3","4","5", "6","7","8","9","10"], :prompt =>'请选择', :label => '难度系数'
+    = f.label '状态'
+    = f.collection_radio_buttons :enabled, [[true, '启用'] ,[false, '禁用']], :first,:last,:type => 'radio'
     = f.button :submit, "添加题目"
     %a.btn.btn-default.preview
       = '预览'
