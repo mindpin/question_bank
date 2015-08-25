@@ -1,30 +1,21 @@
 jQuery(document).ready(function(){
-  jQuery(document).on('click','.delete',function(){
+  jQuery(document).on('click','.page-new-mapping .delete',function(){
     jQuery(this).parent().remove();
    })
-
-  jQuery(document).on('click','.append',function(){
-
+  jQuery(document).on('click','.page-new-mapping .append',function(){
+    var count = jQuery('.option-key-field .item').length
+    var shuzi = jQuery('.page-new-mapping .item:last input ').attr('name');
     var zhengze = new RegExp(/[0-9]+/)
-    var str = jQuery('.item:last ').html();
-    
-    if (str==undefined){
-      shuzi = 0
-    }else{
-      shuzi = zhengze.exec(str)
+    var shuzi = zhengze.exec(shuzi)
+    if (shuzi==null){
+      shuzi = -1
     }
-     shuzi = Number(shuzi)+1
-     
-    atr1 = "<div class='item'>"+
-            "<input type='text' name='[question][mapping_answer]["+shuzi+"][]' id='question_mapping_answer' class ='string optional'>"+"&nbsp"+
-            "<input type='text' name='[question][mapping_answer]["+shuzi+"][]' id='question_mapping_answer' class ='string optional'>"+"&nbsp"+
-            "<button class='delete' type='button'>删除连线</button>"+
-           "</div>"+
-           "<div class='add_items'>"+
-              "<button class='append' type='button'> 添加一组选项</button>"+
-              "请将正确答案连接"+
-            "</div>"
-    jQuery(this).closest('td').append(atr1);
-    jQuery(this).parent().remove();
+    shuzi = Number(shuzi)+1
+    atr = jQuery(this).closest('.page-new-mapping').find(".item:last").clone()
+    jQuery(this).closest('.add-items').before(atr);
+    jQuery(this).closest('.page-new-mapping').find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
+    if (count>1){
+      jQuery(this).closest('.page-new-mapping').find(".item:last a").removeClass('hidden')
+    }
    })
  })
