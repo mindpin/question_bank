@@ -6,6 +6,10 @@ module QuestionBank
     def new_bool
     end
 
+    def new_essay
+      @question = Question.new
+    end
+
     def new_mapping
       @question = Question.new
     end
@@ -38,5 +42,8 @@ module QuestionBank
         hash
       end
 
+      def question_essay_params
+        params.require(:question).permit(:kind, :content, :analysis, :essay_answer, :level, :enabled)
+      end
   end
 end
