@@ -6,8 +6,6 @@ module QuestionBank
 
     def create
       @question = Question.new(question_bool_params)
-      p "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-      p @question
       if @question.save
 
       else
