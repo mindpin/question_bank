@@ -17,5 +17,6 @@ jQuery(document).ready(function(){
     if (count>1){
       jQuery(this).closest('.page-new-question-mapping').find(".item:last a").removeClass('hidden')
     }
+    jQuery(this).closest('.page-new-question-mapping').find(".item:last input").val('')
    })
  })
