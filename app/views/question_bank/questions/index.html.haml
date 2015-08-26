@@ -1,4 +1,4 @@
-.quesstion-index
+.questionuesstion-index
   %table{:class=>"table table-striped"} 
     %thead
       %tr
@@ -11,23 +11,57 @@
         %th 添加时间
         %th 操作
     %tbody
-      - @questions.each do |q|
+      - @questions.each do |question|
         %tr
           %td
-            - q.id = q.id.to_s
-            = q.id
+            - question.id = question.id.to_s
+            = question.id
           %td
-            = q.content
+            = question.content
+            - if question.kind == "single_choice"
+              %br
+              = question.choices
+            - if question.kind == "multi_choice"
+              %br
+              - option_id = 1
+              - question.choices.each do |choice_code|               
+                %br
+                = option_id
+                %span :
+                = choice_code
+                - option_id = option_id+1
           %td
-            = q.analysis
+            - case question.kind
+              - when "single_choice"
+                - question.choice_answer_indexs.each do |choice_code|
+                  = choice_code+1
+                  %span ,
+              - when "multi_choice"
+                - question.choice_answer_indexs.each do |choice_code|
+                  = choice_code+1
+                  %span ,
+              - when "bool"
+                = question.bool_answer
+              - when "mapping"
+                - question.mapping_answer.each do |mapping_team|
+                  %br
+                  - mapping_team.each do |mapping|
+                    = mapping
+                    %span ,
+              - when "fill"
+                - question.fill_answer.each do |fill_team|
+                  = fill_item
+                  %span ,
+              - when "essay"
+                = question.essay_answer
           %td
-            = q.level
+            = question.level
           %td
-            = q.kind
+            = question.kind
           %td
-            = q.enabled
+            = question.enabled
           %td
-            = q.created_at
+            = question.created_at
           %td
             %a{:role=>"button",class: "btn btn-success fix ",:href=>"javascript:;"}修改
             %a{:role=>"button",class: "btn btn-success ban ",:href=>"javascript:;"}禁用
