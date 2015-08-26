@@ -20,7 +20,13 @@
             = question.content
             - if question.kind == "single_choice"
               %br
-              = question.choices
+              - option_id = 1
+              - question.choices.each do |choice_code|               
+                %br
+                = option_id
+                %span :
+                = choice_code
+                - option_id = option_id+1
             - if question.kind == "multi_choice"
               %br
               - option_id = 1
@@ -33,25 +39,18 @@
           %td
             - case question.kind
               - when "single_choice"
-                - question.choice_answer_indexs.each do |choice_code|
-                  = choice_code+1
-                  %span ,
+                = question.choice_answer_indexs[0]+1
               - when "multi_choice"
-                - question.choice_answer_indexs.each do |choice_code|
-                  = choice_code+1
-                  %span ,
+                - choice_answer_indexs = question.choice_answer_indexs.map { |e| e=e+1  }
+                = choice_answer_indexs*","
               - when "bool"
                 = question.bool_answer
               - when "mapping"
                 - question.mapping_answer.each do |mapping_team|
                   %br
-                  - mapping_team.each do |mapping|
-                    = mapping
-                    %span ,
+                  = mapping_team*","
               - when "fill"
-                - question.fill_answer.each do |fill_team|
-                  = fill_item
-                  %span ,
+                = question.fill_answer*","
               - when "essay"
                 = question.essay_answer
           %td
