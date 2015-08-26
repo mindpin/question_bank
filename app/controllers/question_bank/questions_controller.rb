@@ -1,9 +1,11 @@
 module QuestionBank
   class QuestionsController < QuestionBank::ApplicationController
     def new_single_choice
+      @question = Question.new
     end
 
     def new_multi_choice
+      @question = Question.new
     end
 
     def new_bool
@@ -29,7 +31,7 @@ module QuestionBank
       if @question.save
         redirect_to questions_path
       else
-        redirect_to(send("new_#{kind}_questions_path"))
+        render "new_#{kind}"
       end
     end
 

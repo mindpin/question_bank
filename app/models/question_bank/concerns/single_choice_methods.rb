@@ -14,12 +14,12 @@ module QuestionBank
 
       # 待选选项最少两个
       if self.choices.count < 2
-        errors.add(:choice_answer, I18n.t("question_bank.question.single_choice_count"))
+        errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.single_choice_count"))
       end
 
       # 答案只能有一个
       if self.choice_answer_indexs.count != 1
-        errors.add(:choice_answer, I18n.t("question_bank.question.single_choice_answer_indexs_count"))
+        errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.single_choice_answer_count"))
       end
 
     end

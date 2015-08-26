@@ -23,8 +23,15 @@ module QuestionBank
     def check_mapping_answer_of_mapping
       return true if !self.kind.mapping?
 
+      self.mapping_answer.each do |item|
+        if item[0].blank? || item[1].blank?
+          errors.add(:mapping_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.mapping_answer.blank"))
+          break
+        end
+      end
+
       if self.mapping_answer.count < 2
-        errors.add(:mapping_answer, I18n.t("question_bank.question.mapping_answer.count"))
+        errors.add(:mapping_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.mapping_answer.count"))
       end
     end
 

@@ -1,0 +1,8 @@
+zh-CN:
+  mongoid:
+    errors:
+      models:
+        question_bank/question:
+            attributes:
+              level:
+                blank: "难度系数不能为空"
