@@ -22,6 +22,10 @@ module QuestionBank
       @question = Question.new
     end
 
+    def index
+      @questions = Question.all
+    end
+
     def create
       kind = params[:question][:kind]
       hash = send("question_#{kind}_params")
