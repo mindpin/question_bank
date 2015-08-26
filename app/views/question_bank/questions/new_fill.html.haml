@@ -5,11 +5,7 @@
     = f.input :content, as: :text
     %a{:href => "javascript:;", :class => "insert"} 插入填空下划线
 
-    = f.input :fill_answer do
-      .answer.hidden
-        = f.input_field :fill_answer, name: 'question[fill_answer][]'
-        %a{:role=>"button",class: "btn btn-success delete ",:href=>"javascript:;"}删除
-      %a{:role=>"button",class: "btn btn-success append ",:href=>"javascript:;"}添加
+    = f.input :fill_answer, as: :question_fill_answer
 
     = f.input :analysis , as: :text
 

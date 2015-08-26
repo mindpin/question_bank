@@ -53,7 +53,7 @@ module QuestionBank
       end
 
       def question_fill_params
-        params.require(:question).permit(:kind, :content, :fill_answer, :analysis, :level, :enabled)
+        params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :fill_answer => [])
       end
 
       def question_mapping_params

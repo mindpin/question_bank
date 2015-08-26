@@ -4,15 +4,7 @@
 
     = f.input :content, as: :text
 
-    = f.input :choice_answer_indexs do
-      .checkbox
-        = f.text_field :choice_answer_indexs,:type => 'checkbox',:value => 0, :name => 'question[choice_answer_indexs][]', :id => 'question_choice_answer_indexs_1'
-        = f.text_field :choices, :name => "question[choices][]"
-      .checkbox
-        = f.text_field :choice_answer_indexs,:type => 'checkbox',:value => 1, :name => 'question[choice_answer_indexs][]', :id => 'question_choice_answer_indexs_2'
-        = f.text_field :choices, :name => "question[choices][]"
-      %a.btn.btn-default.add-choice
-        = '添加选项'
+    = f.input :choice_answer_indexs, as: :question_multi_choice_answer
 
     = f.input :analysis, as: :text
 

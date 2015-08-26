@@ -19,7 +19,6 @@ module QuestionBank
       if self.fill_count == 0
         errors.add(:fill_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.fill_answer.zero_count"))
       end
-
       if self.fill_count != self.fill_answer.count
         errors.add(:fill_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.fill_answer.not_eq_count"))
       end

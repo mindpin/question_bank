@@ -4,20 +4,7 @@
 
     = f.input :content, as: :text
 
-    = f.input :mapping_answer do
-      .option-key-field
-        / 选项及答案:
-        .item
-          = f.input_field :mapping_answer,:name=>'question[mapping_answer][0][]'
-          = f.input_field :mapping_answer,:name=>'question[mapping_answer][0][]'
-          %a{:role=>"button",class: "btn btn-success delete hidden",:href=>"#"}删除连线
-        .item
-          = f.input_field :mapping_answer,:name=>'question[mapping_answer][1][]'
-          = f.input_field :mapping_answer,:name=>'question[mapping_answer][1][]'
-          %a{:role=>"button",class: "btn btn-success delete hidden",:href=>"#"}删除连线
-        .add-items
-          %a{:role=>"button",class: "btn btn-success append ",:href=>"#"}添加一组选项
-          %span 请将正确答案连接
+    = f.input :mapping_answer, as: :question_mapping_answer
 
     = f.input :analysis, as: :text
 
