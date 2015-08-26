@@ -7,13 +7,18 @@ module QuestionBank
     end
 
     def new_bool
+      @question = Question.new
+    end
+
+    def new_mapping
+      @question = Question.new
     end
 
     def new_essay
       @question = Question.new
     end
 
-    def new_mapping
+    def new_fill
       @question = Question.new
     end
 
@@ -39,6 +44,10 @@ module QuestionBank
 
       def question_multi_choice_params
         params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :choices => [], :choice_answer_indexs => [])
+      end
+
+      def question_fill_params
+        params.require(:question).permit(:kind, :content, :fill_answer, :analysis, :level, :enabled)
       end
 
       def question_mapping_params
