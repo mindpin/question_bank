@@ -29,17 +29,25 @@ module QuestionBank
     def check_choice_answer_of_choice
       return true if !self.kind.single_choice? && !self.kind.multi_choice?
 
+      # 选项不能是空字符串
+      self.choices.each do |choice|
+        if choice.blank?
+          errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.choice_blank"))
+          break
+        end
+      end
+
       # 选项必须是字符串
       self.choices.each do |choice|
         if !choice.is_a?(String)
-          errors.add(:base, I18n.t("question_bank.question.unknow_error"))
+          errors.add(:base, I18n.t("mongoid.errors.models.question_bank/question.attributes.base.unknow_error"))
         end
       end
 
       # 答案 index +1 不能大于选项数量
       self.choice_answer_indexs.each do |index|
         if index + 1 > self.choices.count
-          errors.add(:base, I18n.t("question_bank.question.unknow_error"))
+          errors.add(:base, I18n.t("mongoid.errors.models.question_bank/question.attributes.base.unknow_error"))
         end
       end
     end
