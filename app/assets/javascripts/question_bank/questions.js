@@ -4,6 +4,7 @@ jQuery(document).ready(function(){
     var n = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio').length
     dom1 = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio:first').clone()
     dom = dom1.append("<a class = 'btn btn-default delete-choice'>删除选项</a>")
+    dom.find('#question_choices').val("")
     dom.find('#question_choice_answer_indexs_1').val(n)
     jQuery('.page-new-question-single-choice .add-choice').before(dom);
     jQuery('.page-new-question-single-choice .delete-choice').click(function(){
@@ -21,6 +22,7 @@ jQuery(document).ready(function(){
     var n = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox').length
     dom1 = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox:first').clone()
     dom = dom1.append("<a class = 'btn btn-default delete-choice'>删除选项</a>")
+    dom.find('#question_choices').val("")
     dom.find('#question_choice_answer_indexs_1').val(n)
     jQuery('.page-new-question-multi-choice .add-choice').before(dom);
     jQuery('.page-new-question-multi-choice .delete-choice').click(function(){
