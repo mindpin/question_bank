@@ -21,6 +21,7 @@ module QuestionBank
     end
 
     def check_mapping_answer_of_mapping
+      return true if self.kind.blank?
       return true if !self.kind.mapping?
 
       self.mapping_answer.each do |item|

@@ -14,6 +14,7 @@ module QuestionBank
     end
 
     def check_fill_answer_of_fill
+      return true if self.kind.blank?
       return true if !self.kind.fill?
 
       if self.fill_count == 0
@@ -26,7 +27,7 @@ module QuestionBank
 
     # 填空题的填空位置
     def fill_count
-      self.content.scan(" ___ ").size
+      self.content.scan(/_+/).size
     end
 
     module ClassMethods

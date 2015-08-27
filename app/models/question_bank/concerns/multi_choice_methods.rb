@@ -10,16 +10,18 @@ module QuestionBank
     end
 
     def check_choice_answer_of_multi_choice
+      return true if self.kind.blank?
       return true if !self.kind.multi_choice?
 
       # 待选选项最少两个
       if self.choices.count < 2
-        errors.add(:choice_answer_indexs, I18n.t("question_bank.question.choice_answer_indexs.multi_choice_count"))
+
+        errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.multi_choice_count"))
       end
 
       # 答案最少两个
       if self.choice_answer_indexs.count < 2
-        errors.add(:choice_answer_indexs, I18n.t("question_bank.question.choice_answer_indexs.multi_choice_answer_count"))
+        errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.multi_choice_answer_count"))
       end
     end
 
