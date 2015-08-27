@@ -8,12 +8,23 @@ class QuestionMultiChoiceAnswerInput < SimpleForm::Inputs::Base
     choices = ["",""] if choices.blank?
 
     dom = ""
+    dom += _build_checkbox_hidden
     choices.each_with_index do |choice, i|
       dom += _build_checkbox(choice, i)
     end
     dom += _build_add_button
 
     dom.html_safe
+  end
+
+  def _build_checkbox_hidden
+    <<-EOF
+      <div class="checkbox hidden">
+        <input type="checkbox" value=""  name="question[choice_answer_indexs][]" id="question_choice_answer_indexs_0" />
+        <input name="question[choices][]" type="text" value="" id="question_choices" />
+        <a class='btn btn-default delete-choice'>删除选项</a>
+      </div>
+    EOF
   end
 
   def _build_checkbox(choice, i)
