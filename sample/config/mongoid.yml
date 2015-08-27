@@ -1,12 +1,7 @@
 development:
   sessions:
     default:
-      database: question_bank_dev
+      database: question_bank_create_question_dev
       hosts:
-        - localhost:27017
-test:
-  sessions:
-    default:
-      database: question_bank_test
-      hosts:
-        - localhost:27017
+        - 192.168.0.135:27017
+    

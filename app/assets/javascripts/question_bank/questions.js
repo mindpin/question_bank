@@ -1,11 +1,11 @@
-jQuery(document).ready(function(){
+
   jQuery(document).on('click', '.page-new-question-single-choice .add-choice', function(){
     // .radio的数量等于最后的编号值+1
+   var dom = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio:first').clone()
     var n = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio').length
-    dom = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio:first').clone()
     dom.find('#question_choices').val("")
     dom.find('#question_choice_answer_indexs_1').val(n)
-    jQuery('.page-new-question-single-choice .add-choice').before(dom);
+    jQuery('.page-new-question-single-choice .question_single_choice_answer .radio:last').after(dom);
   })
 
   jQuery(document).on('click','.page-new-question-single-choice .delete-choice',function(){
@@ -18,6 +18,8 @@ jQuery(document).ready(function(){
     jQuery(this).closest('.radio').remove()
   })
 
+
+// 多选的控制js
   jQuery(document).on('click', '.page-new-question-multi-choice .add-choice', function(){
     var n = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox').length
     dom = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox:first').clone()
@@ -36,4 +38,4 @@ jQuery(document).ready(function(){
     jQuery(this).closest('.checkbox').remove()
   })
 
-})
+

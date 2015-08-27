@@ -23,10 +23,10 @@ class QuestionMappingAnswerInput < SimpleForm::Inputs::Base
 
   def _build_item(mapping_answer_item, index)
     <<-EOF
-      <div class="item">
+      <div class="item ">
         <input name="question[mapping_answer][#{index}][]" class="string optional" type="text" value="#{mapping_answer_item[0]}" id="question_mapping_answer">
         <input name="question[mapping_answer][#{index}][]" class="string optional" type="text" value="#{mapping_answer_item[1]}" id="question_mapping_answer">
-        <a class="btn btn-success delete hidden" href="javascript:;" role="button">删除连线</a>
+        <a class="btn btn-success delete" href="javascript:;" role="button" ">删除连线</a>
       </div>
     EOF
   end
