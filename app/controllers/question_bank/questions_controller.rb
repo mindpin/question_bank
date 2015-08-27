@@ -1,20 +1,31 @@
 module QuestionBank
   class QuestionsController < QuestionBank::ApplicationController
     def new_single_choice
+      @question = Question.new
     end
 
     def new_multi_choice
+      @question = Question.new
     end
 
     def new_bool
+      @question = Question.new
+    end
+
+    def new_mapping
+      @question = Question.new
     end
 
     def new_essay
       @question = Question.new
     end
 
-    def new_mapping
+    def new_fill
       @question = Question.new
+    end
+
+    def index
+      @questions = Question.all
     end
 
     def create
@@ -24,7 +35,7 @@ module QuestionBank
       if @question.save
         redirect_to questions_path
       else
-        redirect_to(send("new_#{kind}_questions_path"))
+        render "new_#{kind}"
       end
     end
 
@@ -39,6 +50,10 @@ module QuestionBank
 
       def question_multi_choice_params
         params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :choices => [], :choice_answer_indexs => [])
+      end
+
+      def question_fill_params
+        params.require(:question).permit(:kind, :content, :analysis, :level, :enabled, :fill_answer => [])
       end
 
       def question_mapping_params

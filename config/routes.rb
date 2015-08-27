@@ -7,6 +7,7 @@ QuestionBank::Engine.routes.draw do
       get :new_mapping
       get :new_multi_choice
       get :new_essay
+      get :new_fill
     end
   end
 end

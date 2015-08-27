@@ -10,6 +10,8 @@ module QuestionBank
       ##
 
       scope :bool, -> { where(kind: "bool") }
+
+      validates :bool_answer, :presence => {:if => Proc.new{|question| question.kind.bool?}}
     end
 
     module ClassMethods

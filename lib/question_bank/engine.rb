@@ -4,5 +4,6 @@ module QuestionBank
     config.to_prepare do
       ApplicationController.helper ::ApplicationHelper
     end
+    config.i18n.default_locale = "zh-CN"
   end
 end
