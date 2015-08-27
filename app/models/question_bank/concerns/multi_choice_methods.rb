@@ -10,6 +10,7 @@ module QuestionBank
     end
 
     def check_choice_answer_of_multi_choice
+      return true if self.kind.blank?
       return true if !self.kind.multi_choice?
 
       # 待选选项最少两个

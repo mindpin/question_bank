@@ -14,6 +14,7 @@ module QuestionBank
     end
 
     def check_fill_answer_of_fill
+      return true if self.kind.blank?
       return true if !self.kind.fill?
 
       if self.fill_count == 0
