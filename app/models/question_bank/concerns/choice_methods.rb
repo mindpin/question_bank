@@ -21,7 +21,9 @@ module QuestionBank
     def set_choice_answer_by_choices_and_choice_answer_indexs
       res = self.choices.map{|choice|[choice,false]}
       self.choice_answer_indexs.each do |index|
-        res[index][1] = true
+        if !res[index].blank?
+          res[index][1] = true
+        end
       end
       self.choice_answer = res
     end

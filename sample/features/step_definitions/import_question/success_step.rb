@@ -8,6 +8,8 @@ end
 end
 
 假如(/^解析数据文件没有出错$/) do
+  @import_question.valid?
+  p @import_question.error_info
   expect(@import_question.valid?).to eq(true)
 end
 

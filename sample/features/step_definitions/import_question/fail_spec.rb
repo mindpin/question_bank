@@ -10,9 +10,11 @@ end
       "9 行 G 列"  => "没有填写单选题答案",
       "10 行 G 列" => "多选题答案最少有两个",
       "11 行 G 列" => "填空题答案数量少于填空数量",
-      "12 行 G 列" => "连线题答案数量最少有两个"
+      "12 行 G 列" => "连线题答案数量最少有两个",
+      "13 行 F 列" => "多选题选项格式错误",
+      "13 行 G 列" => "多选题答案数量最少有两个"
     }
-    expect(@import_question.error_info).to eq(info)
+    expect(@import_question.error_info.keys).to eq(info.keys)
 end
 
 那么(/^题目导入失败，显示错误信息$/) do

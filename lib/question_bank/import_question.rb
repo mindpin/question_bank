@@ -1,5 +1,6 @@
 module QuestionBank
   class ImportQuestion
+    attr_reader :error_info
     def initialize(csv_file)
       @csv_file       = csv_file
       @question_infos = []
@@ -12,6 +13,7 @@ module QuestionBank
     end
 
     def import
+      return if !valid?
       @question_infos.each do |info|
         QuestionBank::Question.create!(info)
       end
@@ -28,7 +30,10 @@ module QuestionBank
     end
 
     def _validate_line(line_data, index)
-      pl = ParseLine.new(line_data, index)
+      arr = line_data.compact.map{|a|a.strip}
+      return if arr == [""] || arr == []
+
+      pl = ParseLine.build_by(line_data, index)
 
       if pl.valid?
         @question_infos << pl.info
