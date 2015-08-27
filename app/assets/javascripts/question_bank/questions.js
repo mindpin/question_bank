@@ -22,6 +22,15 @@ jQuery(document).ready(function(){
   })
 
   jQuery(document).on('click','.page-new-question-single-choice .btn-default:last', function(){
+    var m = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio').length
+    if (m == 2){
+      var n = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio').length - 1
+      dom = jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio:first').clone()
+      dom.removeClass('hidden')
+      dom.find('#question_choices').val("")
+      dom.find('input:first').val(n)
+      jQuery('.page-new-question-single-choice .add-choice').before(dom);
+    }
     jQuery('.page-new-question-single-choice .question_choice_answer_indexs .radio.hidden').remove()
   })
 
@@ -47,6 +56,15 @@ jQuery(document).ready(function(){
   })
 
   jQuery(document).on('click','.page-new-question-multi-choice .btn-default:last', function(){
+    var m = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox').length
+    if (m == 2){
+      var n = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox').length - 1
+      dom = jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox:first').clone()
+      dom.removeClass('hidden')
+      dom.find('#question_choices').val("")
+      dom.find('input:first').val(n)
+      jQuery('.page-new-question-multi-choice .add-choice').before(dom);
+    }
     jQuery('.page-new-question-multi-choice .question_choice_answer_indexs .checkbox.hidden').remove()
   })
 
