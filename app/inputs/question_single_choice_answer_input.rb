@@ -8,6 +8,7 @@ class QuestionSingleChoiceAnswerInput < SimpleForm::Inputs::Base
     choices = ["",""] if choices.blank?
 
     dom = ""
+    dom += _build_radio_hidden
     choices.each_with_index do |choice, i|
       dom += _build_radio(choice, i)
     end
@@ -15,6 +16,16 @@ class QuestionSingleChoiceAnswerInput < SimpleForm::Inputs::Base
 
     dom.html_safe
   end
+
+  def _build_radio_hidden
+     <<-EOF
+      <div class="radio hidden">
+        <input type="radio" value=""  name="question[choice_answer_indexs][]" id="question_choice_answer_indexs_0" />
+        <input name="question[choices][]" type="text" value="" id="question_choices" />
+        <a class='btn btn-default delete-choice'>删除选项</a>
+      </div>
+    EOF
+  end 
 
   def _build_radio(choice, i)
     checked = ""

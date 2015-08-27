@@ -2,8 +2,10 @@ development:
   sessions:
     default:
       database: question_bank_dev
+
       hosts:
         - localhost:27017
+
 test:
   sessions:
     default:
