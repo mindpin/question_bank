@@ -1,13 +1,13 @@
-$(document).on 'click','.page-new-question-fill .insert',->
-  str = $('.page-new-question-fill').find("[name='question[content]']").val();
+$(document).on 'click','.form-question-fill .insert',->
+  str = $('.form-question-fill').find("[name='question[content]']").val();
   str = str+" ___ "
-  $('.page-new-question-fill').find("[name='question[content]']").val(str);
+  $('.form-question-fill').find("[name='question[content]']").val(str);
 
-$(document).on 'click','.page-new-question-fill .delete ',->
+$(document).on 'click','.form-question-fill .delete ',->
   $(this).closest(".answer").remove()
 
-$(document).on 'click','.page-new-question-fill .append',->
-  blank = $('.page-new-question-fill .answer:last').clone();
+$(document).on 'click','.form-question-fill .append',->
+  blank = $('.form-question-fill .answer:last').clone();
   blank.removeClass("hidden")
   blank.find("input").val("")
-  $('.page-new-question-fill .answer:last').after(blank)
+  $('.form-question-fill .answer:last').after(blank)

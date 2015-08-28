@@ -39,6 +39,23 @@ module QuestionBank
       end
     end
 
+    def edit
+      @question = Question.find(params[:id])
+      @kind = @question.kind
+      render "edit_#{@kind}"
+    end
+
+    def update
+      @question = Question.find(params[:id])
+      @kind = @question.kind
+      hash = send("question_#{@kind}_params")
+      if @question.update_attributes(hash)
+        redirect_to "/questions"
+      else
+        render "edit_#{@kind}"
+      end
+    end
+
     private
       def question_bool_params
         params.require(:question).permit(:kind, :content, :bool_answer, :analysis, :level, :enabled)
