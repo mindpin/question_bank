@@ -12,25 +12,35 @@ RSpec.describe QuestionBank::Section, type: :model do
   end
 
   describe "关系" do
-    it{
+    before do
       @section = create(:section)
-      @question = create(:question)
-      @section_question1 = create(:section_question, section: @section, question: @question)
-      @section_question2 = create(:section_question, section: @section, question: create(:question))
+      @question1 = create(:question)
+      @question2 = create(:question)
+      @section_question1 = create(:section_question, section: @section, question: @question1)
+      @section_question2 = create(:section_question, section: @section, question: @question2)
 
       @section.reload
+    end
 
+    it{
       expect(@section_question1.section).to eq(@section)
       expect(@section_question2.section).to eq(@section)
 
-      expect(@section_question1.question).to eq(@question)
-      expect(@section_question2.section).not_to be_nil
+      expect(@section_question1.question).to eq(@question1)
+      expect(@section_question2.question).to eq(@question2)
 
       expect(@section.section_questions).to include(@section_question1)
       expect(@section.section_questions).to include(@section_question2)
 
       expect(@section.section_questions.count).to eq(2)
     }
+
+    it "#questions" do
+      expect(@section.questions).to include(@question1)
+      expect(@section.questions).to include(@question2)
+
+      expect(@section.questions.count).to eq(2)
+    end
   end
 end
 
