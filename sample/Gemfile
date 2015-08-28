@@ -45,3 +45,4 @@ gem 'play_auth', :github => 'mindpin/play_auth',
                  :tag => :latest
 
 gem 'question_bank', path: '../'
+gem 'rails-i18n', '~> 4.0.0'

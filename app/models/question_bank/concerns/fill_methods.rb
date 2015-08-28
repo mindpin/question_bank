@@ -18,9 +18,11 @@ module QuestionBank
       return true if !self.kind.fill?
 
       if self.fill_count == 0
-        errors.add(:fill_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.fill_answer.zero_count"))
+        errors.add(:content, I18n.t("mongoid.errors.models.question_bank/question.attributes.content.fill_answer_zero_count"))
+        return
       end
-      if self.fill_count != self.fill_answer.count
+
+      if self.fill_answer.blank? || self.fill_count != self.fill_answer.count
         errors.add(:fill_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.fill_answer.not_eq_count"))
       end
     end
