@@ -10,4 +10,14 @@
     = javascript_include_tag 'question_bank/application'
 
   %body
-    = yield
+    %nav.navbar.navbar-inverse
+      .container
+        .navbar-header
+          %a.navbar-brand 题库
+        %ul.nav.navbar-nav
+          %li= link_to "题库管理","/questions"
+        %ul.nav.navbar-nav.navbar-right
+          %li
+            %a{:href => '/auth/logout', :data => {:method => :delete}} 登出
+    .container
+      = yield

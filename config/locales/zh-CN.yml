@@ -5,4 +5,31 @@ zh-CN:
         question_bank/question:
             attributes:
               level:
-                blank: "难度系数不能为空"
+                blank: 请选择难度系数
+              content:
+                blank: 请填写题目内容
+                fill_answer_zero_count: 题目内容中最少有一个填空
+              bool_answer:
+                blank: 请选择答案
+              choice_answer_indexs:
+                choice_blank: 请填写答案及选项
+                single_choice_answer_count: 必须选择一个答案
+                multi_choice_answer_count: 必须选择两个或多于两个的答案
+              mapping_answer:
+                blank: 必须有两组或多于两组
+              fill_answer:
+                not_eq_count: 填空答案的数量必须等于题目内容中的填空数量
+
+    models:
+      question_bank/question: 题目
+    attributes:
+      question_bank/question:
+        content: 题目内容
+        choice_answer_indexs: 选项及答案
+        analysis: 答案解析
+        level: 难度系数
+        enabled: 是否启用
+        fill_answer: 填空答案
+        mapping_answer: 连线选项
+        essay_answer: 参考答案
+        bool_answer: 答案
