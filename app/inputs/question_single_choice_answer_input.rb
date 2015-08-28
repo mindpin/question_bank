@@ -6,6 +6,7 @@ class QuestionSingleChoiceAnswerInput < SimpleForm::Inputs::Base
     choices = object.choices
 
     choices = ["",""] if choices.blank?
+    choices = ["",""] if choices == [""]
 
     dom = ""
     dom += _build_radio_hidden
@@ -25,7 +26,7 @@ class QuestionSingleChoiceAnswerInput < SimpleForm::Inputs::Base
         <a class='btn btn-default delete-choice'>删除选项</a>
       </div>
     EOF
-  end 
+  end
 
   def _build_radio(choice, i)
     checked = ""
