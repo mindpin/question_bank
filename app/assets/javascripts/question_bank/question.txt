@@ -1,5 +1,4 @@
 jQuery(document).on('click',".page-new-question-mapping .delete",function(){
-
   var position_atr = jQuery(this).closest('.item').find('input').attr('name');
   var zhengze = new RegExp(/[0-9]+/)
   var position = zhengze.exec(position_atr)
@@ -19,10 +18,10 @@ jQuery(document).on('click',".page-new-question-mapping .delete",function(){
   jQuery(this).closest('.item').remove();
 })
 
-
 jQuery(document).on('click','.page-new-question-mapping .append',function(){
   var count = jQuery('.option-key-field .item').length
   var count_hidden = jQuery('.option-key-field .hidden').length
+  
   if (count_hidden==1){
     jQuery('.option-key-field .hidden input').attr('name','question[mapping_answer][0][]')
     jQuery('.option-key-field .hidden' ).removeClass('hidden')
@@ -38,9 +37,7 @@ jQuery(document).on('click','.page-new-question-mapping .append',function(){
     shuzi = Number(shuzi)+1
     atr = jQuery(this).closest('.page-new-question-mapping').find(".item:last").clone()
     jQuery(this).closest('.add-items').before(atr);
-    // /++
     jQuery(this).closest('.page-new-question-mapping').find(".item:last").removeClass('hidden')
-
     jQuery(this).closest('.page-new-question-mapping').find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
     jQuery(this).closest('.page-new-question-mapping').find(".item:last input").val('')
   }
