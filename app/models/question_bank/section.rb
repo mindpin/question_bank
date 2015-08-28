@@ -4,6 +4,7 @@ module QuestionBank
     include Mongoid::Timestamps
     extend Enumerize
     # 引用排序模块
+    include QuestionBank::Concerns::MovePosition
 
     # 题目类型 枚举: 单选题 多选题 判断题 填空题 论述题 连线题
     KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping]
@@ -23,6 +24,10 @@ module QuestionBank
 
     def questions
       section_questions.map(&:question).compact
+    end
+
+    def parent
+      test_paper
     end
 
     validates :kind, :presence => true
