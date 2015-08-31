@@ -1,5 +1,5 @@
 .questionuesstion-index
-  %table{:class=>"table table-striped"} 
+  %table{:class=>"table table-striped"}
     %thead
       %tr
         %th 编号
@@ -21,7 +21,7 @@
             - if question.kind == "single_choice"
               %br
               - option_id = 1
-              - question.choices.each do |choice_code|               
+              - question.choices.each do |choice_code|
                 %br
                 = option_id
                 %span :
@@ -30,7 +30,7 @@
             - if question.kind == "multi_choice"
               %br
               - option_id = 1
-              - question.choices.each do |choice_code|               
+              - question.choices.each do |choice_code|
                 %br
                 = option_id
                 %span :
@@ -66,3 +66,5 @@
             %a{:role=>"button",class: "btn btn-success ban ",:href=>"javascript:;"}禁用
             %a{:role=>"button",class: "btn btn-success delete ", :href=>"/questions/#{question.id}", :data=>{:method => :delete}}删除
             %a{:role=>"button",class: "btn btn-success find-tag ",:href=>"javascript:;"}查看版本
+
+  = custom_paginate @questions
