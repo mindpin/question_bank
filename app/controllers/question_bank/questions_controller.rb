@@ -44,7 +44,7 @@ module QuestionBank
     def edit
       @question = Question.find(params[:id])
       @kind = @question.kind
-      render "edit_#{@kind}"
+      render "new_#{@kind}"
     end
 
     def update
@@ -54,7 +54,7 @@ module QuestionBank
       if @question.update_attributes(hash)
         redirect_to "/questions"
       else
-        render "edit_#{@kind}"
+        render "new_#{@kind}"
       end
     end
 

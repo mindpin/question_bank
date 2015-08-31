@@ -64,7 +64,7 @@
           %td
             %a{:role=>"button",class: "btn btn-success fix ",:href=>"/questions/#{question.id}/edit"}修改
             %a{:role=>"button",class: "btn btn-success ban ",:href=>"javascript:;"}禁用
-            %a{:role=>"button",class: "btn btn-success delete ", :href=>"/questions/#{question.id}", :data=>{:method => :delete}}删除
+            %a{:role=>"button",class: "btn btn-success delete ", :href=>"/questions/#{question.id}", :data=>{ :confirm => "确认删除吗？", :method => :delete}}删除
             %a{:role=>"button",class: "btn btn-success find-tag ",:href=>"javascript:;"}查看版本
 
   = custom_paginate @questions

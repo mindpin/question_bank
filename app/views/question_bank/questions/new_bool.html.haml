@@ -1,4 +1,4 @@
-.page-new-question-bool.form-question-bool
+.form-question-bool
   =simple_form_for @question, input_html: {class: "form-horizontal"} do |f|
     = f.input :kind, as: :hidden, input_html: { value: 'bool' }
 
