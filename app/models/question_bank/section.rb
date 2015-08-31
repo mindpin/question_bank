@@ -34,5 +34,7 @@ module QuestionBank
     validates :score, :presence => true
     validates :min_level, :presence => true
     validates :max_level, :presence => true
+
+    accepts_nested_attributes_for :section_questions
   end
 end

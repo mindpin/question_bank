@@ -1,0 +1,51 @@
+.page-new-test_paper.form-test_paper
+  = simple_form_for @test_paper, wrapper: :horizontal_form do |f|
+
+    .form-inputs
+      = f.input :title
+      = f.input :score
+      = f.input :minutes
+
+    - index = 0
+    .sections
+      = f.simple_fields_for :sections do |section_form|
+        .section.clearfix{data: {section_id: section_form.object.id}}
+          %h3= "第#{index+1}大题"
+          = section_form.input :kind
+          = section_form.input :score
+          = section_form.input :min_level, collection: 1..10, include_blank: false
+          = section_form.input :max_level, collection: 1..10, include_blank: false
+
+          .form-group.opts
+            %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_#{index}_min_level"} 选择考题
+            .col-sm-3
+              %a.btn.btn-default{href: 'javascript:;'} 系统随机
+            .col-sm-3
+              %a.btn.btn-default{href: 'javascript:;'} 手动选题
+
+          .clearfix
+          %ol
+            = section_form.simple_fields_for :section_questions do |sq_form|
+              %li
+                .clearfix
+                  = sq_form.object.question.content
+                  %a{href: 'javascript:;'}
+                    %i.glyphicon.glyphicon-arrow-up
+                  %a{href: 'javascript:;'}
+                    %i.glyphicon.glyphicon-arrow-down
+                  %a{href: 'javascript:;'}
+                    %i.glyphicon.glyphicon-remove.red
+                = sq_form.input :question_id, as: :hidden
+                = sq_form.input :_destroy, as: :hidden
+
+          - index += 1
+
+    .section-actions
+      %a.btn.btn-default{href: 'javascript:;'} 增加一个大题
+
+    %hr
+
+    .form-actions
+      = f.button :submit, "生成试卷"
+
+

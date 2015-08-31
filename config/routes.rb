@@ -10,4 +10,5 @@ QuestionBank::Engine.routes.draw do
       get :new_fill
     end
   end
+  resources :test_papers
 end

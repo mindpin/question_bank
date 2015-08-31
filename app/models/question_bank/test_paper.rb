@@ -20,5 +20,7 @@ module QuestionBank
     validates :title, :presence => true
     validates :score, :presence => true
     validates :minutes, :presence => true
+
+    accepts_nested_attributes_for :sections
   end
 end
