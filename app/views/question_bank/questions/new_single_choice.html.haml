@@ -1,4 +1,4 @@
-.page-new-question-single-choice.form-question-single-choice
+.form-question-single-choice
   = simple_form_for @question,:input_html  => {:class => "form-horizontal"} do |f|
     = f.input :kind, :as => :hidden, :input_html => { :value => "single_choice" }
 
