@@ -52,19 +52,19 @@ jQuery(document).on "ready page:load", ->
     $choice_answer_indexs.find('.checkbox.hidden').remove()
 
   jQuery(document).on 'click','.form-question-mapping .delete',->
-  position_atr = jQuery(this).closest('.item').find('input').attr('name');
-  zhengze = new RegExp(/[0-9]+/)
-  position = zhengze.exec(position_atr)
-  item_length = jQuery(".form-question-mapping .item").length
-  x
-  for x in [position...item_length]
-    q = x - 1
-    jQuery(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
-  if item_length == 1
-    fuben = jQuery(".form-question-mapping .item:first").clone()
-    jQuery(".form-question-mapping .item:first").after(fuben)
-    jQuery(".form-question-mapping .item:last").addClass('hidden')
-  jQuery(this).closest('.item').remove();
+    position_atr = jQuery(this).closest('.item').find('input').attr('name');
+    zhengze = new RegExp(/[0-9]+/)
+    position = zhengze.exec(position_atr)
+    item_length = jQuery(".form-question-mapping .item").length
+    x
+    for x in [position...item_length]
+      q = x - 1
+      jQuery(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
+    if item_length == 1
+      fuben = jQuery(".form-question-mapping .item:first").clone()
+      jQuery(".form-question-mapping .item:first").after(fuben)
+      jQuery(".form-question-mapping .item:last").addClass('hidden')
+    jQuery(this).closest('.item').remove();
 
   jQuery(document).on 'click','.form-question-mapping .append',->
     count_hidden = jQuery('.option-key-field .hidden').length
