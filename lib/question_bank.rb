@@ -2,7 +2,6 @@ require 'enumerize'
 require 'simple_form'
 require 'csv'
 require 'kaminari'
-require 'bootstrap-kaminari-views'
 # 引用 rails engine
 require 'question_bank/engine'
 require 'question_bank/import_question'
