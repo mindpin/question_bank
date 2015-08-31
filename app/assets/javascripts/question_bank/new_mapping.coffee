@@ -3,11 +3,11 @@ $(document).on 'click','.page-new-question-mapping .delete',->
   zhengze = new RegExp(/[0-9]+/)
   position = zhengze.exec(position_atr)
   item_length = $(".page-new-question-mapping .item").length
-  x
   for x in [position...item_length]
     q = x-1
     $(".page-new-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
   if item_length==1
+    $(".page-new-question-mapping .item:first input").val("")
     fuben = $(".page-new-question-mapping .item:first").clone()
     $(".page-new-question-mapping .item:first").after(fuben)
     $(".page-new-question-mapping .item:last").addClass('hidden')
@@ -24,8 +24,9 @@ $(document).on 'click','.page-new-question-mapping .append',->
     shuzi = zhengze.exec(shuzi)
     shuzi = Number(shuzi)+1
     atr = $(this).closest('.page-new-question-mapping').find(".item:last").clone()
-    alert atr.html()
     $(this).closest('.add-items').before(atr);
     $(this).closest('.page-new-question-mapping').find(".item:last").removeClass('hidden')
     $(this).closest('.page-new-question-mapping').find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
     $(this).closest('.page-new-question-mapping').find(".item:last input").val('')
+$(document).on 'submit','.page-new-question-mapping',->
+  $('.page-new-question-mapping .answer .hidden').remove()

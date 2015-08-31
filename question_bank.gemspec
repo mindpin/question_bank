@@ -30,4 +30,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'simple_form'
   spec.add_dependency 'enumerize'
+  spec.add_dependency 'kaminari'
+  spec.add_dependency 'bootstrap-kaminari-views'
+
 end

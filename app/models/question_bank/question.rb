@@ -3,6 +3,7 @@ module QuestionBank
     include Mongoid::Document
     include Mongoid::Timestamps
     extend Enumerize
+    include Kaminari::MongoidExtension::Document
     include QuestionBank::ChoiceMethods
     include QuestionBank::SingleChoiceMethods
     include QuestionBank::MultiChoiceMethods

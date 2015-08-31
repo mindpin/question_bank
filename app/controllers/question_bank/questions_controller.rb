@@ -1,5 +1,6 @@
 module QuestionBank
-  class QuestionsController < QuestionBank::ApplicationController
+  class QuestionsController < QuestionBank::ApplicationController 
+    include QuestionBank::ApplicationHelper
     def new_single_choice
       @question = Question.new
     end
@@ -25,7 +26,8 @@ module QuestionBank
     end
 
     def index
-      @questions = Question.all
+      params[:page] ||= 1
+      @questions = Question.page(params[:page]).per(6)
     end
 
     def create
