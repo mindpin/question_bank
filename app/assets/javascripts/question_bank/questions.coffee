@@ -51,3 +51,48 @@ jQuery(document).on "ready page:load", ->
     $choice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
     $choice_answer_indexs.find('.checkbox.hidden').remove()
 
+  jQuery(document).on 'click','.form-question-mapping .delete',->
+  position_atr = jQuery(this).closest('.item').find('input').attr('name');
+  zhengze = new RegExp(/[0-9]+/)
+  position = zhengze.exec(position_atr)
+  item_length = jQuery(".form-question-mapping .item").length
+  x
+  for x in [position...item_length]
+    q = x - 1
+    $(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
+  if item_length == 1
+    fuben = jQuery(".form-question-mapping .item:first").clone()
+    jQuery(".form-question-mapping .item:first").after(fuben)
+    jQuery(".form-question-mapping .item:last").addClass('hidden')
+  jQuery(this).closest('.item').remove();
+
+  jQuery(document).on 'click','.form-question-mapping .append',->
+    count_hidden = jQuery('.option-key-field .hidden').length
+    if count_hidden == 1
+      jQuery('.option-key-field .hidden input').attr('name','question[mapping_answer][0][]')
+      jQuery('.option-key-field .hidden' ).removeClass('hidden')
+    else
+      shuzi = jQuery('.form-question-mapping .item:last input ').attr('name');
+      zhengze = new RegExp(/[0-9]+/)
+      shuzi = zhengze.exec(shuzi)
+      shuzi = Number(shuzi) + 1
+      atr = jQuery(this).closest('.form-question-mapping').find(".item:last").clone()
+      jQuery(this).closest('.add-items').before(atr);
+      jQuery(this).closest('.form-question-mapping').find(".item:last").removeClass('hidden')
+      jQuery(this).closest('.form-question-mapping').find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
+      jQuery(this).closest('.form-question-mapping').find(".item:last input").val()
+
+  jQuery(document).on 'click','.form-question-fill .insert',->
+    str = jQuery('.form-question-fill').find("[name='question[content]']").val();
+    str = str+" ___ "
+    jQuery('.form-question-fill').find("[name='question[content]']").val(str);
+
+  jQuery(document).on 'click','.form-question-fill .delete ',->
+    jQuery(this).closest(".answer").remove()
+
+  jQuery(document).on 'click','.form-question-fill .append',->
+    blank = jQuery('.form-question-fill .answer:last').clone();
+    blank.removeClass("hidden")
+    blank.find("input").val("")
+    jQuery('.form-question-fill .answer:last').after(blank)
+
