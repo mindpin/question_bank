@@ -35,7 +35,7 @@ module QuestionBank
       # 选项不能是空
       self.choices.each do |choice|
         if choice.blank?
-          errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.choice_blank"))
+          errors.add(:choice_answer_indexs, I18n.t("mongoid.errors.models.question_bank/question.attributes.choice_answer_indexs.choice_has_blank"))
           break
         end
       end
