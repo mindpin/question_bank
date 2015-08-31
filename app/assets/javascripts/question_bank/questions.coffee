@@ -59,7 +59,7 @@ jQuery(document).on "ready page:load", ->
   x
   for x in [position...item_length]
     q = x - 1
-    $(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
+    jQuery(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
   if item_length == 1
     fuben = jQuery(".form-question-mapping .item:first").clone()
     jQuery(".form-question-mapping .item:first").after(fuben)
