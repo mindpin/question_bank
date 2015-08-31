@@ -8,7 +8,6 @@ QuestionBank::Engine.routes.draw do
       get :new_multi_choice
       get :new_essay
       get :new_fill
-      get :edit_bool
     end
   end
 end
