@@ -11,33 +11,52 @@
       = f.simple_fields_for :sections do |section_form|
         .section.clearfix{data: {section_id: section_form.object.id}}
           %h3= "第#{index+1}大题"
-          = section_form.input :kind
-          = section_form.input :score
-          = section_form.input :min_level, collection: 1..10, include_blank: false
-          = section_form.input :max_level, collection: 1..10, include_blank: false
+          .col-xs-11
+            = section_form.input :kind
+            = section_form.input :score
+            = section_form.input :min_level, collection: 1..10, include_blank: false, input_html:{class: 'min_level'}
+            = section_form.input :max_level, collection: 1..10, include_blank: false, input_html:{class: 'max_level'}
 
-          .form-group.opts
-            %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_#{index}_min_level"} 选择考题
-            .col-sm-3
-              %a.btn.btn-default.btn-random{href: 'javascript:;'} 系统随机
-            .col-sm-3
-              %a.btn.btn-default.btn-choose{href: 'javascript:;'} 手动选题
+            .form-group.opts
+              %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_#{index}_min_level"} 选择考题
+              .col-sm-3
+                %a.btn.btn-default.btn-random{href: 'javascript:;'} 系统随机
+              .col-sm-3
+                %a.btn.btn-default.btn-choose{href: 'javascript:;'} 手动选题
 
-          .clearfix
-          %ol
-            = section_form.simple_fields_for :section_questions do |sq_form|
-              %li
-                .clearfix
-                  = sq_form.object.question.content
-                  %a{href: 'javascript:;'}
-                    %i.glyphicon.glyphicon-arrow-up
-                  %a{href: 'javascript:;'}
-                    %i.glyphicon.glyphicon-arrow-down
-                  %a{href: 'javascript:;'}
-                    %i.glyphicon.glyphicon-remove.red
-                = sq_form.input :question_id, as: :hidden
-                = sq_form.input :_destroy, as: :hidden
+            .clearfix
+            %ol
+              = section_form.simple_fields_for :section_questions do |sq_form|
+                %li
+                  .clearfix
+                    = sq_form.object.question.content
+                    %a{href: 'javascript:;'}
+                      %i.glyphicon.glyphicon-arrow-up
+                    %a{href: 'javascript:;'}
+                      %i.glyphicon.glyphicon-arrow-down
+                    %a{href: 'javascript:;'}
+                      %i.glyphicon.glyphicon-remove.red
+                  = sq_form.input :question_id, as: :hidden
+                  = sq_form.input :position, as: :hidden
+                  = sq_form.input :_destroy, as: :hidden
 
+          .col-xs-1
+            %p.text-center
+              %a.section_move_up{href: 'javascript:;'}
+                %i.glyphicon.glyphicon-arrow-up
+                %br
+                上移
+            %p.text-center
+              %a.section_move_down{href: 'javascript:;'}
+                %i.glyphicon.glyphicon-arrow-down
+                %br
+                下移
+            %p.text-center
+              %a.section_destroy{href: 'javascript:;'}
+                %i.glyphicon.glyphicon-remove.red
+                %br
+                删除
+            
           - index += 1
 
     .section-actions
