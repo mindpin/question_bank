@@ -19,7 +19,9 @@ zh-CN:
                 single_choice_answer_count: 必须选择一个答案
                 multi_choice_answer_count: 必须选择两个或多于两个的答案
               mapping_answer:
-                blank: 必须有两组或多于两组
+                blank: 请填写连线选项
+                has_blank: 连线选项中不能有空位，请把空位填写完成
+                count: 连线选项必须有两组或多于两组
               fill_answer:
                 fill_answer_has_blank: 填空答案不能有空
                 not_eq_count: 填空答案的数量必须等于题目内容中的填空数量

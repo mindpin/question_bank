@@ -24,10 +24,17 @@ module QuestionBank
       return true if self.kind.blank?
       return true if !self.kind.mapping?
 
+      # 不能为空
+      if self.mapping_answer.map { |m| m[0].blank? && m[1].blank? }.uniq == [true]
+        errors.add(:mapping_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.mapping_answer.blank"))
+        return
+      end
+
+      # 不能有空
       self.mapping_answer.each do |item|
         if item[0].blank? || item[1].blank?
-          errors.add(:mapping_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.mapping_answer.blank"))
-          break
+          errors.add(:mapping_answer, I18n.t("mongoid.errors.models.question_bank/question.attributes.mapping_answer.has_blank"))
+          return
         end
       end
 

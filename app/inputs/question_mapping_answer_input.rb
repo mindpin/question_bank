@@ -5,6 +5,7 @@ class QuestionMappingAnswerInput < SimpleForm::Inputs::Base
     mapping_answer = object.mapping_answer
 
     mapping_answer = [["",""],["",""]] if mapping_answer.blank?
+    mapping_answer << ["",""] if mapping_answer.count == 1
 
     dom = ""
     mapping_answer.each_with_index do |mapping_answer_item, i|
