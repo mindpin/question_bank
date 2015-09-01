@@ -91,6 +91,8 @@ jQuery(document).on "ready page:load", ->
     if count ==1
       fuben = jQuery(this).closest(".answer").clone()
       fuben.addClass('hidden')
+      fuben.find('input').attr('value','')
+      fuben.find('input').val('')
       jQuery(this).closest(".answer").before(fuben)
     jQuery(this).closest(".answer").remove()
 
@@ -99,9 +101,6 @@ jQuery(document).on "ready page:load", ->
     blank.removeClass("hidden")
     blank.find("input").val("")
     jQuery('.form-question-fill .answer:last').after(blank)
-    jQuery('.form-question-fill .append').unbind();
 
-  jQuery('.form-question-fill').on 'submit','form',->
-    jQuery('.form-question-fill .answer.hidden').remove()
 
 
