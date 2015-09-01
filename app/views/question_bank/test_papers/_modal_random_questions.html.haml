@@ -1,0 +1,17 @@
+#modal-random-questions.modal.fade{tabindex:"-1", role:"dialog", aria:{labelledby:"select_address_label", hidden:"true"}}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{type:"button", data: {dismiss:"modal"}, aria: {label:"Close"} }
+          %span{aria: {hidden:"true"}} &times;
+        %h4.modal-title#select_address_label 系统随机选题
+      .modal-body
+        %p 系统将从题库中选择符合条件的题目加入试卷，请填写需要选出的题目数量：
+        .form-group.clearfix
+          %label.col-sm-3.controller-label{for: "input_random_count"} 选择考题
+          .col-sm-3
+            %input#input_random_count.form-control{type: 'text'}
+
+      .modal-footer
+        %button.btn.btn-default{type:"button", data:{dismiss: "modal"}} 取消
+        %button.button-random-questions.btn.btn-primary 开始选题

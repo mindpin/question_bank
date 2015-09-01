@@ -19,9 +19,9 @@
           .form-group.opts
             %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_#{index}_min_level"} 选择考题
             .col-sm-3
-              %a.btn.btn-default{href: 'javascript:;'} 系统随机
+              %a.btn.btn-default.btn-random{href: 'javascript:;'} 系统随机
             .col-sm-3
-              %a.btn.btn-default{href: 'javascript:;'} 手动选题
+              %a.btn.btn-default.btn-choose{href: 'javascript:;'} 手动选题
 
           .clearfix
           %ol
@@ -48,4 +48,5 @@
     .form-actions
       = f.button :submit, "生成试卷"
 
-
+  = render 'modal_random_questions'
+  = render 'modal_questions_selector'
