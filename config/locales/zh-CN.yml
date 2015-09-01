@@ -33,3 +33,12 @@ zh-CN:
         mapping_answer: 连线选项
         essay_answer: 参考答案
         bool_answer: 答案
+      question_bank/test_paper:
+        title: 试卷标题
+        score: 总分
+        minutes: 考试时间(分钟)
+      question_bank/section:
+        kind: 题型
+        score: 每题分值
+        min_level: 难度系数下限
+        max_level: 难度系数上限
