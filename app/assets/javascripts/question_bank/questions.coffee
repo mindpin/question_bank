@@ -103,4 +103,8 @@ jQuery(document).on "ready page:load", ->
     jQuery('.form-question-fill .answer:last').after(blank)
 
 
+  jQuery('.form-question-fill').on 'submit','form',->
+    if jQuery('.form-question-fill .answer:not(.hidden)').length > 0
+      jQuery('.form-question-fill .answer.hidden').remove()
+
 
