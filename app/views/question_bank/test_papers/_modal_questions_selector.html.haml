@@ -7,9 +7,9 @@
         %h4.modal-title#select_address_label 手动选题
       .modal-body
         - QuestionBank::Question.all.each do |question|
-          %label.controller-label{for: "input_random_count"}
-            %input{type: 'checkbox'}
-            = question.content
+          %label.controller-label{for: "question_#{question.id}", data: {question_id: question.id}}
+            %input{type: 'checkbox', id: "question_#{question.id}"}
+            %span= question.content
 
       .modal-footer
         %button.btn.btn-default{type:"button", data:{dismiss: "modal"}} 取消
