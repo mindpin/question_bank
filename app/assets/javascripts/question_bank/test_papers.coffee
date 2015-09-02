@@ -109,7 +109,7 @@ class NewTestPaper
       else
         # todo 传入已选题目, 不重复
         @get_random_questions
-          section: @$control_section
+          $section: @$control_section
           random_count: random_count
 
     @$modal_questions_selector.on 'click', '.button-questions-selector', =>
@@ -196,12 +196,43 @@ class NewTestPaper
 
   get_random_questions: (params) ->
     console.log params
-    {section, random_count} = params
+    {$section, random_count} = params
     # ajax get_random_questions
-    for i in [0..random_count-1]
-      section.find('.section_questions').append('<li><div class="clearfix">测试</div></li>')
-    @set_scores()
-    @$modal_random_questions.modal('hide')
+    kind = $section.find('.kind').val()
+    min_level = $section.find('.min_level').val()
+    max_level = $section.find('.max_level').val()
+    jQuery.ajax
+      url: '/questions/search.json'
+      method: 'GET'
+      data:
+        min_level: min_level
+        max_level: max_level
+        kind: kind
+        type: 'random'
+        per: random_count
+      success: (res) =>
+        #console.log res
+        section_index = @$el.find('.sections .section').index($section)
+        $section_questions = $section.find('.section_questions')
+        question_index_prefix = $section_questions.find('li').length
+        for question, index in res
+          console.log question
+          console.log index
+          str_template = @$template_question.html()
+
+          str_template = str_template.replace /{{content}}/g , question.content
+
+          str_template = str_template.replace /{{section_index}}/g , section_index
+          str_template = str_template.replace /{{question_id}}/g , question.id
+
+          str_template = str_template.replace /{{question_index}}/g , index + question_index_prefix
+          str_template = str_template.replace /{{position}}/g , index + question_index_prefix
+
+          $template = jQuery(str_template).removeClass('hidden')
+          $section_questions.append($template)
+          @set_scores()
+          @$modal_random_questions.modal('hide')
+
 
   reset_section_title: ->
     @$el.find('.sections .section').each (index)->

@@ -7,7 +7,7 @@
           %abbr{title: "required"} *
           题型
         .col-sm-9
-          %select.select.required.form-control{name: 'test_paper[sections_attributes][{{section_index}}][kind]', id: 'test_paper_sections_attributes_{{section_index}}_kind'}
+          %select.select.required.form-control.kind{name: 'test_paper[sections_attributes][{{section_index}}][kind]', id: 'test_paper_sections_attributes_{{section_index}}_kind'}
             %option{:selected => "selected", :value => "single_choice"} 单选题
             %option{:value => "multi_choice"} 多选题
             %option{:value => "bool"} 判断题
@@ -20,8 +20,7 @@
           %abbr{:title => "required"} *
           每题分值
         .col-sm-9
-          %input.string.required.form-control{:name => "test_paper[sections_attributes][1][score]", :type => "text", :value => "" , :id => 'test_paper_sections_attributes_{{section_index}}_score'}/
-          %span.help-block 不能为空字符
+          %input.string.required.form-control.section_score{:name => "test_paper[sections_attributes][1][score]", :type => "text", :value => "" , :id => 'test_paper_sections_attributes_{{section_index}}_score'}/
 
       .form-group.select.required.test_paper_sections_min_level
         %label.select.required.col-sm-3.control-label{:for => "test_paper_sections_attributes_{{section_index}}_min_level"}

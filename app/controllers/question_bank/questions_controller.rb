@@ -56,6 +56,28 @@ module QuestionBank
       end
     end
 
+    def search
+      @type = params[:type]
+      @kind = params[:kind]
+      @min_level = params[:min_level].to_i
+      @max_level = params[:max_level].to_i
+      @per = params[:per].to_i
+      @per = 5 if @per <= 0
+      if @type == 'random'
+        questions = Question.where(kind: @kind, level: @min_level..@max_level)
+        count = questions.count
+        @questions = (0..count-1).sort_by{rand}.slice(0, @per).collect! do |i| questions.skip(i).first end
+      else
+        @questions = Question.where(kind: @kind, level: @min_level..@max_level).page(params[:page]).per(@per)
+      end
+      render json: @questions.map{ |question|
+        {
+          id: question.id.to_s,
+          content: question.content
+        }
+      }
+    end
+
     private
       def question_bool_params
         params.require(:question).permit(:kind, :content, :bool_answer, :analysis, :level, :enabled)
