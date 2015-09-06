@@ -55,6 +55,8 @@
             %option{:value => "9"} 9
             %option{:value => "10"} 10
 
+      %input.hidden.section_position.form-control{type:"hidden", name:"test_paper[sections_attributes][{{section_index}}][position]",  id:"test_paper_sections_attributes_{{section_index}}_position", value:"{{section_index}}"}
+
       .form-group.opts
         %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_{{section_index}}_min_level"} 选择考题
         .col-sm-3

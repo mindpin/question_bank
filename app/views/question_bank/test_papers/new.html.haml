@@ -17,6 +17,8 @@
             = section_form.input :min_level, collection: 1..10, include_blank: false, input_html:{class: 'min_level'}
             = section_form.input :max_level, collection: 1..10, include_blank: false, input_html:{class: 'max_level'}
 
+            = section_form.input :position, as: :hidden, input_html: {class: 'section_position'}
+
             .form-group.opts
               %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_#{index}_min_level"} 选择考题
               .col-sm-3

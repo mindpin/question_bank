@@ -40,6 +40,8 @@ class NewTestPaper
       $section = $this.parent().parent().parent()
       $section.insertBefore($section.prev()) if $section.prev().length > 0 
       # position 需要做调整
+      that.reset_section_positions()
+      that.reset_section_title()
 
     @$el.on 'click', '.section_move_down', ->
       console.log 'section_move_down'
@@ -47,6 +49,8 @@ class NewTestPaper
       $section = $this.parent().parent().parent()
       $section.insertAfter($section.next()) if $section.next().length > 0 and !$section.next().hasClass('empty')
       # position 需要做调整
+      that.reset_section_positions()
+      that.reset_section_title()
 
     @$el.on 'click', '.section_destroy', ->
       console.log 'section_destroy'
@@ -270,8 +274,11 @@ class NewTestPaper
 
 
   reset_section_title: ->
+    console.log 'reset_section_title'
     @$el.find('.sections .section').each (index)->
       $this1 = jQuery(this)
+      console.log index
+      console.log $this1
       $this1.find('h3').html("第#{index+1}大题")
       
   reset_question_positions: ($question)->
@@ -281,6 +288,19 @@ class NewTestPaper
         $this1.find('.question_position').val(index)
         console.log $this1.find('.question_position')
         console.log index
+
+  reset_section_positions: ()->
+    @$el.find('.sections .section').each (index)->
+      $section = jQuery(this)
+      console.log $section
+      # todo 替换地下所有的[x]
+      $section.html $section.html().replace(/(sections_attributes\]\[)\d+\]/, "$1#{index}]")
+      $section.find('.section_position').val(index)
+      #$this1.val(index)
+      #$this1.html $this1.html().replace(/(section_questions_attributes\]\[)\d+(\])/g , "$1#{index}$2")
+      #$this1.find('.question_position').val(index)
+      #console.log $this1.find('.question_position')
+      #console.log index
 
 jQuery(document).on 'ready page:load', ->
   new NewTestPaper(jQuery('.page-new-test_paper'), {}) if jQuery('.page-new-test_paper').length > 0
