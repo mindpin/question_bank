@@ -8,6 +8,7 @@ class NewTestPaper
     @$modal_questions_selector = @$el.find('#modal-questions-selector')
     @$template_question = @$el.find('.template.question')
     @$template_section = @$el.find('.template.section')
+    @$template_selector_question = @$el.find('.template.selector_question')
 
     @set_scores()
     @_bind()
@@ -28,7 +29,9 @@ class NewTestPaper
       $this = jQuery(this)
       that.$control_section = $this.parent().parent().parent().parent()
 
-      # 按等级读取题目，并根据已选初始化
+      that.get_questions
+        $section: that.$control_section
+
       that.$modal_questions_selector.modal('show')
 
     @$el.on 'click', '.section_move_up', ->
@@ -115,7 +118,7 @@ class NewTestPaper
     @$modal_questions_selector.on 'click', '.button-questions-selector', =>
       $question = @$template_question.clone()
       $section_questions = @$control_section.find('.section_questions')
-      $section_questions.children().remove()
+      #$section_questions.children().remove()
       section_index = @$el.find('.sections .section').index(@$control_section)
 
       @$modal_questions_selector.find(':checked').each (index)->
@@ -193,6 +196,33 @@ class NewTestPaper
         total += score * $section.find('ol li').length
     console.log total
     total
+
+  get_questions: (params) ->
+    {$section} = params
+    kind = $section.find('.kind').val()
+    min_level = $section.find('.min_level').val()
+    max_level = $section.find('.max_level').val()
+    $question_selector = @$el.find('.question_selector')
+    $question_selector.html('读取中...')
+    jQuery.ajax
+      url: '/questions/search.json'
+      method: 'GET'
+      data:
+        min_level: min_level
+        max_level: max_level
+        kind: kind
+        type: 'select'
+      success: (res) =>
+        $question_selector.html('')
+        for question, index in res
+          str_template = @$template_selector_question.html()
+
+          str_template = str_template.replace /{{content}}/g , question.content
+
+          str_template = str_template.replace /{{question_id}}/g , question.id
+
+          $template = jQuery(str_template).removeClass('hidden')
+          $question_selector.append($template)
 
   get_random_questions: (params) ->
     console.log params

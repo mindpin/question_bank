@@ -63,10 +63,14 @@ module QuestionBank
       @max_level = params[:max_level].to_i
       @per = params[:per].to_i
       @per = 5 if @per <= 0
-      if @type == 'random'
+      case @type
+      when 'random'
         questions = Question.where(kind: @kind, level: @min_level..@max_level)
         count = questions.count
         @questions = (0..count-1).sort_by{rand}.slice(0, @per).collect! do |i| questions.skip(i).first end
+      when 'select'
+        # 显示所有题目
+        @questions = Question.where(kind: @kind, level: @min_level..@max_level)
       else
         @questions = Question.where(kind: @kind, level: @min_level..@max_level).page(params[:page]).per(@per)
       end
