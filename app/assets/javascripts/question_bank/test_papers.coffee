@@ -84,15 +84,15 @@ class NewTestPaper
     # question 选题操作
     @$el.on 'click', '.question_move_up', ->
       $this = jQuery(this)
-      $section = $this.parent().parent()
-      $section.insertBefore($section.prev()) if $section.prev().length > 0 
-      # todo position 需要做调整
+      $question = $this.parent().parent()
+      $question.insertBefore($question.prev()) if $question.prev().length > 0 
+      that.reset_question_positions($question)
 
     @$el.on 'click', '.question_move_down', ->
       $this = jQuery(this)
-      $section = $this.parent().parent()
-      $section.insertAfter($section.next()) if $section.next().length > 0 and !$section.next().hasClass('empty')
-      # todo position 需要做调整
+      $question = $this.parent().parent()
+      $question.insertAfter($question.next()) if $question.next().length > 0 and !$question.next().hasClass('empty')
+      that.reset_question_positions($question)
 
     @$el.on 'click', '.question_destroy', ->
       $this = jQuery(this)
@@ -274,6 +274,13 @@ class NewTestPaper
       $this1 = jQuery(this)
       $this1.find('h3').html("第#{index+1}大题")
       
+  reset_question_positions: ($question)->
+      $question.parent().children().each (index)->
+        $this1 = jQuery(this)
+        $this1.html $this1.html().replace(/(section_questions_attributes\]\[)\d+(\])/g , "$1#{index}$2")
+        $this1.find('.question_position').val(index)
+        console.log $this1.find('.question_position')
+        console.log index
 
 jQuery(document).on 'ready page:load', ->
   new NewTestPaper(jQuery('.page-new-test_paper'), {}) if jQuery('.page-new-test_paper').length > 0

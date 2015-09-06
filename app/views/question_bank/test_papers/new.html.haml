@@ -37,7 +37,7 @@
                     %a.question_destroy{href: 'javascript:;'}
                       %i.glyphicon.glyphicon-remove.red
                   = sq_form.input :question_id, as: :hidden
-                  = sq_form.input :position, as: :hidden
+                  = sq_form.input :position, as: :hidden, input_html: {class: 'question_position'}
                   = sq_form.input :_destroy, as: :hidden, input_html: {class: 'destroy'}
 
           .col-xs-1
