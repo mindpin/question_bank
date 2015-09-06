@@ -174,6 +174,11 @@ class NewTestPaper
     @$el.on 'blur', '#test_paper_score, .section_score', =>
       @set_scores()
 
+    @$el.on 'click', '.btn-submit', =>
+      if @total == NaN or @total <= 0 or @surplus != 0
+        alert('未分配分数不为0')
+        return false
+
   set_scores: ->
     @scores = Number @$el.find('#test_paper_score').val()
     @total = @calculate_total()
