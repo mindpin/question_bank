@@ -1,6 +1,6 @@
-.page-new-question-mapping.form-question-mapping
+.page-edit-question-mapping.form-question-mapping
   = simple_form_for @question do |f|
-    = f.input :kind, :as => :hidden
+    = f.input :kind, :as => :hidden, :input_html => { :value => "mapping" }
 
     = f.input :content, as: :text
 
