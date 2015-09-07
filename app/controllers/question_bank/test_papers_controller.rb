@@ -1,7 +1,7 @@
 module QuestionBank
   class TestPapersController < QuestionBank::ApplicationController
     def index
-      @test_papers = QuestionBank::TestPaper.all
+      @test_papers = QuestionBank::TestPaper.recent.page params[:page]
     end
 
     def new
@@ -23,6 +23,25 @@ module QuestionBank
 
     def show
       @test_paper = QuestionBank::TestPaper.find params[:id]
+    end
+
+    def edit
+      @test_paper = QuestionBank::TestPaper.find params[:id]
+    end
+
+    def update
+      @test_paper = QuestionBank::TestPaper.find params[:id]
+      if @test_paper.update_attributes test_paper_params
+        redirect_to @test_paper
+      else
+        render :edit
+      end
+    end
+
+    def destroy
+      @test_paper = QuestionBank::TestPaper.find params[:id]
+      @test_paper.destroy
+      redirect_to test_papers_path
     end
 
     private

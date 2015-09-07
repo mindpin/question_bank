@@ -22,5 +22,7 @@ module QuestionBank
     validates :minutes, :presence => true
 
     accepts_nested_attributes_for :sections
+
+    scope :recent, -> {order(id: :desc)}
   end
 end
