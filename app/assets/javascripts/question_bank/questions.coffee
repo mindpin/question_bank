@@ -35,6 +35,7 @@ class SingleChoice
     @$sin.on 'submit', (evt)->
       $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
       $choice_answer_indexs.find('.radio.hidden').remove()
+
 class MultiChoice
   constructor: (@$mul)->
     @bind_events()
@@ -123,5 +124,3 @@ class Fill
       blank.removeClass("hidden")
       blank.find("input").val("")
       @$fill.find('.answer:last').after(blank)
-
-
