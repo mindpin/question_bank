@@ -4,6 +4,7 @@ class NewTestPaper
     @_init()
   
   _init: ->
+    @is_edit = @$el.hasClass('page-edit-test_paper')
     @$modal_random_questions = @$el.find('#modal-random-questions')
     @$modal_questions_selector = @$el.find('#modal-questions-selector')
     @$template_question = @$el.find('.template.question')
@@ -100,12 +101,15 @@ class NewTestPaper
 
     @$el.on 'click', '.question_destroy', ->
       $this = jQuery(this)
-      $section = $this.parent().parent()
-      # 新建时，直接删除
-      $section.remove()
-      # todo 修改时， 设置_destroy 而非单纯移除  ????
-      #$section.addClass('hidden')
-      #$section.find('.destroy').val('true')
+      $question = $this.parent().parent()
+      if that.is_edit
+        # 新建时，直接删除
+        $question.remove()
+      else
+      # 修改时， 设置_destroy 而非单纯移除  ????
+        $question.addClass('hidden')
+        $question.find('.destroy').val('true')
+      that.set_scores()
 
     # modal 弹窗操作
     @$modal_random_questions.on 'click', '.button-random-questions', =>
@@ -198,11 +202,11 @@ class NewTestPaper
 
   calculate_total: ->
     total = 0
-    @$el.find('.sections .section').each ->
+    @$el.find('.sections .section:not(.hidden)').each ->
       $section = jQuery(this)
       score = Number $section.find('.section_score').val()
       if score != NaN and score > 0
-        total += score * $section.find('ol li').length
+        total += score * $section.find('ol li:not(.hidden)').length
     console.log total
     total
 
