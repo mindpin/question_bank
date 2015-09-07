@@ -20,7 +20,7 @@
           %abbr{:title => "required"} *
           每题分值
         .col-sm-9
-          %input.string.required.form-control.section_score{:name => "test_paper[sections_attributes][1][score]", :type => "text", :value => "" , :id => 'test_paper_sections_attributes_{{section_index}}_score'}/
+          %input.string.required.form-control.section_score{:name => "test_paper[sections_attributes][{{section_index}}][score]", :type => "text", :value => "" , :id => 'test_paper_sections_attributes_{{section_index}}_score'}/
 
       .form-group.select.required.test_paper_sections_min_level
         %label.select.required.col-sm-3.control-label{:for => "test_paper_sections_attributes_{{section_index}}_min_level"}
