@@ -57,9 +57,18 @@ class NewTestPaper
       console.log 'section_destroy'
       $this = jQuery(this)
       $section = $this.parent().parent().parent()
-      $section.remove()
+
+      if that.is_edit
+        # 修改时， 设置_destroy 而非单纯移除  ????
+        $section.addClass('hidden')
+        $section.find('.section_destroy').val('true')
+      else
+        # 新建时，直接删除
+        $section.remove()
+
       # 删除后，还要重新计算大题数
       that.reset_section_title()
+      that.set_scores()
 
     @$el.on 'change', '.min_level', ->
       $this = jQuery(this)
@@ -102,13 +111,14 @@ class NewTestPaper
     @$el.on 'click', '.question_destroy', ->
       $this = jQuery(this)
       $question = $this.parent().parent()
+      console.log "is_edit: #{that.is_edit}"
       if that.is_edit
-        # 新建时，直接删除
-        $question.remove()
-      else
-      # 修改时， 设置_destroy 而非单纯移除  ????
+        # 修改时， 设置_destroy 而非单纯移除  ????
         $question.addClass('hidden')
         $question.find('.destroy').val('true')
+      else
+        # 新建时，直接删除
+        $question.remove()
       that.set_scores()
 
     # modal 弹窗操作
@@ -279,7 +289,7 @@ class NewTestPaper
 
   reset_section_title: ->
     console.log 'reset_section_title'
-    @$el.find('.sections .section').each (index)->
+    @$el.find('.sections .section:not(.hidden)').each (index)->
       $this1 = jQuery(this)
       console.log index
       console.log $this1
