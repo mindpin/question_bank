@@ -11,7 +11,8 @@ class SingleChoice
     that = this
 
     @$sin.on 'click', '.add-choice', ->
-      $choice_answer_indexs = jQuery('.form-question-single-choice .question_choice_answer_indexs')
+      $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
+      $add = that.$sin.find('.add-choice')
       next_choice_answer_index = $choice_answer_indexs.find('.radio:not(.hidden)').length
       dom = $choice_answer_indexs.find('.radio:first').clone()
       dom.removeClass('hidden')
@@ -20,8 +21,7 @@ class SingleChoice
       jQuery(this).before(dom)
 
     @$sin.on 'click', '.delete-choice', ->
-      $choice_answer_indexs = jQuery('.form-question-single-choice .question_choice_answer_indexs')
-
+      $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
       $delete_radio = jQuery(this).closest('.radio')
       delete_index  = parseInt($delete_radio.find('input:first').val())
       last_index    = $choice_answer_indexs.find('.radio:not(.hidden)').length - 1
@@ -33,7 +33,7 @@ class SingleChoice
 
 
     @$sin.on 'submit', (evt)->
-      $choice_answer_indexs = jQuery('.form-question-single-choice .question_choice_answer_indexs')
+      $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
       $choice_answer_indexs.find('.radio.hidden').remove()
 class MultiChoice
   constructor: (@$mul)->
@@ -43,7 +43,7 @@ class MultiChoice
     that = this
 
     @$mul.on 'click', ' .add-choice', ->
-      $choice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
+      $choice_answer_indexs = that.$mul.find('.question_choice_answer_indexs')
       next_choice_answer_index = $choice_answer_indexs.find('.checkbox:not(.hidden)').length
       dom = $choice_answer_indexs.find('.checkbox:first').clone()
       dom.removeClass('hidden')
@@ -52,7 +52,7 @@ class MultiChoice
       jQuery(this).before(dom)
 
     @$mul.on 'click', ' .delete-choice', ->
-      $choice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
+      $choice_answer_indexs = that.$mul.find('.question_choice_answer_indexs')
 
       $delete_checkbox = jQuery(this).closest('.checkbox')
       delete_index = parseInt($delete_checkbox.find('input:first').val())
@@ -63,8 +63,8 @@ class MultiChoice
 
       $delete_checkbox.remove()
 
-    @$mul.on 'submit', ' form', (evt)->
-      $choice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
+    @$mul.on 'submit','form', (evt)->
+      $choice_answer_indexs = that.$mul.find('.question_choice_answer_indexs')
       $choice_answer_indexs.find('.checkbox.hidden').remove()
 class Mapping
   constructor: (@$map)->
@@ -77,15 +77,15 @@ class Mapping
       position_atr = jQuery(this).closest('.item').find('input').attr('name');
       zhengze = new RegExp(/[0-9]+/)
       position = zhengze.exec(position_atr)
-      item_length = jQuery(".form-question-mapping .item").length
+      item_length = that.$map.find(".item").length
       x
       for x in [position...item_length]
         q = x - 1
-        jQuery(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
+        that.$map.find(".item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
       if item_length == 1
-        fuben = jQuery(".form-question-mapping .item:first").clone()
-        jQuery(".form-question-mapping .item:first").after(fuben)
-        jQuery(".form-question-mapping .item:last").addClass('hidden')
+        fuben = that.$map.find(".item:first").clone()
+        that.$map.find(".item:first").after(fuben)
+        that.$map.find(".item:first").addClass('hidden')
       jQuery(this).closest('.item').remove();
 
     @$map.on 'click',' .append',->
@@ -94,15 +94,15 @@ class Mapping
         jQuery('.option-key-field .hidden input').attr('name','question[mapping_answer][0][]')
         jQuery('.option-key-field .hidden' ).removeClass('hidden')
       else
-        shuzi = jQuery('.form-question-mapping .item:last input ').attr('name');
+        shuzi = that.$map.find('.item:last input').attr('name');
         zhengze = new RegExp(/[0-9]+/)
         shuzi = zhengze.exec(shuzi)
         shuzi = Number(shuzi) + 1
         atr = jQuery(this).closest('.form-question-mapping').find(".item:last").clone()
         jQuery(this).closest('.add-items').before(atr);
-        jQuery(this).closest('.form-question-mapping').find(".item:last").removeClass('hidden')
-        jQuery(this).closest('.form-question-mapping').find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
-        jQuery(this).closest('.form-question-mapping').find(".item:last input").val()
+        that.$map.find(".item:last").removeClass('hidden')
+        that.$map.find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
+        that.$map.find(".item:last input").val()
 class Fill
   constructor: (@$fill)->
     @bind_events()
@@ -110,18 +110,18 @@ class Fill
   bind_events: ->
     that = this
 
-    @$fill.on 'click','.insert',->
-      str = jQuery('.form-question-fill').find("[name='question[content]']").val();
+    @$fill.on 'click','.insert',=>
+      str = @$fill.find("[name='question[content]']").val();
       str = str+" ___ "
       jQuery('.form-question-fill').find("[name='question[content]']").val(str);
 
     @$fill.on 'click','.delete ',->
       jQuery(this).closest(".answer").remove()
 
-    @$fill.on 'click',' .append',->
-      blank = jQuery('.form-question-fill .answer:last').clone();
+    @$fill.on 'click',' .append',=>
+      blank = @$fill.find('.answer:last').clone();
       blank.removeClass("hidden")
       blank.find("input").val("")
-      jQuery('.form-question-fill .answer:last').after(blank)
+      @$fill.find('.answer:last').after(blank)
 
 
