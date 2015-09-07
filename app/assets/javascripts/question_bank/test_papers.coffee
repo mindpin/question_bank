@@ -303,4 +303,4 @@ class NewTestPaper
       #console.log index
 
 jQuery(document).on 'ready page:load', ->
-  new NewTestPaper(jQuery('.page-new-test_paper'), {}) if jQuery('.page-new-test_paper').length > 0
+  new NewTestPaper(jQuery('.form-test_paper'), {}) if jQuery('.form-test_paper').length > 0

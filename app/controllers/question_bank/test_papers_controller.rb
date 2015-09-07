@@ -46,7 +46,7 @@ module QuestionBank
 
     private
       def test_paper_params
-        params.require(:test_paper).permit(:title, :score, :minutes, :sections_attributes => [:kind, :score, :min_level, :max_level, :section_questions_attributes => [:question_id, :position, :_destroy]])
+        params.require(:test_paper).permit(:title, :score, :minutes, :sections_attributes => [:kind, :score, :min_level, :max_level, :id, :section_questions_attributes => [:question_id, :position, :_destroy, :id]])
       end
   end
 end
