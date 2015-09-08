@@ -330,12 +330,18 @@ class NewTestPaper
         console.log index
 
   reset_section_positions: ()->
+    that = this
     @$el.find('.sections .section').each (index)->
       $section = jQuery(this)
       console.log $section
-      # todo 替换地下所有的[x]
-      $section.html $section.html().replace(/(sections_attributes\]\[)\d+\]/, "$1#{index}]")
+      # 替换地下所有的[x]
+      $section.html $section.html().replace(/(sections_attributes\]\[)\d+\]/g, "$1#{index}]")
       $section.find('.section_position').val(index)
+
+      if that.is_edit
+        origin_index = $section.data('origin-index')
+        $id = $section.parent().find("#test_paper_sections_attributes_#{origin_index}_id")
+        $id.prop 'name', $id.prop('name').replace(/(sections_attributes\]\[)\d+\]/g, "$1#{index}]") if $id.length > 0
       #$this1.val(index)
       #$this1.html $this1.html().replace(/(section_questions_attributes\]\[)\d+(\])/g , "$1#{index}$2")
       #$this1.find('.question_position').val(index)

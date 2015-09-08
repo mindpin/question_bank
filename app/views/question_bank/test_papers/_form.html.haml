@@ -1,6 +1,6 @@
 = simple_form_for @test_paper, wrapper: :horizontal_form do |f|
 
-  .form-inputs
+  .form-inputs.clearfix
     = f.input :title
     = f.input :score
     = f.input :minutes
@@ -8,7 +8,7 @@
   - index = 0
   .sections
     = f.simple_fields_for :sections do |section_form|
-      .section.clearfix{data: {section_id: section_form.object.id}}
+      .section.clearfix{data: {section_id: section_form.object.id, origin_index: index}}
         %h3= "第#{index+1}大题"
         .col-xs-11
           = section_form.input :kind, include_blank: false, input_html: {class: 'kind'}
