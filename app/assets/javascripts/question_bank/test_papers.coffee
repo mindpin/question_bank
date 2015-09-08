@@ -99,14 +99,24 @@ class NewTestPaper
     @$el.on 'click', '.question_move_up', ->
       $this = jQuery(this)
       $question = $this.parent().parent()
-      $question.insertBefore($question.prev()) if $question.prev().length > 0 
-      that.reset_question_positions($question)
+
+      $questions = $question.parent().find('li')
+      index = $questions.index($question)
+      if index > 0 
+        $prev = jQuery($questions.get(index - 1))
+        $question.insertBefore($prev) if $prev and !$prev.hasClass('empty')
+        that.reset_question_positions($question)
 
     @$el.on 'click', '.question_move_down', ->
       $this = jQuery(this)
       $question = $this.parent().parent()
-      $question.insertAfter($question.next()) if $question.next().length > 0 and !$question.next().hasClass('empty')
-      that.reset_question_positions($question)
+
+      $questions = $question.parent().find('li')
+      index = $questions.index($question)
+      $next = jQuery($questions.get(index + 1))
+      if $next and !$next.hasClass('empty')
+        $question.insertAfter($next) 
+        that.reset_question_positions($question)
 
     @$el.on 'click', '.question_destroy', ->
       $this = jQuery(this)
@@ -296,7 +306,7 @@ class NewTestPaper
       $this1.find('h3').html("第#{index+1}大题")
       
   reset_question_positions: ($question)->
-      $question.parent().children().each (index)->
+      $question.parent().find('li').each (index)->
         $this1 = jQuery(this)
         $this1.html $this1.html().replace(/(section_questions_attributes\]\[)\d+(\])/g , "$1#{index}$2")
         $this1.find('.question_position').val(index)
