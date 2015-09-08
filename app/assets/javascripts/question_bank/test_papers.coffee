@@ -39,19 +39,35 @@ class NewTestPaper
       console.log 'section_move_up'
       $this = jQuery(this)
       $section = $this.parent().parent().parent()
-      $section.insertBefore($section.prev()) if $section.prev().length > 0 
-      # position 需要做调整
-      that.reset_section_positions()
-      that.reset_section_title()
+
+      $sections = $section.parent().find('.section')
+      index = $sections.index($section)
+      if index > 0 
+        $prev = jQuery($sections.get(index - 1))
+        $section.insertBefore($prev) if $prev and !$prev.hasClass('empty')
+        #that.reset_question_positions($question)
+
+        #$section.insertBefore($section.prev()) if $section.prev().length > 0 
+        # position 需要做调整
+        that.reset_section_positions()
+        that.reset_section_title()
 
     @$el.on 'click', '.section_move_down', ->
       console.log 'section_move_down'
       $this = jQuery(this)
       $section = $this.parent().parent().parent()
+
       $section.insertAfter($section.next()) if $section.next().length > 0 and !$section.next().hasClass('empty')
-      # position 需要做调整
-      that.reset_section_positions()
-      that.reset_section_title()
+
+      $sections = $section.parent().find('.section')
+      index = $sections.index($section)
+      $next = jQuery($sections.get(index + 1))
+      if $next
+        $section.insertAfter($next) 
+
+        # position 需要做调整
+        that.reset_section_positions()
+        that.reset_section_title()
 
     @$el.on 'click', '.section_destroy', ->
       console.log 'section_destroy'
