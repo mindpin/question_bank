@@ -8,6 +8,8 @@ QuestionBank::Engine.routes.draw do
       get :new_multi_choice
       get :new_essay
       get :new_fill
+      get :search
     end
   end
+  resources :test_papers
 end

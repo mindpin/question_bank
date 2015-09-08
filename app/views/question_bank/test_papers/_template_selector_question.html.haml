@@ -1,0 +1,4 @@
+.template.selector_question
+  %label.controller-label.hidden{for: "question_{{question_id}}", data: {question_id: "{{question_id}}"}}
+    %input{type: 'checkbox', id: "question_{{question_id}}"}
+    %span {{content}}

@@ -1,5 +1,5 @@
 module QuestionBank
-  class QuestionsController < QuestionBank::ApplicationController 
+  class QuestionsController < QuestionBank::ApplicationController
     include QuestionBank::ApplicationHelper
     def new_single_choice
       @question = Question.new
@@ -62,6 +62,32 @@ module QuestionBank
       @question = Question.find(params[:id])
       @question.destroy
       redirect_to "/questions"
+    end
+
+    def search
+      @type = params[:type]
+      @kind = params[:kind]
+      @min_level = params[:min_level].to_i
+      @max_level = params[:max_level].to_i
+      @per = params[:per].to_i
+      @per = 5 if @per <= 0
+      case @type
+      when 'random'
+        questions = Question.where(kind: @kind, level: @min_level..@max_level)
+        count = questions.count
+        @questions = (0..count-1).sort_by{rand}.slice(0, @per).collect! do |i| questions.skip(i).first end
+      when 'select'
+        # 显示所有题目
+        @questions = Question.where(kind: @kind, level: @min_level..@max_level)
+      else
+        @questions = Question.where(kind: @kind, level: @min_level..@max_level).page(params[:page]).per(@per)
+      end
+      render json: @questions.map{ |question|
+        {
+          id: question.id.to_s,
+          content: question.content
+        }
+      }
     end
 
     private

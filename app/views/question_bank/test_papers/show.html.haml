@@ -1,0 +1,18 @@
+.page-test_paper
+  %h1= @test_paper.title
+  %p.text-center
+    = "试卷总分为:#{@test_paper.score}分, 考试时间为:#{@test_paper.minutes}分钟"
+
+  - index = 0
+  .sections
+    - @test_paper.sections.each do |section|
+      .section.clearfix{data: {section_id: section.id}}
+        %h3= "第#{index+1}大题"
+
+        %ol.section_questions
+          - section.section_questions.each do |sq|
+            %li
+              - p sq
+              = sq.question.content
+
+        - index += 1

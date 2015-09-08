@@ -1,0 +1,93 @@
+= simple_form_for @test_paper, wrapper: :horizontal_form do |f|
+
+  .form-inputs.clearfix
+    = f.input :title
+    = f.input :score
+    = f.input :minutes
+
+  - index = 0
+  .sections
+    = f.simple_fields_for :sections do |section_form|
+      .section.clearfix{data: {section_id: section_form.object.id, origin_index: index}}
+        %h3= "第#{index+1}大题"
+        .col-xs-11
+          = section_form.input :kind, include_blank: false, input_html: {class: 'kind'}
+          = section_form.input :score, input_html: {class: 'section_score'}
+          = section_form.input :min_level, collection: 1..10, include_blank: false, input_html:{class: 'min_level'}
+          = section_form.input :max_level, collection: 1..10, include_blank: false, input_html:{class: 'max_level'}
+
+          = section_form.input :position, as: :hidden, input_html: {class: 'section_position'}
+          = section_form.input :_destroy, as: :hidden, input_html: {class: 'section_destroy'}
+
+          .form-group.opts
+            %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_#{index}_min_level"} 选择考题
+            .col-sm-3
+              %a.btn.btn-default.btn-random{href: 'javascript:;'} 系统随机
+            .col-sm-3
+              %a.btn.btn-default.btn-choose{href: 'javascript:;'} 手动选题
+
+          .clearfix
+          %ol.section_questions
+            = section_form.simple_fields_for :section_questions do |sq_form|
+              %li
+                .clearfix
+                  = sq_form.object.question.content
+                  %a.question_move_up{href: 'javascript:;'}
+                    %i.glyphicon.glyphicon-arrow-up
+                  %a.question_move_down{href: 'javascript:;'}
+                    %i.glyphicon.glyphicon-arrow-down
+                  %a.question_destroy{href: 'javascript:;'}
+                    %i.glyphicon.glyphicon-remove.red
+                = sq_form.input :question_id, as: :hidden
+                = sq_form.input :position, as: :hidden, input_html: {class: 'question_position'}
+                = sq_form.input :_destroy, as: :hidden, input_html: {class: 'destroy'}
+
+        .col-xs-1
+          %p.text-center
+            %a.section_move_up{href: 'javascript:;'}
+              %i.glyphicon.glyphicon-arrow-up
+              %br
+              上移
+          %p.text-center
+            %a.section_move_down{href: 'javascript:;'}
+              %i.glyphicon.glyphicon-arrow-down
+              %br
+              下移
+          %p.text-center
+            %a.section_destroy{href: 'javascript:;'}
+              %i.glyphicon.glyphicon-remove.red
+              %br
+              删除
+          
+        - index += 1
+
+  .section-actions
+    %a.btn-new-section.btn.btn-default{href: 'javascript:;'} 增加一个大题
+
+  %hr
+  .calculate.col-md-offset-3.col-md-2
+    %span 试卷总分:
+    %span.scores 100
+  .col-md-2
+    %span 已分配分数:
+    %span.total 0
+  .col-md-2
+    %span 未分配分数:
+    %span.surplus 100
+  
+  .clearfix
+
+  %p
+
+  -#.form-actions
+  .col-md-offset-4.col-md-2
+    %a.btn.btn-default{href: 'javascript:;'} 预览试卷
+  .col-md-2
+    = f.button :submit, "生成试卷", class: 'btn-submit'
+
+= render 'modal_random_questions'
+= render 'modal_questions_selector'
+
+= render 'template_section'
+= render 'template_question'
+= render 'template_selector_question'

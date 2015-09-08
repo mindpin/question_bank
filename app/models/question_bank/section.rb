@@ -18,9 +18,9 @@ module QuestionBank
     # 最高难度系数(1 2 3 4 5 6 7 8 9 10)
     field :max_level, :type => Integer
 
-    belongs_to :test_paper, class_name: 'QuestionBank::TestPaper'
+    belongs_to :test_paper, class_name: 'QuestionBank::TestPaper', inverse_of: :sections
 
-    has_many :section_questions, class_name: 'QuestionBank::SectionQuestion'
+    has_many :section_questions, class_name: 'QuestionBank::SectionQuestion', inverse_of: :section
 
     def questions
       section_questions.map(&:question).compact
@@ -34,5 +34,7 @@ module QuestionBank
     validates :score, :presence => true
     validates :min_level, :presence => true
     validates :max_level, :presence => true
+
+    accepts_nested_attributes_for :section_questions, allow_destroy: true
   end
 end
