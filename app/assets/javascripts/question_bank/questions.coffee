@@ -1,8 +1,37 @@
 jQuery(document).on "ready page:load", ->
-  new SingleChoice jQuery('.form-question-single-choice')
-  new MultiChoice jQuery('.form-question-multi-choice')
-  new Mapping jQuery('.form-question-mapping')
-  new Fill jQuery('.form-question-fill')
+
+  if jQuery('.form-question-single-choice').length > 0
+    new SingleChoice jQuery('.form-question-single-choice')
+
+  if jQuery('.form-question-multi-choice').length > 0
+    new MultiChoice jQuery('.form-question-multi-choice')
+
+  if jQuery('.form-question-mapping').length > 0
+    new Mapping jQuery('.form-question-mapping')
+
+  if jQuery('.form-question-fill').length > 0  
+    new Fill jQuery('.form-question-fill')
+
+choice_answer_indexs= (form)->
+  form.find('.question_choice_answer_indexs')
+
+add_choice= ($choice_answer_indexs,next_choice_answer_index,type)->
+  dom = $choice_answer_indexs.find(type).clone()
+  dom.removeClass('hidden')
+  dom.find('input[name="question[choices][]"]').val("")
+  dom.find('input[name="question[choice_answer_indexs][]"]').val(next_choice_answer_index)
+  return dom
+
+choice_answer_indexs_desc= ($choice_answer_indexs,delete_index,last_index,type)->
+  for index in [delete_index..last_index]
+    $radio = $choice_answer_indexs.find(type).eq(index)
+    $radio.find('input:first').val(index - 1)
+
+delete_hidden_choice= (form,type)->
+  $choice_answer_indexs = choice_answer_indexs(form)
+  $choice_answer_indexs.find(type).remove()
+
+
 class SingleChoice
   constructor: (@$sin)->
     @bind_events()
@@ -10,32 +39,28 @@ class SingleChoice
   bind_events: ->
     that = this
 
-    @$sin.on 'click', '.add-choice', ->
-      $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
-      $add = that.$sin.find('.add-choice')
+    @$sin.on 'click', '.add-choice',(evt)=>
+      $choice_answer_indexs = choice_answer_indexs(@$sin)
       next_choice_answer_index = $choice_answer_indexs.find('.radio:not(.hidden)').length
-      dom = $choice_answer_indexs.find('.radio:first').clone()
-      dom.removeClass('hidden')
-      dom.find('input[name="question[choices][]"]').val("")
-      dom.find('input[name="question[choice_answer_indexs][]"]').val(next_choice_answer_index)
-      jQuery(this).before(dom)
+      dom = add_choice($choice_answer_indexs,next_choice_answer_index,'.radio:first')
+      jQuery(event.target).before(dom)
+      
 
-    @$sin.on 'click', '.delete-choice', ->
-      $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
-      $delete_radio = jQuery(this).closest('.radio')
+    @$sin.on 'click', '.delete-choice',(evt)=>
+      $choice_answer_indexs = choice_answer_indexs(@$sin)
+      
+      $delete_radio = jQuery(event.target).closest('.radio')
       delete_index  = parseInt($delete_radio.find('input:first').val())
       last_index    = $choice_answer_indexs.find('.radio:not(.hidden)').length - 1
-      for index in [delete_index..last_index]
-        $radio = $choice_answer_indexs.find('.radio:not(.hidden)').eq(index)
-        $radio.find('input:first').val(index - 1)
+
+      choice_answer_indexs_desc($choice_answer_indexs,delete_index,last_index,'.radio:not(.hidden)')
 
       $delete_radio.remove()
 
 
-    @$sin.on 'submit', (evt)->
-      $choice_answer_indexs = that.$sin.find('.question_choice_answer_indexs')
-      $choice_answer_indexs.find('.radio.hidden').remove()
-
+    @$sin.on 'submit','form', (evt)=>
+      delete_hidden_choice(@$sin,'.radio.hidden')
+    
 class MultiChoice
   constructor: (@$mul)->
     @bind_events()
@@ -43,30 +68,24 @@ class MultiChoice
   bind_events: ->
     that = this
 
-    @$mul.on 'click', ' .add-choice', ->
-      $choice_answer_indexs = that.$mul.find('.question_choice_answer_indexs')
+    @$mul.on 'click', ' .add-choice', (evt)=>
+      $choice_answer_indexs = choice_answer_indexs(@$mul)
       next_choice_answer_index = $choice_answer_indexs.find('.checkbox:not(.hidden)').length
-      dom = $choice_answer_indexs.find('.checkbox:first').clone()
-      dom.removeClass('hidden')
-      dom.find('input[name="question[choices][]"]').val("")
-      dom.find('input[name="question[choice_answer_indexs][]"]').val(next_choice_answer_index)
-      jQuery(this).before(dom)
+      dom = add_choice($choice_answer_indexs,next_choice_answer_index,'.checkbox:first')
+      jQuery(event.target).before(dom)
 
-    @$mul.on 'click', ' .delete-choice', ->
-      $choice_answer_indexs = that.$mul.find('.question_choice_answer_indexs')
+    @$mul.on 'click', ' .delete-choice',(evt)=>
+      $choice_answer_indexs = choice_answer_indexs(@$mul)
 
-      $delete_checkbox = jQuery(this).closest('.checkbox')
+      $delete_checkbox = jQuery(event.target).closest('.checkbox')
       delete_index = parseInt($delete_checkbox.find('input:first').val())
       last_index   = $choice_answer_indexs.find('.checkbox:not(.hidden)').length - 1
-      for index in [delete_index..last_index]
-        $checkbox = $choice_answer_indexs.find('.checkbox:not(.hidden)').eq(index)
-        $checkbox.find('input:first').val(index - 1)
+      choice_answer_indexs_desc($choice_answer_indexs,delete_index,last_index,'.checkbox:not(.hidden)')
 
       $delete_checkbox.remove()
 
-    @$mul.on 'submit','form', (evt)->
-      $choice_answer_indexs = that.$mul.find('.question_choice_answer_indexs')
-      $choice_answer_indexs.find('.checkbox.hidden').remove()
+    @$mul.on 'submit','form', (evt)=>
+      delete_hidden_choice(@$mul,'.checkbox.hidden')
 class Mapping
   constructor: (@$map)->
     @bind_events()
@@ -124,3 +143,4 @@ class Fill
       blank.removeClass("hidden")
       blank.find("input").val("")
       @$fill.find('.answer:last').after(blank)
+
