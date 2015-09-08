@@ -1,7 +1,7 @@
 class MappingMacker
   constructor: (@$elm)->
     @bind_events()
-    @num_filter = "/[0-9]+/"
+    @num_filter = /[0-9]+/
 
   get_mapping_input_name: (delete_btn)->
     delete_btn.closest('.item').find('input').attr('name');
@@ -14,11 +14,14 @@ class MappingMacker
 
   change_items_index_when_delete: (delete_position, current_item_count)->
     for x in [delete_position...current_item_count]
-      @change_item_name_index($(".form-question-mapping").find(".item"), x-1)
+      @change_item_name_index(@$elm.find(".item"), x-1)
 
   regular: (filter, str)->
     regular_deal = new RegExp(filter)
     regular_deal.exec(str)
+    
+    
+
   add_hidden_item_by_first_item: ()->
     @$elm.find('.question_mapping_answer .option-key-field .item:first' ).find('input').val("")
     copy = @$elm.find('.question_mapping_answer .option-key-field .item:first').clone()
@@ -32,8 +35,8 @@ class MappingMacker
     @$elm.find('.option-key-field .hidden' ).find('input').attr('name','question[mapping_answer][0][]')
     @$elm.find('.option-key-field .hidden' ).removeClass('hidden')
 
-  get_last_mapping_input_name: ()->
-    $('.form-question-mapping .item:last input ').attr('name');
+  get_last_mapping_input: ()->
+    @$elm.find('.question_mapping_answer .option-key-field .item:last input')
 
   add_new_mapping_item_by_last_item: (last_item)->
     @$elm.find('.add-items').before(last_item);
@@ -58,13 +61,13 @@ class MappingMacker
       if hidden_item_count == 1
         @hidden_item_remove_class
       else
-        last_mapping_input_name = @get_last_mapping_input_name
+        last_mapping_input_name = @get_last_mapping_input().attr('name')
         last_mapping_input_index = @regular(@num_filter,last_mapping_input_name)
         new_mapping_input_index = Number(last_mapping_input_index)+1
         last_item_copy = @$elm.find(".question_mapping_answer .option-key-field .item:last").clone()
         @add_new_mapping_item_by_last_item(last_item_copy)
-        new_last_mapping_item_input = $(evt.target).closest('.form-question-mapping').find(".question_mapping_answer .option-key-field .item:last input")
-        @add_new_mapping_item_index(new_last_mapping_item_input,last_mapping_input_index)
+        new_last_mapping_item_input = @get_last_mapping_input()
+        @add_new_mapping_item_index(new_last_mapping_item_input,new_mapping_input_index)
         @$elm.find('.question_mapping_answer .option-key-field .item:last').removeClass('hidden')
 
 
