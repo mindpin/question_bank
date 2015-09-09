@@ -10,6 +10,8 @@ class NewTestPaper
     @$template_section = @$el.find('.template.section')
     @$template_selector_question = @$el.find('.template.selector_question')
 
+    @$new_test_paper = @$el.find('#new_test_paper')
+
     @set_scores()
     @_bind()
 
@@ -201,6 +203,13 @@ class NewTestPaper
       if @total == NaN or @total <= 0 or @surplus != 0
         alert('未分配分数不为0')
         return false
+      @$new_test_paper.prop('action', '/test_papers').prop('target', '')
+
+    @$el.on 'click', '.btn-preview', =>
+      if @total == NaN or @total <= 0 or @surplus != 0
+        alert('未分配分数不为0')
+        return false
+      @$new_test_paper.prop('action', '/test_papers/preview').prop('target', '_blank').submit()
 
   set_scores: ->
     @scores = Number @$el.find('#test_paper_score').val()

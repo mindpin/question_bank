@@ -44,6 +44,11 @@ module QuestionBank
       redirect_to test_papers_path
     end
 
+    def preview
+      @test_paper = QuestionBank::TestPaper.new test_paper_params
+      render :show
+    end
+
     private
       def test_paper_params
         params.require(:test_paper).permit(:title, :score, :minutes, :sections_attributes => [:kind, :score, :min_level, :max_level, :position, :id, :_destroy, :section_questions_attributes => [:question_id, :position, :_destroy, :id]])
