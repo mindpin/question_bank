@@ -1,107 +1,133 @@
-jQuery(document).on "ready page:load", ->
-  jQuery('.form-question-single-choice').on 'click', '.add-choice', ->
-    jQuerychoice_answer_indexs = jQuery('.form-question-single-choice .question_choice_answer_indexs')
-    next_choice_answer_index = jQuerychoice_answer_indexs.find('.radio:not(.hidden)').length
-    dom = jQuerychoice_answer_indexs.find('.radio:first').clone()
-    dom.removeClass('hidden')
-    dom.find('input[name="question[choices][]"]').val("")
-    dom.find('input[name="question[choice_answer_indexs][]"]').val(next_choice_answer_index)
-    jQuery(this).before(dom)
+class MappingMacker
+  constructor: (@$elm)->
+    @bind_events()
+    @num_filter = /[0-9]+/
 
-  jQuery('.form-question-single-choice').on 'click', '.delete-choice', ->
-    jQuerychoice_answer_indexs = jQuery('.form-question-single-choice .question_choice_answer_indexs')
-    jQuerydelete_radio = jQuery(this).closest('.radio')
-    delete_index = parseInt(jQuerydelete_radio.find('input:first').val())
-    last_index   = jQuerychoice_answer_indexs.find('.radio:not(.hidden)').length - 1
-    for index in [delete_index..last_index]
-      jQueryradio = jQuerychoice_answer_indexs.find('.radio:not(.hidden)').eq(index)
-      jQueryradio.find('input:first').val(index - 1)
-    jQuerydelete_radio.remove()
+  get_mapping_input_name: (delete_btn)->
+    delete_btn.closest('.item').find('input').attr('name');
 
-  jQuery('.form-question-single-choice').on 'submit', 'form', (evt)->
-    jQuerychoice_answer_indexs = jQuery('.form-question-single-choice .question_choice_answer_indexs')
-    jQuerychoice_answer_indexs.find('.radio.hidden').remove()
+  get_current_item_count: ()->
+    @$elm.find(".question_mapping_answer .option-key-field .item").length
 
-  jQuery('.form-question-multi-choice').on 'click', '.add-choice', ->
-    jQuerychoice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
-    next_choice_answer_index = jQuerychoice_answer_indexs.find('.checkbox:not(.hidden)').length
-    dom = jQuerychoice_answer_indexs.find('.checkbox:first').clone()
-    dom.removeClass('hidden')
-    dom.find('input[name="question[choices][]"]').val("")
-    dom.find('input[name="question[choice_answer_indexs][]"]').val(next_choice_answer_index)
-    jQuery(this).before(dom)
+  change_item_name_index: (item, index)->
+    item.find("input").attr('name','question[mapping_answer]['+index+'][]')
 
-  jQuery('.form-question-multi-choice').on 'click', '.delete-choice', ->
-    jQuerychoice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
-    jQuerydelete_checkbox = jQuery(this).closest('.checkbox')
-    delete_index = parseInt(jQuerydelete_checkbox.find('input:first').val())
-    last_index   = jQuerychoice_answer_indexs.find('.checkbox:not(.hidden)').length - 1
-    for index in [delete_index..last_index]
-      jQuerycheckbox = jQuerychoice_answer_indexs.find('.checkbox:not(.hidden)').eq(index)
-      jQuerycheckbox.find('input:first').val(index - 1)
+  change_items_index_when_delete: (delete_position, current_item_count)->
+    for x in [delete_position...current_item_count]
+      @change_item_name_index(@$elm.find(".item"), x-1)
 
-    jQuerydelete_checkbox.remove()
+  regular: (filter, str)->
+    regular_deal = new RegExp(filter)
+    regular_deal.exec(str)
+    
+    
 
-  jQuery('.form-question-multi-choice').on 'submit', 'form', (evt)->
-    jQuerychoice_answer_indexs = jQuery('.form-question-multi-choice .question_choice_answer_indexs')
-    jQuerychoice_answer_indexs.find('.checkbox.hidden').remove()
+  add_hidden_item_by_first_item: ()->
+    @$elm.find('.question_mapping_answer .option-key-field .item:first' ).find('input').val("")
+    copy = @$elm.find('.question_mapping_answer .option-key-field .item:first').clone()
+    @$elm.find('.question_mapping_answer .option-key-field .item:first').after(copy)
+    @$elm.find('.question_mapping_answer .option-key-field .item:last').addClass('hidden')
 
-  jQuery('.form-question-mapping').on 'click','.delete',->
-    position_atr = jQuery(this).closest('.item').find('input').attr('name');
-    zhengze = new RegExp(/[0-9]+/)
-    position = zhengze.exec(position_atr)
-    item_length = jQuery(".form-question-mapping .item").length
-    for x in [position...item_length]
-      q = x-1
-      jQuery(".form-question-mapping .item").eq(x).find("input").attr('name','question[mapping_answer]['+q+'][]')
-    if item_length==1
-      jQuery(".form-question-mapping .item:first input").val("")
-      fuben = jQuery(".form-question-mapping .item:first").clone()
-      jQuery(".form-question-mapping .item:first").after(fuben)
-      jQuery(".form-question-mapping .item:last").addClass('hidden')
-      jQuery(".form-question-mapping .item:last input").attr('name','question[mapping_answer][0][]')
-    jQuery(this).closest('.item').remove();
+  get_hidden_item_count: ()->
+    @$elm.find('.option-key-field .hidden').length
 
-  jQuery('.form-question-mapping').on 'click','.append',->
-    count_hidden = jQuery('.option-key-field .hidden').length
-    if count_hidden==1
-      jQuery('.option-key-field .hidden input').attr('name','question[mapping_answer][0][]')
-      jQuery('.option-key-field .hidden' ).removeClass('hidden')
-    else
-      shuzi = jQuery('.form-question-mapping .item:last input ').attr('name');
-      zhengze = new RegExp(/[0-9]+/)
-      shuzi = zhengze.exec(shuzi)
-      shuzi = Number(shuzi)+1
-      atr = jQuery(this).closest('.form-question-mapping').find(".item:last").clone()
-      jQuery(this).closest('.add-items').before(atr);
-      jQuery(this).closest('.form-question-mapping').find(".item:last").removeClass('hidden')
-      jQuery(this).closest('.form-question-mapping').find(".item:last input").attr('name','question[mapping_answer]['+shuzi+'][]')
-      jQuery(this).closest('.form-question-mapping').find(".item:last input").val('')
+  hidden_item_remove_class: ()->
+    @$elm.find('.option-key-field .hidden' ).find('input').attr('name','question[mapping_answer][0][]')
+    @$elm.find('.option-key-field .hidden' ).removeClass('hidden')
 
-  jQuery('.form-question-mapping').on 'submit','form',->
-    jQuery('.form-question-mapping .answer .hidden').remove()
+  get_last_mapping_input: ()->
+    @$elm.find('.question_mapping_answer .option-key-field .item:last input')
 
-  jQuery('.form-question-fill').on 'click','.insert',->
-    str = jQuery('.form-question-fill').find("[name='question[content]']").val();
-    str = str+" ___ "
-    jQuery('.form-question-fill').find("[name='question[content]']").val(str);
+  add_new_mapping_item_by_last_item: (last_item)->
+    @$elm.find('.add-items').before(last_item);
 
-  jQuery('.form-question-fill').on 'click','.delete ',->
-    count = jQuery('.form-question-fill .answer').length
-    if count ==1
-      fuben = jQuery(this).closest(".answer").clone()
-      fuben.addClass('hidden')
-      jQuery(this).closest(".answer").before(fuben)
-    jQuery(this).closest(".answer").remove()
+  add_new_mapping_item_index: (new_item,new_item_index)->
+    new_item.attr('name','question[mapping_answer]['+new_item_index+'][]')
+    new_item.val('')
 
-  jQuery('.form-question-fill').on 'click','.append',->
-    blank = jQuery('.form-question-fill .answer:last').clone();
+  bind_events: ->
+    @$elm.on 'click', '.delete', (evt)=>
+      mapping_input_name = @get_mapping_input_name($(evt.target))
+      delete_position = @regular(@num_filter, mapping_input_name)
+      item_count = @get_current_item_count()
+      if item_count == 1
+        @add_hidden_item_by_first_item()
+      else
+        @change_items_index_when_delete(delete_position, item_count)
+      $(evt.target).closest('.question_mapping_answer .option-key-field .item').remove();
+
+    @$elm.on 'click', '.append', (evt)=>
+      hidden_item_count = @get_hidden_item_count
+      if hidden_item_count == 1
+        @hidden_item_remove_class
+      else
+        last_mapping_input_name = @get_last_mapping_input().attr('name')
+        last_mapping_input_index = @regular(@num_filter,last_mapping_input_name)
+        new_mapping_input_index = Number(last_mapping_input_index)+1
+        last_item_copy = @$elm.find(".question_mapping_answer .option-key-field .item:last").clone()
+        @add_new_mapping_item_by_last_item(last_item_copy)
+        new_last_mapping_item_input = @get_last_mapping_input()
+        @add_new_mapping_item_index(new_last_mapping_item_input,new_mapping_input_index)
+        @$elm.find('.question_mapping_answer .option-key-field .item:last').removeClass('hidden')
+
+
+class FillMacker
+  constructor: (@$elm)->
+    @bind_events()
+  make_new_blank_dom: ()->
+    blank = @$elm.find('.answer:last').clone();
     blank.removeClass("hidden")
     blank.find("input").val("")
-    jQuery('.form-question-fill .answer:last').after(blank)
-    jQuery('.form-question-fill .append').unbind();
+    blank
 
-  jQuery('.form-question-fill').on 'submit','form',->
-    jQuery('.form-question-fill .answer.hidden').remove()
+  add_new_blank: (new_blank)->
+    @$elm.find(".question_fill_answer .answer:last").after(new_blank) 
+  
+  make_new_atr: ()->
+    @$elm.find("[name='question[content]']").val()+" ___ "
 
+  add_new_atr_in_blank: (str)->
+    @$elm.find("[name='question[content]']").val(str);
 
+  make_hidden_answer_when_answer_is_one:(delete_btn)->
+    copy = delete_btn.closest(".answer").clone()
+    copy.addClass('hidden')
+    copy.find('input').attr('value','')
+    copy.find('input').val('')
+    $(evt.target).closest(".answer").before(copy)
+
+  get_answer_which_is_not_hidden_count:()->
+    @$elm.find('.question_fill_answer .answer:not(.hidden)').length
+
+  remove_answer_which_is_not_hidden:()->
+    @$elm.find('.question_fill_answer .answer.hidden').remove()
+
+  get_answer_which_is_not_hidden_count:()->
+    @$elm.find('.question_fill_answer .answer').length
+
+  bind_events: ->
+    @$elm.on 'click', '.append', =>
+      new_blank_dom = @make_new_blank_dom();
+      @add_new_blank(new_blank_dom)   
+
+    @$elm.on 'click', '.insert', =>
+      new_atr_in_blank = @make_new_atr()
+      @add_new_atr_in_blank(new_atr_in_blank)
+
+    @$elm.on 'click', '.delete',(evt)=>
+      answer_input_count = @get_answer_input_count
+      if answer_input_count == 1
+        @make_hidden_answer_when_answer_is_one($(evt.target))
+      $(evt.target).closest(".answer").remove()
+
+    @$elm.on 'submit', 'form', =>
+      answer_which_is_not_hidden_count = @get_answer_which_is_not_hidden_count
+      if answer_which_is_not_hidden_count > 0
+        @remove_answer_which_is_not_hidden()
+
+$(document).on "ready page:load", ->
+  if $('.form-question-fill').length > 0
+    new FillMacker $('.form-question-fill')
+
+  if $('.form-question-mapping').length > 0
+    new MappingMacker $('.form-question-mapping')
