@@ -14,14 +14,12 @@ class MappingMacker
 
   change_items_index_when_delete: (delete_position, current_item_count)->
     for x in [delete_position...current_item_count]
-      @change_item_name_index(@$elm.find(".item"), x-1)
+      @change_item_name_index(@$elm.find(".item").eq(x), x-1)
 
   regular: (filter, str)->
     regular_deal = new RegExp(filter)
     regular_deal.exec(str)
     
-    
-
   add_hidden_item_by_first_item: ()->
     @$elm.find('.question_mapping_answer .option-key-field .item:first' ).find('input').val("")
     copy = @$elm.find('.question_mapping_answer .option-key-field .item:first').clone()
@@ -57,9 +55,9 @@ class MappingMacker
       $(evt.target).closest('.question_mapping_answer .option-key-field .item').remove();
 
     @$elm.on 'click', '.append', (evt)=>
-      hidden_item_count = @get_hidden_item_count
+      hidden_item_count = @get_hidden_item_count()
       if hidden_item_count == 1
-        @hidden_item_remove_class
+        @hidden_item_remove_class()
       else
         last_mapping_input_name = @get_last_mapping_input().attr('name')
         last_mapping_input_index = @regular(@num_filter,last_mapping_input_name)
@@ -74,6 +72,7 @@ class MappingMacker
 class FillMacker
   constructor: (@$elm)->
     @bind_events()
+
   make_new_blank_dom: ()->
     blank = @$elm.find('.answer:last').clone();
     blank.removeClass("hidden")
@@ -94,16 +93,13 @@ class FillMacker
     copy.addClass('hidden')
     copy.find('input').attr('value','')
     copy.find('input').val('')
-    $(evt.target).closest(".answer").before(copy)
+    delete_btn.closest(".answer").before(copy)
 
   get_answer_which_is_not_hidden_count:()->
     @$elm.find('.question_fill_answer .answer:not(.hidden)').length
 
   remove_answer_which_is_not_hidden:()->
     @$elm.find('.question_fill_answer .answer.hidden').remove()
-
-  get_answer_which_is_not_hidden_count:()->
-    @$elm.find('.question_fill_answer .answer').length
 
   bind_events: ->
     @$elm.on 'click', '.append', =>
@@ -115,13 +111,13 @@ class FillMacker
       @add_new_atr_in_blank(new_atr_in_blank)
 
     @$elm.on 'click', '.delete',(evt)=>
-      answer_input_count = @get_answer_input_count
+      answer_input_count = @$elm.find('.question_fill_answer .answer').length
       if answer_input_count == 1
         @make_hidden_answer_when_answer_is_one($(evt.target))
-      $(evt.target).closest(".answer").remove()
+      $(evt.target).closest(".question_fill_answer .answer").remove()
 
     @$elm.on 'submit', 'form', =>
-      answer_which_is_not_hidden_count = @get_answer_which_is_not_hidden_count
+      answer_which_is_not_hidden_count = @get_answer_which_is_not_hidden_count()
       if answer_which_is_not_hidden_count > 0
         @remove_answer_which_is_not_hidden()
 
