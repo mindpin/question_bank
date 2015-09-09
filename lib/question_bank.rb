@@ -14,6 +14,9 @@ require 'question_bank/import_question/parse_essay_line'
 require 'question_bank/import_question/parse_fill_line'
 require 'question_bank/import_question/parse_mapping_line'
 require 'question_bank/import_question/parse_kind_error_line'
+
+# 数字转中文数字
+require 'question_bank/num_cn_conv'
 Dir.glob(File.join(File.expand_path("../../",__FILE__), "app/models/question_bank/concerns/**.rb")).each do |file|
   require file
 end

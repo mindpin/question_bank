@@ -1,18 +1,40 @@
+:ruby
+  num_cn_conv = QuestionBank::NumCnConv.new
 .page-test_paper
-  %h1= @test_paper.title
-  %p.text-center
-    = "试卷总分为:#{@test_paper.score}分, 考试时间为:#{@test_paper.minutes}分钟"
+  %h1.text-center= @test_paper.title
+  .text-center
+    = "试卷满分 #{@test_paper.score} 分"
+    = "考试时间 #{@test_paper.minutes} 分钟"
 
-  - index = 0
   .sections
-    - @test_paper.sections.each do |section|
+    - @test_paper.sections.each_with_index do |section, section_index|
       .section.clearfix{data: {section_id: section.id}}
-        %h3= "第#{index+1}大题"
+        %h3
+          = num_cn_conv.num2cn section_index + 1
+          、
+          = section.kind.text
+          = " (共3题，每题5分)"
 
         %ol.section_questions
-          - section.section_questions.each do |sq|
+          - section.section_questions.each_with_index do |sq, sq_index|
+            - question = sq.question
             %li
-              - p sq
-              = sq.question.content
-
-        - index += 1
+              .question_content= question.content
+              .answers
+                - if question.kind == "single_choice"
+                  - question.choices.each_with_index do |choice_code, choice_index|
+                    .answer.radio
+                      %label
+                        %input{type:"radio", name: "#{section_index}_#{sq_index}"}
+                          = english_choices[choice_index]
+                          、
+                          = choice_code
+                - if question.kind == "multi_choice"
+                  - question.choices.each_with_index do |choice_code, choice_index|
+                    .answer.checkbox
+                      %label
+                        %input{type:"checkbox"}
+                          = english_choices[choice_index]
+                          、
+                          = choice_code
+              %p
