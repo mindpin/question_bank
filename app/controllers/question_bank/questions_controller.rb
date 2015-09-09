@@ -2,27 +2,27 @@ module QuestionBank
   class QuestionsController < QuestionBank::ApplicationController
     include QuestionBank::ApplicationHelper
     def new_single_choice
-      @question = Question.new
+      _new("single_choice")
     end
 
     def new_multi_choice
-      @question = Question.new
+      _new("multi_choice")
     end
 
     def new_bool
-      @question = Question.new
+      _new("bool")
     end
 
     def new_mapping
-      @question = Question.new
+      _new("mapping")
     end
 
     def new_essay
-      @question = Question.new
+      _new("essay")
     end
 
     def new_fill
-      @question = Question.new
+      _new("fill")
     end
 
     def index
@@ -91,6 +91,11 @@ module QuestionBank
     end
 
     private
+      def _new(kind)
+        @question = Question.new(:kind => kind)
+      end
+
+
       def question_bool_params
         params.require(:question).permit(:kind, :content, :bool_answer, :analysis, :level, :enabled)
       end
