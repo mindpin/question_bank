@@ -29,8 +29,9 @@ class Function
       $radio.find('input:first').val(index - 1)
 
   delete_hidden_choice: (form,type)->
-    $choice_answer_indexs = choice_answer_indexs(form)
+    $choice_answer_indexs = form.find('.question_choice_answer_indexs')
     $choice_answer_indexs.find(type).remove()
+
 
 
 class SingleChoice extends Function
@@ -57,9 +58,9 @@ class SingleChoice extends Function
 
       $delete_radio.remove()
 
-
-    @$sin.on 'submit','form', (evt)=>
+    jQuery(document).on 'submit', '.form-question-single-choice form', (evt)=>
       @delete_hidden_choice(@$sin,'.radio.hidden')
+
     
 class MultiChoice extends Function
   constructor: (@$mul)->
@@ -79,12 +80,18 @@ class MultiChoice extends Function
       $delete_checkbox = jQuery(event.target).closest('.checkbox')
       delete_index = parseInt($delete_checkbox.find('input:first').val())
       last_index   = $choice_answer_indexs.find('.checkbox:not(.hidden)').length - 1
-      
+
       @choice_answer_indexs_desc($choice_answer_indexs,delete_index,last_index,'.radio:not(.hidden)')
 
       $delete_checkbox.remove()
+    
+    jQuery(document).on 'submit', '.form-question-multi-choice form', (evt)=>
+      $choice_answer_indexs = @choice_answer_indexs(@$mul)
+      checkbox_count = jQuery('.form-question-multi-choice .question_choice_answer_indexs .checkbox').length
+      next_choice_answer_index = $choice_answer_indexs.find('.checkbox:not(.hidden)').length
+      dom = @add_choice($choice_answer_indexs,next_choice_answer_index,'.checkbox:first')
+      jQuery('.form-question-multi-choice .add-choice').before(dom) if (checkbox_count == 2)
 
-    @$mul.on 'submit','form', (evt)=>
       @delete_hidden_choice(@$mul,'.checkbox.hidden')
 
 
