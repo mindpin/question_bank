@@ -21,7 +21,8 @@
             %li
               .question_content= question.content
               .answers
-                - if question.kind == "single_choice"
+                - case question.kind 
+                - when "single_choice"
                   - question.choices.each_with_index do |choice_code, choice_index|
                     .answer.radio
                       %label
@@ -29,7 +30,7 @@
                           = english_choices[choice_index]
                           、
                           = choice_code
-                - if question.kind == "multi_choice"
+                - when "multi_choice"
                   - question.choices.each_with_index do |choice_code, choice_index|
                     .answer.checkbox
                       %label
@@ -37,4 +38,34 @@
                           = english_choices[choice_index]
                           、
                           = choice_code
+                - when "bool"
+                  .answer
+                    %label
+                      %input{type:"radio", name: "#{section_index}_#{sq_index}", value: 'true'}
+                      对
+                    %label
+                      %input{type:"radio", name: "#{section_index}_#{sq_index}", value: 'false'}
+                      错
+                - when "mapping"
+                  - question.mapping_answer.each_with_index do |mapping, index|
+                    .answer
+                      = index + 1
+                      \. 
+                      = mapping[0]
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      = english_choices[index]
+                      \. 
+                      = mapping[1]
+
+                - when "essay"
+                  .answer
+                    %textarea.form-control{name: "#{section_index}_#{sq_index}"}
+
+                - when "fill"
+                  .answer
+                    - question.fill_answer.length.times do |index|
+                      %label
+                        = english_choices[index]
+                        %input{type: 'text', name: "#{section_index}_#{sq_index}_#{index}", id:  "#{section_index}_#{sq_index}_#{index}"}
+                      %br
               %p
