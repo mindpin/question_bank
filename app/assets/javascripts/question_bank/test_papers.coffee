@@ -40,7 +40,7 @@ class NewTestPaper
       $this = jQuery(this)
       $section = $this.closest('.section')
 
-      $sections = $section.parent().find('.section')
+      $sections = $section.parent().find('.section:not(.hidden)')
       index = $sections.index($section)
       if index > 0 
         $prev = jQuery($sections.get(index - 1))
@@ -61,11 +61,11 @@ class NewTestPaper
 
     @$el.on 'click', '.section_move_down', ->
       $this = jQuery(this)
-      $section = $this.parent().parent().parent()
+      $section = $this.closest('.section')
 
-      $section.insertAfter($section.next()) if $section.next().length > 0 and !$section.next().hasClass('empty')
+      #$section.insertAfter($section.next()) if $section.next().length > 0 and !$section.next().hasClass('empty')
 
-      $sections = $section.parent().find('.section')
+      $sections = $section.parent().find('.section:not(.hidden)')
       index = $sections.index($section)
       $next = jQuery($sections.get(index + 1))
       if $next
