@@ -1,4 +1,22 @@
 .questionuesstion-index
+  .btn-group
+    %button{:class => "btn btn-default dropdown-toggle", :type => "button", :"data-toggle"=> "dropdown", :"aria-haspopup" => "true", :"aria-expanded" => "false"}
+      创建题
+      %span{:class =>"caret"}
+    %ul{:class => "dropdown-menu"}
+      %li
+        %a{:href=>"/questions/new_single_choice"} 单选题
+      %li
+        %a{:href=>"/questions/new_multi_choice"} 多选题
+      %li
+        %a{:href=>"/questions/new_bool"} 判断题
+      %li
+        %a{:href=>"/questions/new_fill"} 填空题
+      %li
+        %a{:href=>"/questions/new_essay"} 论述题
+      %li
+        %a{:href=>"/questions/new_mapping"} 连线题
+
   %table{:class=>"table table-striped"}
     %thead
       %tr
