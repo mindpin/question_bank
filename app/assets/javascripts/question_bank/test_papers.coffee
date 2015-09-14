@@ -38,17 +38,26 @@ class NewTestPaper
 
     @$el.on 'click', '.section_move_up', ->
       $this = jQuery(this)
-      $section = $this.parent().parent().parent()
+      $section = $this.closest('.section')
 
       $sections = $section.parent().find('.section')
       index = $sections.index($section)
       if index > 0 
         $prev = jQuery($sections.get(index - 1))
-        $section.insertBefore($prev) if $prev and !$prev.hasClass('empty')
+        if $prev and !$prev.hasClass('empty')
+          # 移动前保存数据
+          that.save_section_data($section)
+          that.save_section_data($prev)
 
-        # position 需要做调整
-        that.reset_section_positions()
-        that.reset_section_title()
+          $section.insertBefore($prev)
+
+          # position 需要做调整
+          that.reset_section_positions()
+          that.reset_section_title()
+
+          # 移动后恢复数据
+          that.load_section_data($section)
+          that.load_section_data($prev)
 
     @$el.on 'click', '.section_move_down', ->
       $this = jQuery(this)
@@ -60,11 +69,19 @@ class NewTestPaper
       index = $sections.index($section)
       $next = jQuery($sections.get(index + 1))
       if $next
-        $section.insertAfter($next) 
+        # 移动前保存数据
+        that.save_section_data($section)
+        that.save_section_data($next)
+
+        $section.insertAfter($next)
 
         # position 需要做调整
         that.reset_section_positions()
         that.reset_section_title()
+
+        # 移动后读取数据
+        that.load_section_data($section)
+        that.load_section_data($next)
 
     @$el.on 'click', '.section_destroy', ->
       $this = jQuery(this)
@@ -319,6 +336,20 @@ class NewTestPaper
         origin_index = $section.data('origin-index')
         $id = $section.parent().find("#test_paper_sections_attributes_#{origin_index}_id")
         $id.prop 'name', $id.prop('name').replace(/(sections_attributes\]\[)\d+\]/g, "$1#{index}]") if $id.length > 0
+
+  save_section_data: ($section) ->
+    if $section.length > 0
+      $section.data 'section-kind', $section.find('.kind.form-control').val()
+      $section.data 'section-max-level', $section.find('.max_level.form-control').val()
+      $section.data 'section-min-level', $section.find('.min_level.form-control').val()
+      $section.data 'section-score', $section.find('.section_score.form-control').val()
+
+  load_section_data: ($section) ->
+    if $section.length > 0
+      $section.find('.kind.form-control').val $section.data('section-kind')
+      $section.find('.max_level.form-control').val $section.data('section-max-level')
+      $section.find('.min_level.form-control').val $section.data('section-min-level')
+      $section.find('.section_score.form-control').val $section.data('section-score')
 
 jQuery(document).on 'ready page:load', ->
   new NewTestPaper(jQuery('.form-test_paper'), {}) if jQuery('.form-test_paper').length > 0
