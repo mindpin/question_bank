@@ -13,7 +13,7 @@
           = num_cn_conv.num2cn section_index + 1
           、
           = section.kind.text
-          = " (共3题，每题5分)"
+          = " (共#{section.section_questions.count}题，每题#{section.score}分)"
 
         %ol.section_questions
           - section.section_questions.each_with_index do |sq, sq_index|
