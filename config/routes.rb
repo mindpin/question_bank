@@ -15,10 +15,4 @@ QuestionBank::Engine.routes.draw do
   resources :test_papers do
     post :preview, on: :collection
   end
-
-  resources :question_record do
-    resources :user
-    resources :questions
-  end
-
 end
