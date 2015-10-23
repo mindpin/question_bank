@@ -3,13 +3,10 @@ module QuestionBank
     include Mongoid::Document
     include Mongoid::Timestamps
 
-    # field :question_id, type: String          # 题目的外键关联
-    # field :user_id, type: String              #做题用户的外键关联
     field :is_correct, type: Boolean          # 题目是否正确
 
     field :bool_answer, type: Boolean         # 判断题
-    field :single_choice_answer, type: Array  # 单选题
-    field :multi_choice_answer , type: Array  # 多选题
+    field :choice_answer , type: Array        # 选择题
     field :essay_answer, type: String         # 论述题
     field :fill_answer, type: Array           # 填空题
     field :mapping_answer, type: Array        # 连线题
@@ -27,11 +24,43 @@ module QuestionBank
             if bool_answer.blank?
                 errors.add(:bool_answer, "判断题不能为空")
             end
+
+            if !essay_answer.blank?
+                errors.add(:essay_answer, "论述题必须为空")
+            end
+
+            if !fill_answer.blank?
+                errors.add(:fill_answer, "填空题必须为空")
+            end
+
+            if !mapping_answer.blank?
+                errors.add(:mapping_answer, "连线题必须为空")
+            end
+
+            if !choice_answer.blank?
+                errors.add(:choice_answer, "选择题必须为空")
+            end
         end
 
         if question_kind == "essay_answer"
             if essay_answer.blank?
                 errors.add(:essay_answer, "论述题不能为空")
+            end
+
+            if !bool_answer.blank?
+                errors.add(:bool_answer, "判断题必须为空")
+            end
+
+            if !fill_answer.blank?
+                errors.add(:fill_answer, "填空题必须为空")
+            end
+
+            if !mapping_answer.blank?
+                errors.add(:mapping_answer, "连线题必须为空")
+            end
+
+            if !choice_answer.blank?
+                errors.add(:choice_answer, "选择题必须为空")
             end
         end
 
@@ -39,17 +68,65 @@ module QuestionBank
             if fill_answer.blank?
                 errors.add(:fill_answer, "填空题不能为空")
             end
+
+            if !essay_answer.blank?
+                errors.add(:essay_answer, "论述题不能为空")
+            end
+
+            if !bool_answer.blank?
+                errors.add(:bool_answer, "判断题必须为空")
+            end
+
+            if !mapping_answer.blank?
+                errors.add(:mapping_answer, "连线题必须为空")
+            end
+
+            if !choice_answer.blank?
+                errors.add(:choice_answer, "选择题必须为空")
+            end 
         end
 
         if question_kind == "mapping_answer"
             if mapping_answer.blank?
                 errors.add(:mapping_answer, "连线题不能为空")
             end
+
+            if !essay_answer.blank?
+                errors.add(:essay_answer, "论述题不能为空")
+            end
+
+            if !bool_answer.blank?
+                errors.add(:bool_answer, "判断题必须为空")
+            end
+
+            if !fill_answer.blank?
+                errors.add(:fill_answer, "填空题必须为空")
+            end
+
+            if !choice_answer.blank?
+                errors.add(:choice_answer, "选择题必须为空")
+            end
         end
 
         if question_kind == "choice_answer"
             if choice_answer.blank?
                 errors.add(:choice_answer, "连线题不能为空")
+            end
+
+            if !mapping_answer.blank?
+                errors.add(:mapping_answer, "连线题不能为空")
+            end
+
+            if !essay_answer.blank?
+                errors.add(:essay_answer, "论述题不能为空")
+            end
+
+            if !bool_answer.blank?
+                errors.add(:bool_answer, "判断题必须为空")
+            end
+
+            if !fill_answer.blank?
+                errors.add(:fill_answer, "填空题必须为空")
             end
         end
 
