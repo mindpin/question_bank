@@ -11,8 +11,14 @@ QuestionBank::Engine.routes.draw do
       get :search
     end
   end
+
   resources :test_papers do
     post :preview, on: :collection
   end
-  resources :question_record
+
+  resources :question_record do
+    resources :user
+    resources :questions
+  end
+
 end

@@ -2,22 +2,37 @@ module QuestionBank
   class QuestionRecord
     include Mongoid::Document
     include Mongoid::Timestamps
-    
-    field :is_correct, type: Boolean
-    field :bool_answer, type: Boolean  # 判断题
-    field :choice_answer, type: Array  # 选择题(单选和多选)
-    field :essay_answer, type: String  # 论述题
-    field :fill_answer, type: Array    # 填空题
-    field :mapping_answer, type: Array # 连线题
+    extend Enumerize
+    include Kaminari::MongoidExtension::Document
+    include QuestionBank::ChoiceMethods
+    include QuestionBank::SingleChoiceMethods
+    include QuestionBank::MultiChoiceMethods
+    include QuestionBank::BoolMethods
+    include QuestionBank::EssayMethods
+    include QuestionBank::FillMethods
+    include QuestionBank::MappingMethods
 
-    belongs_to :question, class_name: 'QuestionBank::Question'
+    KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping]
+    enumerize :kind, in: KINDS
+
+    field :question_id, type: String   # 题目的外键关联
+    field :user_id, type: String   #做题用户的外键关联
+    field :is_correct, type: Boolean   # 题目是否正确
+
+    belongs_to :questions, class_name: 'QuestionBank::Question' 
     belongs_to :user, class_name: 'User'
 
-    validates_each :bool_answer, :choice_answer, :essay_answer, :fill_answer, :mapping_answer do |record, attr, value|
-        record.errors.add attr, "attribute is wrong" 
+    validate :validates_type
+
+    def validates_type
+        @question = QuestionBank::Question.where(question_id: question_id)
+        question_kind = @question.kind
+        KINDS.each do |k|
+            if k != question_kind
+                k = nil
+            end
+        end
     end
 
-
-
-  end
+  end 
 end
