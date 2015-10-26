@@ -193,30 +193,6 @@ module QuestionBank
                 errors.add(:mapping_answer, "连线题答案格式不正确")
             end
         end
-    #     @question_kind = QuestionBank::Question.where( self.question_id).kind
-    #     if @question_kind == bool_answer && ( bool_answer != true || bool_answer != false )
-    #         errors.add(:bool_answer, "判断题答案格式不正确")
-    #     end
-
-    #     if @question_kind == single_choice_answer && single_choice_answer.count != 1
-    #         errors.add(:single_choice_answer, "单选题答案格式不正确")
-    #     end
-
-    #     if @question_kind == multi_choice_answer && multi_choice_answer.count < 2
-    #         errors.add(:multi_choice_answer, "多选题答案格式不正确")
-    #     end
-
-    #     if @question_kind == essay_answer && !essay_answer.is_a?(String)
-    #         errors.add(:essay_answer, "论述题答案格式不正确")
-    #     end
-
-    #     if @question_kind == fill_answer && ( @question_kind.count != fill_answer.count )
-    #         errors.add(:fill_answer, "填空题答案格式不正确")
-    #     end
-
-    #      if @question_kind == mapping_answer && ( @question_kind.count != mapping_answer.count )
-    #         errors.add(:mapping_answer, "连线题答案格式不正确")
-    #     end
     end
 
     def question_id=(question_id)
