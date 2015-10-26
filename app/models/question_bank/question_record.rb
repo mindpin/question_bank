@@ -194,14 +194,5 @@ module QuestionBank
             end
         end
     end
-
-    def question_id=(question_id)
-      @question_id = question_id
-    end
-
-    def record_answer_ary
-        record_answer = [ bool_answer, single_choice_answer, multi_choice_answer, essay_answer, fill_answer, mapping_answer]
-        return record_answer
-    end
   end 
 end
