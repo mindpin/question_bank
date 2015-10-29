@@ -12,6 +12,5 @@ module QuestionBank
         p 'success'
       end
     end
-    self.import
   end
 end
