@@ -1,0 +1,98 @@
+{
+  "questions": [
+    {
+      "kind": "bool",
+      "level": 1,
+      "content": "１、作为一名银行的客户经理或一线柜员，必须树立良好的营销意识，具备沟通和销售的基本技能，掌握得当的营销技巧和表达艺术。",
+      "bool_answer": true
+    }, 
+
+    {
+      "kind": "bool",
+      "level": 1,
+      "content": "２、现代商业银行的网点必须由原本以服务营销为主向以交易处理为主转变。",
+      "bool_answer": false
+    },
+
+    {
+      "kind": "bool",
+      "level": 1,
+      "content": "３、您打算把您的产品或者服务销售给谁，谁有可能购买您的产品，谁就是您的潜在客户，它具备两个要素：用得着和买得起",
+      "bool_answer": true
+    },
+
+    {
+      "kind": "bool",
+      "level": 1,
+      "content": "４、寻找潜在客户遵循的“MAN”原则中“Ａ”： AUTHORITY，代表购买“决定权”。该对象对购买行为有决定、建议或反对的权力。",
+      "bool_answer": true
+    },
+
+    {
+      "kind": "bool",
+      "level": 1,
+      "content": "５、我们一般从信用状况和支付计划两方面判断潜在客户的购买能力。",
+      "bool_answer": true
+    },
+
+    {
+      "kind": "single_choice",
+      "level": 1,
+      "content": "１、销售流程的各个环节包括：　　　　、有效拉近与客户距离、确认客户需求、成功说服客户、异议处理以及最终提供满意方案等",
+      "choice_answer": [
+        ["如何寻找客户", true],
+        ["了解自己银行的产品", false],
+        ["加强服务意识", false],
+        ["制定销售计划", false]
+      ]
+    },
+
+    {
+      "kind": "multi_choice",
+      "level": 1,
+      "content": "１、判断客户购买欲望的大小，包括以下　　　　检查要点。",
+      "choice_answer": [
+        ["对产品购入的关心程度", true],
+        ["是否能符合各项需求 ", true],
+        ["对产品是否信赖", false],
+        ["对本银行是否有良好的印象", false]
+      ]
+    },
+
+    {
+      "kind": "multi_choice",
+      "level": 1,
+      "content": "２、寻找潜在客户的途径包括　　　　等。",
+      "choice_answer": [
+        ["亲戚或朋友关系", true],
+        ["同事关系 ", true],
+        ["师生关系", true],
+        ["老乡关系", true]
+      ]
+    },
+
+    {
+      "kind": "single_choice",
+      "level": 1,
+      "content": "３０、以下说法哪一种是错误的？　　　　。",
+      "choice_answer": [
+        ["客户异议是您在销售过程中的任何一个举动，客户对您的不赞同、提出质疑或异议。 ", false],
+        ["异议都是因客户本身而产生，与客户经理无关。 ", true],
+        ["编制标准应答语是处理异议一种比较好的方法。", false],
+        ["处理异议的关键在于：刚开始对异议做出反应时，要让客户知道你关切且想多听听他的意见。", false]
+      ]
+    },
+
+    {
+      "kind":"mapping",
+      "level": 1,
+      "content": "连接首都",
+      "mapping_answer": [
+        ["日本","东京"],
+        ["法国","巴黎"],
+        ["俄罗斯","莫斯科"]
+      ]
+    }
+
+  ]
+}
