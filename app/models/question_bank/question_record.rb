@@ -11,15 +11,19 @@ module QuestionBank
     field :fill_answer, type: Array           # 填空题
     field :mapping_answer, type: Array        # 连线题
 
-    belongs_to :question
+    belongs_to :questions
     belongs_to :user
 
-    validate :validates_answer_kind
-    validate :validates_answer_format
-    # validates :choice_answer, :fill_answer, :mapping_answer, array: { inclusion: { in: %w{ ruby rails } }}
+    validate :validate_kind_and_format
+
+    def validate_kind_and_format
+        self.validates_answer_kind
+        self.validates_answer_format
+    end
+
     # 校验类型
     def validates_answer_kind
-        question_kind = QuestionBank::Question.where(self.question).kind
+        question_kind = QuestionBank::Question.find(self.questions.id).kind
         if question_kind == "bool"
             if bool_answer.blank?
                 errors.add(:bool_answer, "判断题不能为空")
@@ -155,44 +159,60 @@ module QuestionBank
 
     # 校验格式
     def validates_answer_format
-        question_kind = QuestionBank::Question.where(self.question).kind
-        if question_kind == "bool"
-            if bool_answer != true || bool_answer != false
-                errors.add(:bool_answer, "判断题答案格式不正确")
-            end
-        end
-
+        question_kind = QuestionBank::Question.find( self.questions.id).kind
         if question_kind == "single_choice"
-            if choice_answer_indexs.count != 1 && self.choice_answer.is_a?
+            if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count != 1
                 errors.add(:single_choice_answer, "单选题答案格式不正确")
             end
         end
 
         if question_kind == "multi_choice"
-            if choice_answer_indexs.count < 2 && self.choice_answer.is_a?
+            # question_choice_answer = QuestionBank::Question.find(self.question.id).choice_answer
+            if self.choice_answer.map { |item| item.count == 2 && item.is_a?(Array) && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count < 2
                 errors.add(:multi_choice_answer, "多选题答案格式不正确")
             end
-        end
 
-        if question_kind == "essay"
-            if !essay_answer.is_a?(String)
-                errors.add(:essay_answer, "论述题答案格式不正确")
-            end
+            # 做题记录是记录做题者的做题情况的（我自己理解）
+            # 在这里我只需要判定为多选时其答案数不能小于两个
+            # 如果我判定做题者所填写的答案与答案数目不相符时，我认为是相当
+            # 于告诉了做题者的答案（待确认...）
+            # if choice_answer_indexs.count != question_choice_answer.count && choice_answer_indexs.count < 2 
+            #     errors.add(:multi_choice_answer, "多选题的答案不符")
+            # end
         end
 
         if question_kind == "fill"
-            question_fill_answer = QuestionBank::Question.where(self.question).fill_answer
-            if self.fill_answer.is_a? && (question_fill_answer.count != fill_answer.count)
+            if !self.fill_answer.is_a?(Array) || (self.fill_count != self.fill_answer.count)
                 errors.add(:fill_answer, "填空题答案格式不正确")
             end
         end
 
         if question_kind == "mapping"
-            question_mapping_answer = QuestionBank::Question.where( self.questions ).mapping_answer
-            if (question_mapping_answer.count != mapping_answer.count) || (self.mapping_answer.map { |m| m.map { |ma| ma[0].blank? && ma[1].blank? }.uniq == true }.uniq == true )
+            question_mapping_answer = QuestionBank::Question.find( self.questions.id ).mapping_answer
+            if self.mapping_answer.map { |item| !item.is_a?(Array) || item.count != 2 || !item[0].is_a?(String) || !item[1].is_a?(String) } || self.mapping_answer.count != question_mapping_answer.count  
                 errors.add(:mapping_answer, "连线题答案格式不正确")
             end
         end
     end
-  end 
+
+    def choice_answer_indexs
+      return @choice_answer_indexs if !@choice_answer_indexs.blank?
+
+      return [] if self.choice_answer.blank?
+
+      indexs = []
+      self.choice_answer.map {|item| item[1]}.flatten.each_with_index do |val, index|
+        indexs << index if val
+      end
+      indexs
+    end
+
+    def choice_answer_indexs=(choice_answer_indexs)
+      @choice_answer_indexs = choice_answer_indexs.map{|index|index.to_i}.uniq
+    end
+
+    def fill_count
+      self.content.scan(/_+/).size
+    end
+  end
 end
