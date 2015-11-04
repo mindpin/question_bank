@@ -14,185 +14,189 @@ module QuestionBank
     belongs_to :questions
     belongs_to :user
 
+    # validate :validates_answer_kind
+    # validate :validates_answer_format
     validate :validate_kind_and_format
 
     def validate_kind_and_format
-        self.validates_answer_kind
-        self.validates_answer_format
+      self.validates_answer_kind
+      self.validates_answer_format
     end
 
     # 校验类型
     def validates_answer_kind
-        question_kind = QuestionBank::Question.find(self.questions.id).kind
-        if question_kind == "bool"
-            if bool_answer.blank?
-                errors.add(:bool_answer, "判断题不能为空")
-            end
-
-            if !essay_answer.blank?
-                errors.add(:essay_answer, "论述题必须为空")
-            end
-
-            if !fill_answer.blank?
-                errors.add(:fill_answer, "填空题必须为空")
-            end
-
-            if !mapping_answer.blank?
-                errors.add(:mapping_answer, "连线题必须为空")
-            end
-
-            if !choice_answer.blank?
-                errors.add(:choice_answer, "选择题必须为空")
-            end
+      question_kind = QuestionBank::Question.find( self.questions.id )
+      if question_kind == "bool"
+        if self.bool_answer.blank?
+          errors.add(:bool_answer, "判断题不能为空")
         end
 
-        if question_kind == "essay"
-            if essay_answer.blank?
-                errors.add(:essay_answer, "论述题不能为空")
-            end
-
-            if !bool_answer.blank?
-                errors.add(:bool_answer, "判断题必须为空")
-            end
-
-            if !fill_answer.blank?
-                errors.add(:fill_answer, "填空题必须为空")
-            end
-
-            if !mapping_answer.blank?
-                errors.add(:mapping_answer, "连线题必须为空")
-            end
-
-            if !choice_answer.blank?
-                errors.add(:choice_answer, "选择题必须为空")
-            end
+        if !self.essay_answer.blank?
+          errors.add(:essay_answer, "论述题必须为空")
         end
 
-        if question_kind == "fill"
-            if fill_answer.blank?
-                errors.add(:fill_answer, "填空题不能为空")
-            end
-
-            if !essay_answer.blank?
-                errors.add(:essay_answer, "论述题必须为空")
-            end
-
-            if !bool_answer.blank?
-                errors.add(:bool_answer, "判断题必须为空")
-            end
-
-            if !mapping_answer.blank?
-                errors.add(:mapping_answer, "连线题必须为空")
-            end
-
-            if !choice_answer.blank?
-                errors.add(:choice_answer, "选择题必须为空")
-            end 
+        if !self.fill_answer.blank?
+          errors.add(:fill_answer, "填空题必须为空")
         end
 
-        if question_kind == "mapping"
-            if mapping_answer.blank?
-                errors.add(:mapping_answer, "连线题不能为空")
-            end
-
-            if !essay_answer.blank?
-                errors.add(:essay_answer, "论述题必须为空")
-            end
-
-            if !bool_answer.blank?
-                errors.add(:bool_answer, "判断题必须为空")
-            end
-
-            if !fill_answer.blank?
-                errors.add(:fill_answer, "填空题必须为空")
-            end
-
-            if !choice_answer.blank?
-                errors.add(:choice_answer, "选择题必须为空")
-            end
+        if !self.mapping_answer.blank?
+          errors.add(:mapping_answer, "连线题必须为空")
         end
 
-        if question_kind == "single_choice"
-            if single_choice_answer.blank?
-                errors.add(:single_choice_answer, "连线题不能为空")
-            end
+        if !self.choice_answer.blank?
+          errors.add(:choice_answer, "选择题必须为空")
+        end
+      end
 
-            if !mapping_answer.blank?
-                errors.add(:mapping_answer, "连线题必须为空")
-            end
-
-            if !essay_answer.blank?
-                errors.add(:essay_answer, "论述题必须为空")
-            end
-
-            if !bool_answer.blank?
-                errors.add(:bool_answer, "判断题必须为空")
-            end
-
-            if !fill_answer.blank?
-                errors.add(:fill_answer, "填空题必须为空")
-            end
+      if question_kind == "essay"
+        if self.essay_answer.blank?
+          errors.add(:essay_answer, "论述题不能为空")
         end
 
-        if question_kind == "multi_choice"
-            if multi_choice_answer.blank?
-                errors.add(:multi_choice_answer, "连线题不能为空")
-            end
-
-            if !mapping_answer.blank?
-                errors.add(:mapping_answer, "连线题必须为空")
-            end
-
-            if !essay_answer.blank?
-                errors.add(:essay_answer, "论述题必须为空")
-            end
-
-            if !bool_answer.blank?
-                errors.add(:bool_answer, "判断题必须为空")
-            end
-
-            if !fill_answer.blank?
-                errors.add(:fill_answer, "填空题必须为空")
-            end
+        if !self.bool_answer.blank?
+          errors.add(:bool_answer, "判断题必须为空")
         end
+
+        if !self.fill_answer.blank?
+          errors.add(:fill_answer, "填空题必须为空")
+        end
+
+        if !self.mapping_answer.blank?
+          errors.add(:mapping_answer, "连线题必须为空")
+        end
+
+        if !self.choice_answer.blank?
+          errors.add(:choice_answer, "选择题必须为空")
+        end
+      end
+
+      if question_kind == "fill"
+        if self.fill_answer.blank?
+          errors.add(:fill_answer, "填空题不能为空")
+        end
+
+        if !self.essay_answer.blank?
+          errors.add(:essay_answer, "论述题必须为空")
+        end
+
+        if !self.bool_answer.blank?
+          errors.add(:bool_answer, "判断题必须为空")
+        end
+
+        if !self.mapping_answer.blank?
+          errors.add(:mapping_answer, "连线题必须为空")
+        end
+
+        if !self.choice_answer.blank?
+          errors.add(:choice_answer, "选择题必须为空")
+        end 
+      end
+
+      if question_kind == "mapping"
+        if self.mapping_answer.blank?
+          errors.add(:mapping_answer, "连线题不能为空")
+        end
+
+        if !self.essay_answer.blank?
+          errors.add(:essay_answer, "论述题必须为空")
+        end
+
+        if !self.bool_answer.blank?
+          errors.add(:bool_answer, "判断题必须为空")
+        end
+
+        if !self.fill_answer.blank?
+          errors.add(:fill_answer, "填空题必须为空")
+        end
+
+        if !self.choice_answer.blank?
+          errors.add(:choice_answer, "选择题必须为空")
+        end
+      end
+
+      if question_kind == "single_choice"
+        if self.single_choice_answer.blank?
+          errors.add(:single_choice_answer, "单选题题不能为空")
+        end
+
+        if !self.mapping_answer.blank?
+          errors.add(:mapping_answer, "连线题必须为空")
+        end
+
+        if !self.essay_answer.blank?
+          errors.add(:essay_answer, "论述题必须为空")
+        end
+
+        if !self.bool_answer.blank?
+          errors.add(:bool_answer, "判断题必须为空")
+        end
+
+        if !self.fill_answer.blank?
+          errors.add(:fill_answer, "填空题必须为空")
+        end
+      end
+
+      if question_kind == "multi_choice"
+        if self.multi_choice_answer.blank?
+          errors.add(:multi_choice_answer, "多选题不能为空")
+        end
+
+        if !self.mapping_answer.blank?
+          errors.add(:mapping_answer, "连线题必须为空")
+        end
+
+        if !self.essay_answer.blank?
+          errors.add(:essay_answer, "论述题必须为空")
+        end
+
+        if !self.bool_answer.blank?
+          errors.add(:bool_answer, "判断题必须为空")
+        end
+
+        if !self.fill_answer.blank?
+          errors.add(:fill_answer, "填空题必须为空")
+        end
+      end
     end
 
     # 校验格式
     def validates_answer_format
-        question_kind = QuestionBank::Question.find( self.questions.id).kind
-        if question_kind == "single_choice"
-            if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count != 1
-                errors.add(:single_choice_answer, "单选题答案格式不正确")
-            end
+      question_kind = QuestionBank::Question.find( self.questions.id).kind
+      if question_kind == "bool"
+          if !self.bool_answer.is_a?(Boolean)
+            errors.add(:bool_answer, "判断题格式不正确")
+          end
+      end
+      if question_kind == "single_choice"
+        if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count != 1
+          errors.add(:single_choice_answer, "单选题答案格式不正确")
         end
+      end
 
-        if question_kind == "multi_choice"
-            # question_choice_answer = QuestionBank::Question.find(self.question.id).choice_answer
-            if self.choice_answer.map { |item| item.count == 2 && item.is_a?(Array) && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count < 2
-                errors.add(:multi_choice_answer, "多选题答案格式不正确")
-            end
+      if question_kind == "multi_choice"
+        if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count < 2
+          errors.add(:multi_choice_answer, "多选题答案格式不正确")
+        end 
+      end
 
-            # 做题记录是记录做题者的做题情况的（我自己理解）
-            # 在这里我只需要判定为多选时其答案数不能小于两个
-            # 如果我判定做题者所填写的答案与答案数目不相符时，我认为是相当
-            # 于告诉了做题者的答案（待确认...）
-            # if choice_answer_indexs.count != question_choice_answer.count && choice_answer_indexs.count < 2 
-            #     errors.add(:multi_choice_answer, "多选题的答案不符")
-            # end
+      if question_kind == "essay"
+        if !self.essay_answer.is_a?(String)
+          errors.add(:essay_answer, "论述题答案格式不正确")
         end
+      end
 
-        if question_kind == "fill"
-            if !self.fill_answer.is_a?(Array) || (self.fill_count != self.fill_answer.count)
-                errors.add(:fill_answer, "填空题答案格式不正确")
-            end
+      if question_kind == "fill"
+        if !self.fill_answer.is_a?(Array) || (self.fill_count != self.fill_answer.count)
+          errors.add(:fill_answer, "填空题答案格式不正确")
         end
+      end
 
-        if question_kind == "mapping"
-            question_mapping_answer = QuestionBank::Question.find( self.questions.id ).mapping_answer
-            if self.mapping_answer.map { |item| !item.is_a?(Array) || item.count != 2 || !item[0].is_a?(String) || !item[1].is_a?(String) } || self.mapping_answer.count != question_mapping_answer.count  
-                errors.add(:mapping_answer, "连线题答案格式不正确")
-            end
+      if question_kind == "mapping"
+        question_mapping_answer = QuestionBank::Question.find( self.questions.id ).mapping_answer
+        if self.mapping_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(String) }.include?(false) || self.mapping_answer.count != question_mapping_answer.count 
+          errors.add(:mapping_answer, "连线题答案格式不正确")
         end
+      end
     end
 
     def choice_answer_indexs
@@ -212,7 +216,8 @@ module QuestionBank
     end
 
     def fill_count
-      self.content.scan(/_+/).size
+      question_content = QuestionBank::Question.find( self.questions.id).content
+      question_content.scan(/_+/).size
     end
   end
 end
