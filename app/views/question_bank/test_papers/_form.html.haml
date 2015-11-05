@@ -8,7 +8,8 @@
   - index = 0
   .sections
     = f.simple_fields_for :sections do |section_form|
-      .section.clearfix{data: {section_id: section_form.object.id, origin_index: index}}
+      - section = section_form.object
+      .section.clearfix{data: {origin_index: index, section:{id: section.id, kind: section.kind, min_level: section.min_level, max_level: section.max_level, score: section.score}}}
         %h3= "第#{index+1}大题"
         .col-xs-11
           = section_form.input :kind, include_blank: false, input_html: {class: 'kind'}
