@@ -34,5 +34,8 @@ module QuestionBank
 
     validates :content, :presence => true
     validates :level, :presence => true
+    has_many :questionflaws,class_name:'QuestionBank::QuestionFlaw'
+
+
   end
 end
