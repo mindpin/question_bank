@@ -1,69 +1,97 @@
 .question-record
-  / %nav.navbar.navbar-default
-  /   .container
-  / %ol.breadcrumb
-  /   %li 
-  /     %a{href: 'javascript:;'} Home
-  /   %li 
-  /     %a{href: 'javascript:;'} Library
-  /   %li.active Date
   %ul.nav.nav-tabs
     %li.active{role: "presentation"}
-      %a{href: 'javascript:;'} 做题记录
+      %a{href: '/question_record'} 做题记录
     %li{role: "presentation"}
-      %a 错题本
+      %a{href: "/question_flaw"} 错题本
     %li{role: "presentation"}
       %a 题目收藏
   %table.table
     %tr
       %td
-  %table.table.table-condensed
+  %table.table
     %tr
       %td 结果：
-      %td 全部
-      %td 正确
-      %td{colspan: 5} 错误 
+      %td
+        %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+      %td 
+        %a{href: 'javaScript:;'} 正确
+      %td{colspan: 5} 
+        %a{href: 'javaScript:;'} 错误 
     %tr
       %td 类型：
-      %td 全部
-      %td 单选题
-      %td 多选题
-      %td 填空题
-      %td 连线题
-      %td 判断题
-      %td 论述题
+      %td
+        %a{href: 'javaScript:;'} 
+          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+      %td 
+        %a{href: 'javaScript:;'} 单选题
+      %td 
+        %a{href: 'javaScript:;'} 多选题
+      %td
+        %a{href: 'javaScript:;'} 填空题
+      %td
+        %a{href: 'javaScript:;'} 连线题
+      %td
+        %a{href: 'javaScript:;'} 判断题
+      %td
+        %a{href: 'javaScript:;'} 论述题
     %tr
       %td 时间：
-      %td 全部
-      %td 一周内
-      %td 一个月内
-      %td 三个月内
+      %td 
+        %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+      %td
+        %a{href: 'javaScript:;'} 一周内
+      %td
+        %a{href: 'javaScript:;'} 一个月内
+      %td
+        %a{href: 'javaScript:;'} 三个月内
       %td{colspan: 3} 
         %input{type: "text"} ——
         %input{type: "text"}
+        %a{href: 'javaScript:;'}
+          %i.glyphicon.glyphicon-search
 
-  %table.table
+  %table.table{ :style => 'display:block;padding-top:10px;' }
     %tr{style: 'background: #E4E4E4;'}
-      %td 时间
-      %td 题目
-      %td 类型
-      %td 做题结果
-      %td 操作
-    %tr
-      %td 2015-10-20 15:33
-      %td 销售流程的各个环节包括：　　　　、有效拉近与客户距离、确认客户需求、成功说服客户、异议处理以及最终提供满意方案等。
-      %td 填空题
-      %td 正确
-      %td 
-        %a{href: "javaScript:;"} 删除记录
-  / {:style => 'display:block;padding-top:64px;'}
-  / <div class="checkbox">
-  /   <label>
-  /     <input type="checkbox"> Check me out
-  /   </label>
-  / </div>
-  .record-bottom{:style => 'display:block;padding-top:50px;'}
-    %input{type: "checkbox"} 全选
-    %button.btn.btn-default.active{type: "button"}批量加入错题本
-    %button.btn.btn-default.active{type: "button"}批量删除记录
-
+      %td
+      %th{width: "12%;"} 时间
+      %th{width: "61%;"} 题目
+      %th{width: "6%;"} 类型
+      %th{width: "7%;"} 做题结果
+      %th{width: "14%;"} 操作
+    - @question_record.each do |record|
+      %tr
+        %td
+          %input{type: "checkbox"}
+        %td
+          = record.created_at
+        %td 
+          - questions = QuestionBank::Question.find(record.questions_id)
+          = questions.content
+        %td 
+          - questions = QuestionBank::Question.find(record.questions_id)
+          - if questions.kind == "bool"
+            判断题
+          - if questions.kind == "single_choice"
+            单选题
+          - if questions.kind == "multi_choice"
+            多选题
+          - if questions.kind == "mapping"
+            连线题
+          - if questions.kind == "fill" 
+            填空题
+          - if questions.kind == "essay"
+            论述题
+        %td
+          - if record.is_correct == false
+            错误
+          - if record.is_correct == true
+            正确
+        %td 
+          - if record.is_correct == false
+            %a{ href: "javaScript:;" } 加入错题本
+          %a{ href: "javaScript:;" } 删除记录
+  .record-bottom{ :style => 'display:block;padding-top:50px;' }
+    %input{ type: "checkbox" } 全选
+    %button.btn.btn-default.active{ type: "button" }批量加入错题本
+    %button.btn.btn-default.active{ type: "button" }批量删除记录

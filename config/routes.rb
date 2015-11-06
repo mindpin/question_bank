@@ -17,4 +17,5 @@ QuestionBank::Engine.routes.draw do
   end
 
   resources :question_record
+  resources :question_flaw
 end

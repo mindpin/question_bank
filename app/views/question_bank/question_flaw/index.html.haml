@@ -1,0 +1,73 @@
+.question-flaw
+  %ul.nav.nav-tabs
+    %li{role: "presentation"}
+      %a{href: '/question_record'} 做题记录
+    %li.active{role: "presentation"}
+      %a{href: '/question_flaw'} 错题本
+    %li{role: "presentation"}
+      %a 题目收藏
+
+  %table.table
+    %tr
+      %td
+  %table.table
+    %tr
+      %td 类型：
+      %td
+        %a{href: 'javaScript:;'} 
+          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+      %td
+        %a{href: 'javaScript:;'} 单选题
+      %td
+        %a{href: 'javaScript:;'} 多选题
+      %td
+        %a{href: 'javaScript:;'} 填空题
+      %td
+        %a{href: 'javaScript:;'} 连线题
+      %td
+        %a{href: 'javaScript:;'} 判断题
+      %td
+        %a{href: 'javaScript:;'} 论述题
+    %tr
+      %td 时间：
+      %td 
+        %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+      %td
+        %a{href: 'javaScript:;'} 一周内
+      %td
+        %a{href: 'javaScript:;'} 一个月内
+      %td
+        %a{href: 'javaScript:;'} 三个月内
+      %td{colspan: 3} 
+        %input{type: "text"} ——
+        %input{type: "text"}
+        %a{href: 'javaScript:;'}
+          %i.glyphicon.glyphicon-search
+
+  %table.table{style:'display:block;padding-top:20px;'}
+    %tr
+      %td
+      %td{width: "12%;"} 时间
+      %td{width: "60%;"} 题目
+      %td{width: "7%;"}  正确答案
+      %td{width: "7%;"}  答案解析
+      %td{width: "14%;"} 操作
+    - @question_flaw.each do |flaw|
+      %tr
+        %td
+          %input{type: "checkbox"}
+        %td
+          = flaw.created_at
+        %td 
+          - if flaw.question_id != nil
+            - questions = QuestionBank::Question.find(flaw.question_id)
+            = questions.content
+        %td 错误
+        %td 0是偶数
+        %td 
+          %a{ href: "javaScript:;" } 重做
+          %a{ href: "javaScript:;" } 删除
+  .flaw-bottom{ :style => 'display:block;padding-top:50px;' }
+    %input{ type: "checkbox" } 全选
+    %button.btn.btn-default.active{ type: "button" }批量删除记录
+
