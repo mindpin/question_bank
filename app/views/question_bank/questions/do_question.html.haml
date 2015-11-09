@@ -1,0 +1,51 @@
+%h2 某学科相关练习题
+.type
+  = @questions_array[@index].kind
+.question-content
+  = @questions_array[@index].content
+- case @questions_array[@index].kind
+  - when "single_choice"
+    .question-single-choice
+      - @questions_array[@index].choice_answer.map{|e| e[0]}.each do |option|
+        .option
+          .option-radio
+            = radio_button_tag 'choice','checked'
+          .option-content
+            = option
+  - when "multi_choice"
+    .question-multi-choice
+      - @questions_array[@index].choice_answer.map{|e| e[0]}.each do |option|
+        .option
+          .option-checkbox
+            %input{:type=>'checkbox'}
+          .option-content
+            = option
+  - when "bool"
+    .question-bool
+      = radio_button_tag 'choice','yes'
+      %span 正确
+      = radio_button_tag 'choice','yes'
+      %span 错误
+  - when "mapping"
+    .question-mapping
+      - for i in 1..@questions_array[@index].mapping_answer.length do
+        .mapping-pair
+          %p 连线#{i}:
+          %input{:class=>"form-control"}
+          %input{:class=>"form-control"}
+          %br
+  - when "fill"
+    .question-fill
+      - for i in 1..@questions_array[@index].fill_answer.length do
+        %p 第#{i}个填空:
+        %input{:class=>"form-control"}
+        %br
+  - when "essay"
+    .question-essay
+      %textarea{:class=>"form-control"}
+
+- if @index == @length-1
+  %a{:class => "btn btn-default" ,:href => "#"} 完成
+- else
+  %a{:class => "btn btn-default" ,:href => "#"} 提交
+  %a{:class => "btn btn-default" ,:href => "/questions/do_question?questions_array_index=#{@index+1}"} 下一题

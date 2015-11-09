@@ -29,3 +29,13 @@ body {
     margin-left: 20px;
   }
 }
+.question-single-choice{
+  .option{
+    .option-radio{
+      display: inline
+    }
+    .option-content{
+      display:inline
+    }
+  } 
+}

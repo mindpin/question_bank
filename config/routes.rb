@@ -9,6 +9,7 @@ QuestionBank::Engine.routes.draw do
       get :new_essay
       get :new_fill
       get :search
+      get :do_question
     end
   end
 

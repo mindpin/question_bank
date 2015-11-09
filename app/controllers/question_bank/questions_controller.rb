@@ -64,6 +64,13 @@ module QuestionBank
       redirect_to "/questions"
     end
 
+    def do_question
+      @questions_array = Question.all.to_a
+      params[:questions_array_index] ||= 0
+      @index = params[:questions_array_index].to_i
+      @length = @questions_array.length
+    end
+
     def search
       @type = params[:type]
       @kind = params[:kind]
