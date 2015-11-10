@@ -10,10 +10,14 @@ module QuestionBank
       @user_id = question_record.user_id
       @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
       if @question_flaw.save
-        redirect_to "/question_record"
+        redirect_to "/question_record", notice: "insert success"
       else
-        render "/question_record", notice: '加入错题本，发生错误'
+        render "index"
       end
+    end
+
+    def show
+      
     end
 
     def destroy

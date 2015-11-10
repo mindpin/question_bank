@@ -44,7 +44,7 @@
         %a{href: 'javaScript:;'}
           %i.glyphicon.glyphicon-search
 
-  %table.table{style:'display:block;padding-top:20px;'}
+  %table.table.flaw-table{style:'display:block;padding-top:20px;'}
     %tr
       %td
       %td{width: "12%;"} 时间
@@ -66,7 +66,7 @@
         %td 0是偶数
         %td 
           %a{ href: "javaScript:;" } 重做
-          %a{ href: "/question_flaw/#{flaw.id}", data: { confirm: "Are you sure you want to delete this wrong topic?", method: :delete } } 删除
+          %a.flaw-delete{ href: "javaScript:;", data: { :confirm => "确认删除吗？", :question_flaw_id => flaw.id} } 删除
   .flaw-bottom{ :style => 'display:block;padding-top:50px;' }
     %input{ type: "checkbox" } 全选
     %button.btn.btn-default.active{ type: "button" }批量删除记录

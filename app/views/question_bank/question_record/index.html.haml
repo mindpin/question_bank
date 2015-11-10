@@ -11,15 +11,15 @@
   %table.table
     %tr
       %td
-  %table.table
+  %table.table.result-table
     %tr
       %td 结果：
       %td
         %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
       %td 
-        %a{href: 'javaScript:;'} 正确
+        %a.question-right{href: 'javaScript:;', data:{ whether_correct: "true", kind: "is_correct" }} 正确
       %td{colspan: 5} 
-        %a{href: 'javaScript:;'} 错误 
+        %a.question-wrong{href: 'javaScript:;'} 错误 
     %tr
       %td 类型：
       %td
@@ -54,54 +54,20 @@
           %i.glyphicon.glyphicon-search
 
   %table.table.record-table{ :style => 'display:block;padding-top:10px;' }
-    %tr{style: 'background: #E4E4E4;'}
-      %td
-      %th{width: "12%;"} 时间
-      %th{width: "52%;"} 题目
-      %th{width: "6%;"} 类型
-      %th{width: "7%;"} 做题结果
-      %th{width: "23%;"} 操作
-    - @question_record.each do |record|
+    %thead{style: 'background: #E4E4E4;'}
       %tr
         %td
-          %input{type: "checkbox"}
-        %td
-          = record.created_at
-        %td 
-          - questions = QuestionBank::Question.find(record.questions_id)
-          = questions.content
-        %td 
-          - questions = QuestionBank::Question.find(record.questions_id)
-          - if questions.kind == "bool"
-            判断题
-          - if questions.kind == "single_choice"
-            单选题
-          - if questions.kind == "multi_choice"
-            多选题
-          - if questions.kind == "mapping"
-            连线题
-          - if questions.kind == "fill" 
-            填空题
-          - if questions.kind == "essay"
-            论述题
-        %td
-          - if record.is_correct == false
-            错误
-          - if record.is_correct == true
-            正确
-        %td 
-          - if record.is_correct == false
-            - whether_blank_flaw = QuestionBank::QuestionFlaw.where(question_id: record.questions_id)
-            - if whether_blank_flaw == nil 
-              %a.btn.btn-default.insert-flaw{ href: "javaScript:;", :data =>{:question_record_id => "#{record.id}"}}
-                %i.glyphicon.glyphicon-plus
-                %span 加入错题本
-            - if whether_blank_flaw != nil
-              %a.btn.btn-default.insert-flaw{ href: "javaScript:;",disabled: "disabled"}
-                %span 已加入错题本
-          %a.btn.btn-default{ href: "/question_record/#{record.id}", data: {confirm: "Are you sure you want to delete this record?", method: :delete} }
-            %i.glyphicon.glyphicon-trash 
-            %span 删除记录
+        %th{width: "12%;"} 时间
+        %th{width: "52%;"} 题目
+        %th{width: "6%;"} 类型
+        %th{width: "7%;"} 做题结果
+        %th{width: "23%;"} 操作
+    %tbody.record-body
+      - if @question_record.blank?
+        %tr
+          %td{colspan: 3} 没有数据
+      - @question_record.each do |record|
+        = render :partial => "record_index_tr",locals: { record: record }
   .record-bottom{ :style => 'display:block;padding-top:50px;' }
     %input{ type: "checkbox" } 全选
     %button.btn.btn-default.active{ type: "button" }批量加入错题本
