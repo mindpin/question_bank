@@ -2,6 +2,18 @@
   %h2 某学科相关练习题
   .question-type.hidden
     %p #{@questions_array[@index].kind}
+  .question-answer
+    - case @questions_array[@index].kind
+      - when "single_choice"
+        %p #{@questions_array[@index].choice_answer}
+      - when "multi_choice"
+        %p #{@questions_array[@index].choice_answer}
+      - when "bool"
+        %p #{@questions_array[@index].bool_answer}  
+      - when "mapping"
+        %p #{@questions_array[@index].mapping_answer}
+      - when "fill"
+        %p #{@questions_array[@index].fill_answer}
   .question-content
     = @questions_array[@index].content
   - case @questions_array[@index].kind
@@ -10,12 +22,11 @@
         - @questions_array[@index].choice_answer.map{|e| e[0]}.each do |option|
           .option
             .option-radio
-              = radio_button_tag 'choice','checked'
+              = radio_button_tag 'choice',option
             .option-content
               = option
     - when "multi_choice"
       .question-multi-choice
-        %p #{@questions_array[@index].choice_answer}
         - @questions_array[@index].choice_answer.map{|e| e[0]}.each do |option|
           .option
             .option-checkbox
@@ -24,25 +35,28 @@
               = option
     - when "bool"
       .question-bool
-        = radio_button_tag 'choice','yes'
-        %span 正确
-        = radio_button_tag 'choice','yes'
-        %span 错误
+        .option
+          = radio_button_tag 'choice',true
+          %span 正确
+        .option
+          = radio_button_tag 'choice',false
+          %span 错误
     - when "mapping"
-      .question-mapping
+      .question-mapping-list
         - answer = @questions_array[@index].mapping_answer
         - for i in 1..answer.length do
           .mapping-pair
             %span 连线#{i}:
-            %span #{answer[i-1][0]}
+            %span{:class=>'mapping-key'} #{answer[i-1][0]}
             %select{:class=>'form-control select'}
               %option{:value => '空'}空 
               - answer.map{|e| e[1]}.each do |i|
                 %option{:value => i} #{i} 
             %br
     - when "fill"
-      .question-fill
+      .question-fill-list
         - for i in 1..@questions_array[@index].fill_answer.length do
+          .question-fill
           %p 第#{i}个填空:
           %input{:class=>"form-control"}
           %br

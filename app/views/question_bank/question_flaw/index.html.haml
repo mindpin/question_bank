@@ -44,7 +44,7 @@
         %a{href: 'javaScript:;'}
           %i.glyphicon.glyphicon-search
 
-  %table.table.flaw-table{style:'display:block;padding-top:20px;'}
+  %table.table.table-hover.flaw-table{style:'display:block;padding-top:20px;'}
     %tr
       %td
       %td{width: "12%;"} 时间
@@ -58,12 +58,12 @@
           %input{type: "checkbox"}
         %td
           = flaw.created_at
+        - questions = QuestionBank::Question.find(flaw.question_id)
         %td 
-          - if flaw.question_id != nil
-            - questions = QuestionBank::Question.find(flaw.question_id)
-            = questions.content
+          = questions.content
         %td 错误
-        %td 0是偶数
+        %td 
+          =questions.analysis
         %td 
           %a{ href: "javaScript:;" } 重做
           %a.flaw-delete{ href: "javaScript:;", data: { :confirm => "确认删除吗？", :question_flaw_id => flaw.id} } 删除

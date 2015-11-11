@@ -15,18 +15,19 @@
     %tr
       %td 结果：
       %td
-        %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a{href: 'javaScript:;'} 
+          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
       %td 
         %a.question-right{href: 'javaScript:;', data:{ whether_correct: "true", kind: "is_correct" }} 正确
       %td{colspan: 5} 
-        %a.question-wrong{href: 'javaScript:;'} 错误 
+        %a.question-wrong{href: 'javaScript:;', data:{ whether_correct: "false", kind: "is_correct" }} 错误 
     %tr
       %td 类型：
       %td
         %a{href: 'javaScript:;'} 
           %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
       %td 
-        %a{href: 'javaScript:;'} 单选题
+        %a.question-single{href: 'javaScript:;', data:{ kind: "single_choice" }} 单选题
       %td 
         %a{href: 'javaScript:;'} 多选题
       %td
@@ -40,7 +41,8 @@
     %tr
       %td 时间：
       %td 
-        %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a{href: 'javaScript:;'} 
+          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
       %td
         %a{href: 'javaScript:;'} 一周内
       %td
@@ -53,7 +55,7 @@
         %a{href: 'javaScript:;'}
           %i.glyphicon.glyphicon-search
 
-  %table.table.record-table{ :style => 'display:block;padding-top:10px;' }
+  %table.table.table-hover.record-table{ :style => 'display:block;padding-top:10px;' }
     %thead{style: 'background: #E4E4E4;'}
       %tr
         %td
@@ -66,8 +68,7 @@
       - if @question_record.blank?
         %tr
           %td{colspan: 3} 没有数据
-      - @question_record.each do |record|
-        = render :partial => "record_index_tr",locals: { record: record }
+      = render :partial => "record_index_tr",locals: { question_record: @question_record }
   .record-bottom{ :style => 'display:block;padding-top:50px;' }
     %input{ type: "checkbox" } 全选
     %button.btn.btn-default.active{ type: "button" }批量加入错题本

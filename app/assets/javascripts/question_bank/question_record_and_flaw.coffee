@@ -20,21 +20,45 @@ class QuestionRecord
       .error (msg) ->
         console.log(msg)
 
-    # 条件查询( 正确 )
+    # 条件查询( 结果： 正确 )
     @$elm.on "click", ".result-table .question-right", ->
       whether_correct = $(this).closest(".question-right").attr("data-whether-correct")
       record_kind = $(this).closest(".question-right").attr("data-kind")
       $.ajax
         url: "/question_record/#{whether_correct}",
         method: "GET",
-        data:{
-          kind: record_kind
-        }
+        data:{kind: record_kind},
         dataType: "json"
       .done (msg) ->
         that.set_body(msg.body)
-        # $( "#log" ).html( msg )
-      .fail ( jqXHR, textStatus )  ->
+      .fail (jqXHR, textStatus)  ->
+        console.log( "Request failed: " + textStatus )
+
+    # 条件查询 （结果： 错误）
+    @$elm.on "click", ".result-table .question-wrong", ->
+      whether_correct = $(this).closest(".question-wrong").attr("data-whether-correct")
+      record_kind = $(this).closest(".question-wrong").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{whether_correct}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .done (msg) ->
+        that.set_body(msg.body)
+      .fail (jqXHR, textStatus) ->
+        console.log("Request failed:" + textStatus)
+
+    # 条件查询 ( 类型： 单选题 )
+    @$elm.on "click", ".result-table .question-single", ->
+      record_kind = $(this).closest(".question-single").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
         console.log( "Request failed: " + textStatus )
 
 # 错题本

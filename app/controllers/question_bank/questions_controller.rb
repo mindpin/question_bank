@@ -71,6 +71,15 @@ module QuestionBank
       @length = @questions_array.length
     end
 
+    def do_question_validation
+      kind = params[:kind]
+      answer = params[:answer]
+      case kind
+        when 'fill' then
+          _fill_validation(answer)
+      end
+    end
+
     def search
       @type = params[:type]
       @kind = params[:kind]
@@ -98,6 +107,9 @@ module QuestionBank
     end
 
     private
+      def _fill_validation(array)
+      end
+
       def _new(kind)
         @question = Question.new(:kind => kind)
       end
