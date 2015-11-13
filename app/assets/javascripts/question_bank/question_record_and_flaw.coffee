@@ -61,6 +61,73 @@ class QuestionRecord
       .error (jqXHR, textStatus) ->
         console.log( "Request failed: " + textStatus )
 
+    # 条件查询（类型： 多选题）
+    @$elm.on "click", ".result-table .question-multi", ->
+      record_kind = $(this).closest(".question-multi").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+    # 条件查询（类型： 填空题）
+    @$elm.on "click", ".result-table .question-fill", ->
+      record_kind = $(this).closest(".question-fill").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+    # 条件查询（类型： 连线题）
+    @$elm.on "click", ".result-table .question-mapping", ->
+      record_kind = $(this).closest(".question-mapping").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+    # 条件查询 （类型： 判断题）
+    @$elm.on "click", ".result-table .question-bool", ->
+      record_kind = $(this).closest(".question-bool").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+    # 条件查询（类型：论述题）
+    @$elm.on "click", ".result-table .question-essay", ->
+      record_kind = $(this).closest(".question-essay").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+
+
 # 错题本
 class QuestionFlaw
   constructor: (@$elm)->

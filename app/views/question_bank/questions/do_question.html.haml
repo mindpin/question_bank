@@ -2,18 +2,7 @@
   %h2 某学科相关练习题
   .question-type.hidden
     %p #{@questions_array[@index].kind}
-  .question-answer
-    - case @questions_array[@index].kind
-      - when "single_choice"
-        %p #{@questions_array[@index].choice_answer}
-      - when "multi_choice"
-        %p #{@questions_array[@index].choice_answer}
-      - when "bool"
-        %p #{@questions_array[@index].bool_answer}  
-      - when "mapping"
-        %p #{@questions_array[@index].mapping_answer}
-      - when "fill"
-        %p #{@questions_array[@index].fill_answer}
+  .question-id{:data=>{:id=>@questions_array[@index].id}}
   .question-content
     = @questions_array[@index].content
   - case @questions_array[@index].kind

@@ -1,0 +1,89 @@
+.question-record{
+  .result-table{
+    a{text-decoration: none;}
+    a:link {color: #515151;}     
+    a:hover {color: #515151;}
+    a:active {color: #0000FF;}
+  }
+
+  .record-table{
+    display: block;
+    padding-top: 20px;
+    .record_thead{
+      background: #E4E4E4;
+      .th_record_one{
+        width: 12%;
+        text-align: center;
+      }
+      .th_record_two{
+        width: 52%;
+        text-align: center;
+      }
+      .th_record_three{
+        width: 6%;
+        text-align: center;
+      }
+      .th_record_four{
+        width: 7%;
+        text-align: center;
+      }
+      .th_record_five{
+        width: 23%;
+        text-align: center;
+      }
+
+    }
+  }
+
+  .record-bottom{
+    padding-top: 50px;
+  }
+
+  .user_name{
+    padding-top: 20px;
+    color: #4395FF;
+  }
+}
+
+.question-flaw{
+  .result-table{
+    padding-top: 20px;
+    a{text-decoration: none;}
+    a:link {color: #515151;}     
+    a:hover {color: #515151;}
+    a:active {color: #0000FF;}
+  }
+
+  .flaw-table{
+    display: block;
+    padding-top: 20px;
+    .flaw_thead{
+      background: #E4E4E4;
+      .th_record_one{
+        width: 9%;
+        text-align: center;
+      }
+      .th_record_two{
+        width: 50%;
+        text-align: center;
+      }
+      .th_record_three{
+        width: 15%;
+        text-align: center;
+      }
+      .th_record_four{
+        width: 11%;
+        text-align: center;
+      }
+      .th_record_five{
+        width: 15%;
+        text-align: center;
+      }
+    }
+  }
+
+  .flaw-bottom{
+    display:block;
+    padding-top:50px;
+  }
+}

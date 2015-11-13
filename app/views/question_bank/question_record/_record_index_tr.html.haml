@@ -1,3 +1,6 @@
+- if question_record.blank?
+  %tr
+    %td{colspan: 3} 没有数据
 - question_record.each do |record|
   %tr
     %td

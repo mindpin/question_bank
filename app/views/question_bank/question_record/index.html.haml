@@ -15,61 +15,62 @@
     %tr
       %td 结果：
       %td
-        %a{href: 'javaScript:;'} 
-          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a.btn-default.question-result-all{href: '/question_record'} 全部
       %td 
-        %a.question-right{href: 'javaScript:;', data:{ whether_correct: "true", kind: "is_correct" }} 正确
+        %a.btn-default.question-right{href: 'javaScript:;', data:{ whether_correct: "true", kind: "is_correct" }} 正确
       %td{colspan: 5} 
-        %a.question-wrong{href: 'javaScript:;', data:{ whether_correct: "false", kind: "is_correct" }} 错误 
+        %a.btn-default.question-wrong{href: 'javaScript:;', data:{ whether_correct: "false", kind: "is_correct" }} 错误 
     %tr
       %td 类型：
       %td
-        %a{href: 'javaScript:;'} 
-          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a.btn-default.question-type-all{href: '/question_record'} 全部
       %td 
-        %a.question-single{href: 'javaScript:;', data:{ kind: "single_choice" }} 单选题
+        %a.btn-default.question-single{href: 'javaScript:;', data:{ kind: "single_choice" }} 单选题
       %td 
-        %a{href: 'javaScript:;'} 多选题
+        %a.btn-default.question-multi{href: 'javaScript:;', data:{kind: "multi_choice"}} 多选题
       %td
-        %a{href: 'javaScript:;'} 填空题
+        %a.btn-default.question-fill{href: 'javaScript:;', data:{kind: "fill"}} 填空题
       %td
-        %a{href: 'javaScript:;'} 连线题
+        %a.btn-default.question-mapping{href: 'javaScript:;', data:{kind: "mapping"}} 连线题
       %td
-        %a{href: 'javaScript:;'} 判断题
+        %a.btn-default.question-bool{href: 'javaScript:;', data:{kind: "bool"}} 判断题
       %td
-        %a{href: 'javaScript:;'} 论述题
+        %a.btn-default.question-essay{href: 'javaScript:;', data:{kind: "essay"}} 论述题
     %tr
       %td 时间：
       %td 
-        %a{href: 'javaScript:;'} 
-          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a.btn-default.question-time-all{href: '/question_record'} 全部
       %td
-        %a{href: 'javaScript:;'} 一周内
+        %a.btn-default.question-one-week{href: 'javaScript:;'} 一周内
       %td
-        %a{href: 'javaScript:;'} 一个月内
+        %a.btn-default.question-one-month{href: 'javaScript:;'} 一个月内
       %td
-        %a{href: 'javaScript:;'} 三个月内
+        %a.btn-default.question-three-month{href: 'javaScript:;'} 三个月内
       %td{colspan: 3} 
         %input{type: "text"} ——
         %input{type: "text"}
-        %a{href: 'javaScript:;'}
+        %a.btn-default{href: 'javaScript:;'}
           %i.glyphicon.glyphicon-search
 
-  %table.table.table-hover.record-table{ :style => 'display:block;padding-top:10px;' }
-    %thead{style: 'background: #E4E4E4;'}
+  %table.table.table-hover.record-table
+    %thead.record_thead
       %tr
         %td
-        %th{width: "12%;"} 时间
-        %th{width: "52%;"} 题目
-        %th{width: "6%;"} 类型
-        %th{width: "7%;"} 做题结果
-        %th{width: "23%;"} 操作
+        %th.th_record_one 时间
+        %th.th_record_two 题目
+        %th.th_record_three 类型
+        %th.th_record_four 做题结果
+        %th.th_record_five 操作
     %tbody.record-body
-      - if @question_record.blank?
-        %tr
-          %td{colspan: 3} 没有数据
       = render :partial => "record_index_tr",locals: { question_record: @question_record }
-  .record-bottom{ :style => 'display:block;padding-top:50px;' }
+  .record-bottom
     %input{ type: "checkbox" } 全选
-    %button.btn.btn-default.active{ type: "button" }批量加入错题本
-    %button.btn.btn-default.active{ type: "button" }批量删除记录
+    %button.btn.btn-default{ type: "button" }
+      %i.glyphicon.glyphicon-plus
+      %span 批量加入错题本
+    %button.btn.btn-default{ type: "button" }
+      %i.glyphicon.glyphicon-trash
+      %span 批量删除记录
+
+  .user_name
+    = current_user.name

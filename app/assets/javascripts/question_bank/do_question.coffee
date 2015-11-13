@@ -2,20 +2,70 @@ class DoQuestion
   constructor: (@$elm)->
     @bind_events()
 
-  multi_choice_validation: ()->
+  get_question_id: ()->
+    @$elm.find('.question-id').attr('data-id')
+
+  bool_validation: (bool_answer)->
+    id = @get_question_id()
+    $.ajax
+        url: "/questions/do_question_validation",
+        method: "post",
+        data: {
+          answer :bool_answer,
+          answer_id:id,
+          kind : 'bool'
+        }
+      .success (msg) ->
+
 
   fill_validation: (fill_question_array)=>
-    right_array= @$elm.find('.question-answer p').text()
-    alert(typeof(right_array))
-    # a = right_array.split('"')
-    # alert(right_array_new)
-    for x in [0..right_array.length-1]
-      if fill_question_array[x]== right_array[x]
-        # alert('right')
-        # continue;
-      else
-        # alert('wrong')
-        # continue;
+    id = @get_question_id()
+    $.ajax
+        url: "/questions/do_question_validation",
+        method: "post",
+        data: {
+          answer :fill_question_array,
+          answer_id:id,
+          kind : 'fill'
+        }
+      .success (msg) ->
+
+  single_choice_validation: (checked_option)=>
+    id = @get_question_id()
+    $.ajax
+        url: "/questions/do_question_validation",
+        method: "post",
+        data: {
+          answer :checked_option,
+          answer_id:id,
+          kind : 'single_choice'
+        }
+      .success (msg) ->
+
+  multi_choice_validation: (answer_array)=>
+    id = @get_question_id()
+    $.ajax
+        url: "/questions/do_question_validation",
+        method: "post",
+        data: {
+          answer :checked_option,
+          answer_id:id,
+          kind : 'multi_choice'
+        }
+      .success (msg) ->
+
+  mapping_validation: (answer_array)=>
+    id = @get_question_id()
+    $.ajax
+        url: "/questions/do_question_validation",
+        method: "post",
+        data: {
+          answer :checked_option,
+          answer_id:id,
+          kind : 'mapping'
+        }
+      .success (msg) ->
+
 
 
   bind_events: ->
@@ -28,6 +78,7 @@ class DoQuestion
         $(event.target).closest('.question-mapping-list').find("option[value =#{@before_click}]").removeClass('hidden')
     @$elm.find('.mapping-pair .select').click (event)=>
       @before_click = $(event.target).find('option:selected').text()
+
     # 五种题型的验证 错误回显+生成记录
     @$elm.on "click", ".submit-answer", (event)=>
       kind = $(event.target).parent().find('.question-type p').text()
@@ -46,6 +97,7 @@ class DoQuestion
             mapping_key = @$elm.find(".question-mapping-list .mapping-pair .mapping-key:eq(#{x-1})").text()
             mapping_value = @$elm.find(".question-mapping-list select:eq(#{x-1})").val()
             mapping_array.push([mapping_key,mapping_value])
+          @mapping_validation(mapping_array)
 
         when 'multi_choice'
           multi_choice_array = []
@@ -57,13 +109,15 @@ class DoQuestion
             else
               option_check_information = false
             multi_choice_array.push(multi_choice_option,option_check_information)
+          @multi_choice_validation(multi_choice_array)
 
         when 'single_choice'
           checked_option = @$elm.find(":checked").closest('.option-radio input').attr("value")
+          @single_choice_validation(checked_option)
 
         when 'bool'
           checked_option = @$elm.find(":checked").closest('.option input').attr("value")
-
+          @bool_validation(checked_option)
 
 
 

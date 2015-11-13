@@ -1,7 +1,8 @@
 module QuestionBank
   class QuestionFlawController < QuestionBank::ApplicationController
     def index
-      @question_flaw = QuestionBank::QuestionFlaw.all
+      user_id = current_user.id
+      @question_flaw = QuestionBank::QuestionFlaw.where(user_id: user_id).to_a
     end
 
     def create

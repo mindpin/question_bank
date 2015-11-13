@@ -74,9 +74,18 @@ module QuestionBank
     def do_question_validation
       kind = params[:kind]
       answer = params[:answer]
+      question_id = params[:answer_id]
       case kind
         when 'fill' then
-          _fill_validation(answer)
+          _fill_validation(answer,question_id)
+        when 'bool' then
+          _bool_validation(answer,question_id)
+        when 'mapping' then
+          _mapping_validation(answer,question_id)
+        when 'single_choice' then
+          _single_choice_validation(answer,question_id)
+        when 'multi_choice' then
+          _multi_choice_validation(answer,question_id)
       end
     end
 
@@ -107,8 +116,44 @@ module QuestionBank
     end
 
     private
-      def _fill_validation(array)
+      def make_record(msg)
+        if msg.length == 0
+        end
       end
+
+      def _fill_validation(array,question_id)
+        query_right_answer = Question.find(question_id).fill_answer
+        wrong_information = []
+        0.upto(query_right_answer.length-1).each do |i|
+          if query_right_answer[i] == array[i]
+            next;
+          else
+            wrong_information.push({:index=>i,:right_answer=>query_right_answer[i]})
+          end
+        end
+        p wrong_information
+      end
+
+      def _bool_validation(answer,question_id)
+        query_right_answer = Question.find(question_id).bool_answer
+        wrong_information=[]
+        if query_right_answer.to_s!=answer
+          wrong_information.push(query_right_answer)
+        end
+        p '~~~~~~~~~~'
+        p wrong_information
+        p current_user.name
+        # make_record(wrong_information)
+      end
+
+      def _single_choice_validation(answer,question_id)
+        p answer
+        p question_id
+      end
+
+      def _multi_choice_validation(answer,question_id)
+      end
+
 
       def _new(kind)
         @question = Question.new(:kind => kind)

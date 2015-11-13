@@ -10,64 +10,89 @@
   %table.table
     %tr
       %td
-  %table.table
+  %table.table.result-table
     %tr
       %td 类型：
       %td
-        %a{href: 'javaScript:;'} 
-          %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a.btn-default{href: 'javaScript:;'} 全部
       %td
-        %a{href: 'javaScript:;'} 单选题
+        %a.btn-default{href: 'javaScript:;'} 单选题
       %td
-        %a{href: 'javaScript:;'} 多选题
+        %a.btn-default{href: 'javaScript:;'} 多选题
       %td
-        %a{href: 'javaScript:;'} 填空题
+        %a.btn-default{href: 'javaScript:;'} 填空题
       %td
-        %a{href: 'javaScript:;'} 连线题
+        %a.btn-default{href: 'javaScript:;'} 连线题
       %td
-        %a{href: 'javaScript:;'} 判断题
+        %a.btn-default{href: 'javaScript:;'} 判断题
       %td
-        %a{href: 'javaScript:;'} 论述题
+        %a.btn-default{href: 'javaScript:;'} 论述题
     %tr
       %td 时间：
       %td 
-        %span{style: 'background: #0099FF; color: #FFFFFF'} 全部
+        %a.btn-default{href: 'javaScript:;'} 全部
       %td
-        %a{href: 'javaScript:;'} 一周内
+        %a.btn-default{href: 'javaScript:;'} 一周内
       %td
-        %a{href: 'javaScript:;'} 一个月内
+        %a.btn-default{href: 'javaScript:;'} 一个月内
       %td
-        %a{href: 'javaScript:;'} 三个月内
+        %a.btn-default{href: 'javaScript:;'} 三个月内
       %td{colspan: 3} 
         %input{type: "text"} ——
         %input{type: "text"}
-        %a{href: 'javaScript:;'}
+        %a.btn-default{href: 'javaScript:;'}
           %i.glyphicon.glyphicon-search
 
-  %table.table.table-hover.flaw-table{style:'display:block;padding-top:20px;'}
-    %tr
+  %table.table.table-hover.flaw-table
+    %thead.flaw_thead
       %td
-      %td{width: "12%;"} 时间
-      %td{width: "60%;"} 题目
-      %td{width: "7%;"}  正确答案
-      %td{width: "7%;"}  答案解析
-      %td{width: "14%;"} 操作
-    - @question_flaw.each do |flaw|
-      %tr
-        %td
-          %input{type: "checkbox"}
-        %td
-          = flaw.created_at
-        - questions = QuestionBank::Question.find(flaw.question_id)
-        %td 
-          = questions.content
-        %td 错误
-        %td 
-          =questions.analysis
-        %td 
-          %a{ href: "javaScript:;" } 重做
-          %a.flaw-delete{ href: "javaScript:;", data: { :confirm => "确认删除吗？", :question_flaw_id => flaw.id} } 删除
-  .flaw-bottom{ :style => 'display:block;padding-top:50px;' }
+      %th.th_record_one 时间
+      %th.th_record_two 题目
+      %th.th_record_three 正确答案
+      %th.th_record_four 答案解析
+      %th.th_record_five 操作
+    %tbody.flaw_tbody
+      - if @question_flaw.blank?
+        %tr
+          %td{colspan: 4} 没有数据
+      - @question_flaw.each do |flaw|
+        %tr
+          %td
+            %input{type: "checkbox"}
+          %td
+            = flaw.created_at
+          - questions = QuestionBank::Question.find(flaw.question_id)
+          %td 
+            = questions.content
+          %td 
+            - case questions.kind
+              - when "single_choice"
+                = questions.choice_answer_indexs[0]+1
+              - when "multi_choice"
+                - choice_answer_indexs = questions.choice_answer_indexs.map { |e| e=e+1  }
+                = choice_answer_indexs*","
+              - when "bool"
+                = questions.bool_answer
+              - when "mapping"
+                - questions.mapping_answer.each do |mapping_team|
+                  %br
+                  = mapping_team*","
+              - when "fill"
+                = questions.fill_answer*","
+              - when "essay"
+                = questions.essay_answer
+          %td 
+            =questions.analysis
+          %td 
+            %a.btn.btn-default{ href: "javaScript:;" } 
+              %i.glyphicon.glyphicon-repeat
+              %span 重做
+            %a.btn.btn-default.flaw-delete{ href: "javaScript:;", data: { :confirm => "确认删除吗？", :question_flaw_id => flaw.id} } 
+              %i.glyphicon.glyphicon-trash
+              %span 删除
+  .flaw-bottom
     %input{ type: "checkbox" } 全选
-    %button.btn.btn-default.active{ type: "button" }批量删除记录
+    %button.btn.btn-default{ type: "button" }
+      %i.glyphicon.glyphicon-trash
+      %span 批量删除记录
 
