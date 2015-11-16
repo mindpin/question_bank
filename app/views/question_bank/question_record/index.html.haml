@@ -41,16 +41,18 @@
       %td 
         %a.btn-default.question-time-all{href: '/question_record'} 全部
       %td
-        %a.btn-default.question-one-week{href: 'javaScript:;'} 一周内
+        %a.btn-default.question-a-week{href: 'javaScript:;', data:{kind: "a_week"}} 一周内
       %td
-        %a.btn-default.question-one-month{href: 'javaScript:;'} 一个月内
+        %a.btn-default.question-a-month{href: 'javaScript:;', data:{kind: "a_month"}} 一个月内
       %td
-        %a.btn-default.question-three-month{href: 'javaScript:;'} 三个月内
+        %a.btn-default.question-three-months{href: 'javaScript:;', data:{kind: "three_months"}} 三个月内
       %td{colspan: 3} 
-        %input{type: "text"} ——
-        %input{type: "text"}
-        %a.btn-default{href: 'javaScript:;'}
+        %input{type: "text", id: "time_first"}
+        ——
+        %input{type: "text", id: "time_second"}
+        %a.btn-default.question-time-fragment{href: 'javaScript:;', data:{kind: "time_fragment"}}
           %i.glyphicon.glyphicon-search
+        %span (例：2015-11-11)
 
   %table.table.table-hover.record-table
     %thead.record_thead
@@ -73,4 +75,7 @@
       %span 批量删除记录
 
   .user_name
-    = current_user.name
+    - if current_user != nil 
+      = current_user.name
+    - else 
+      %span 请登录

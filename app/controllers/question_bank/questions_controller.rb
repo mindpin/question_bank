@@ -154,6 +154,8 @@ module QuestionBank
       def _multi_choice_validation(answer,question_id)
       end
 
+      def _mapping_
+
 
       def _new(kind)
         @question = Question.new(:kind => kind)

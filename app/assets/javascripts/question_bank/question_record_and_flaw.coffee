@@ -126,6 +126,59 @@ class QuestionRecord
       .error (jqXHR, textStatus) ->
         console.log("Request failed: " + textStatus)
 
+    # 条件查询( 时间： 一个周内 )
+    @$elm.on "click", ".result-table .question-a-week", ->
+      record_kind = $(this).closest(".question-a-week").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+    # 条件查询（时间: 一个月内）
+    @$elm.on "click", ".result-table .question-a-month", ->
+      record_kind = $(this).closest(".question-a-month").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus) 
+
+    # 条件查询（时间： 三个月内）
+    @$elm.on "click", ".result-table .question-three-months", ->
+      record_kind = $(this).closest(".question-three-months").attr("data-kind")
+      $.ajax
+        url: "/question_record/#{record_kind}",
+        method: "GET",
+        data: {kind: record_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
+
+    # 条件查询（时间: 某一时段内）
+    @$elm.on "click", ".result-table .question-time-fragment", ->
+      record_kind = $(this).closest(".question-time-fragment").attr("data-kind")
+      time_first = $("#time_first").val()
+      time_second = $("#time_second").val()
+      $.ajax
+        url: "/question_record/#{time_first}",
+        method: "GET"
+        data: {kind: record_kind, second: time_second},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (jqXHR, textStatus) ->
+        console.log("Request failed: " + textStatus)
 
 
 # 错题本
