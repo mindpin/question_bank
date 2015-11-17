@@ -1,0 +1,38 @@
+- if question_flaw.blank?
+  %tr
+    %td{colspan: 3} 没有数据
+- question_flaw.each do |flaw|
+  %tr
+    %td
+      %input.flaw-checkBoxes{type: "checkbox"}
+    %td
+      = flaw.created_at
+    - questions = QuestionBank::Question.find(flaw.question_id)
+    %td 
+      = questions.content
+    %td 
+      - case questions.kind
+        - when "single_choice"
+          = questions.choice_answer_indexs[0]+1
+        - when "multi_choice"
+          - choice_answer_indexs = questions.choice_answer_indexs.map { |e| e=e+1  }
+          = choice_answer_indexs*","
+        - when "bool"
+          = questions.bool_answer
+        - when "mapping"
+          - questions.mapping_answer.each do |mapping_team|
+            %br
+            = mapping_team*","
+        - when "fill"
+          = questions.fill_answer*","
+        - when "essay"
+          = questions.essay_answer
+    %td 
+      =questions.analysis
+    %td 
+      %a.btn.btn-default{ href: "javaScript:;" } 
+        %i.glyphicon.glyphicon-repeat
+        %span 重做
+      %a.btn.btn-default.flaw-delete{ href: "javaScript:;", data: { :question_flaw_id => flaw.id} } 
+        %i.glyphicon.glyphicon-trash
+        %span 删除

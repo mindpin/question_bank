@@ -47,6 +47,11 @@
       %td
         %a.btn-default.question-three-months{href: 'javaScript:;', data:{kind: "three_months"}} 三个月内
       %td{colspan: 3} 
+        / .container.col-md-5.form-group
+        /   .input-group.date{id: "datetimepicker6"}
+        /     %input.form-control{type: "text", id: "time_first"}
+        /     %span.input-group-addon
+        /       %span.glyphicon.glyphicon-calendar
         %input{type: "text", id: "time_first"}
         ——
         %input{type: "text", id: "time_second"}
@@ -63,7 +68,7 @@
         %th.th_record_three 类型
         %th.th_record_four 做题结果
         %th.th_record_five 操作
-    %tbody.record-body
+    %tbody.record-tbody
       = render :partial => "record_index_tr",locals: { question_record: @question_record }
   .record-bottom
     %input{ type: "checkbox" } 全选

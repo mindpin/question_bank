@@ -2,7 +2,7 @@
 class QuestionRecord
   constructor: (@$elm)->
     @bind_events()
-    @$body_ele = @$elm.find(".record-body")
+    @$body_ele = @$elm.find(".record-tbody")
 
   set_body: (body)->
     @$body_ele.html(body)
@@ -20,6 +20,22 @@ class QuestionRecord
       .error (msg) ->
         console.log(msg)
 
+    # 删除做题记录
+    @$elm.on "click", ".record-table .record-tbody .delete-record", ->
+      record_id = $(this).closest(".delete-record").attr("data-question-record-id")
+      if confirm("确认删除吗？")
+        $.ajax
+          url: "/question_record/#{record_id}",
+          method: "DELETE",
+          dataType: "json",
+        .success (msg) ->
+          that.set_body(msg.body)
+        .error (msg) ->
+          console.log(msg)
+      else
+        console.log("已取消删除")
+        
+
     # 条件查询( 结果： 正确 )
     @$elm.on "click", ".result-table .question-right", ->
       whether_correct = $(this).closest(".question-right").attr("data-whether-correct")
@@ -31,8 +47,8 @@ class QuestionRecord
         dataType: "json"
       .done (msg) ->
         that.set_body(msg.body)
-      .fail (jqXHR, textStatus)  ->
-        console.log( "Request failed: " + textStatus )
+      .fail (msg)  ->
+        console.log( msg )
 
     # 条件查询 （结果： 错误）
     @$elm.on "click", ".result-table .question-wrong", ->
@@ -45,8 +61,8 @@ class QuestionRecord
         dataType: "json"
       .done (msg) ->
         that.set_body(msg.body)
-      .fail (jqXHR, textStatus) ->
-        console.log("Request failed:" + textStatus)
+      .fail (msg) ->
+        console.log(msg)
 
     # 条件查询 ( 类型： 单选题 )
     @$elm.on "click", ".result-table .question-single", ->
@@ -58,8 +74,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log( "Request failed: " + textStatus )
+      .error (msg) ->
+        console.log( msg )
 
     # 条件查询（类型： 多选题）
     @$elm.on "click", ".result-table .question-multi", ->
@@ -71,8 +87,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询（类型： 填空题）
     @$elm.on "click", ".result-table .question-fill", ->
@@ -84,8 +100,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询（类型： 连线题）
     @$elm.on "click", ".result-table .question-mapping", ->
@@ -97,8 +113,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询 （类型： 判断题）
     @$elm.on "click", ".result-table .question-bool", ->
@@ -110,8 +126,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询（类型：论述题）
     @$elm.on "click", ".result-table .question-essay", ->
@@ -123,8 +139,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询( 时间： 一个周内 )
     @$elm.on "click", ".result-table .question-a-week", ->
@@ -136,8 +152,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询（时间: 一个月内）
     @$elm.on "click", ".result-table .question-a-month", ->
@@ -149,8 +165,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus) 
+      .error (msg) ->
+        console.log(msg) 
 
     # 条件查询（时间： 三个月内）
     @$elm.on "click", ".result-table .question-three-months", ->
@@ -162,8 +178,8 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
     # 条件查询（时间: 某一时段内）
     @$elm.on "click", ".result-table .question-time-fragment", ->
@@ -177,25 +193,174 @@ class QuestionRecord
         dataType: "json"
       .success (msg) ->
         that.set_body(msg.body)
-      .error (jqXHR, textStatus) ->
-        console.log("Request failed: " + textStatus)
+      .error (msg) ->
+        console.log(msg)
 
 
 # 错题本
 class QuestionFlaw
   constructor: (@$elm)->
     @bind_events()
+    @$body_ele = @$elm.find(".flaw_tbody")
+
+  set_body: (body)->
+    @$body_ele.html(body)
 
   bind_events: ->
+    that = this
+    # 删除记录
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = $(this).closest(".flaw-delete").attr("data-question-flaw-id")
+      if confirm("确认删除吗？")
+        $.ajax
+          url: "/question_flaw/#{flaw_id}"
+          method: "DELETE"
+          dataType: "json"
+        .success (msg) ->
+          that.set_body(msg.body)
+        .error (msg) ->
+          console.log(msg)
+      else
+        console.log("已取消删除")
+
+    # 条件查询（类型：单选题）
+    @$elm.on "click", ".result-table .question-flaw-single", ->
+      flaw_kind = $(this).closest(".question-flaw-single").attr("data-kind")
       $.ajax
-        url: "/question_flaw/#{flaw_id}"
-        method: "DELETE"
-      .success ->
-        window.location.reload()
-      .error ->
-        console.log("error")
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（类型：多选题）
+    @$elm.on "click", ".result-table .question-flaw-multi", ->
+      flaw_kind = $(this).closest(".question-flaw-multi").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（类型: 填空题）
+    @$elm.on "click", ".result-table .question-flaw-fill", ->
+      flaw_kind = $(this).closest(".question-flaw-fill").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType : "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（类型: 连线题）
+    @$elm.on "click", ".result-table .question-flaw-mapping", ->
+      flaw_kind = $(this).closest(".question-flaw-mapping").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（类型: 判断题）
+    @$elm.on "click", ".result-table .question-flaw-bool", ->
+      flaw_kind = $(this).closest(".question-flaw-bool").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（类型: 论述题）
+    @$elm.on "click", ".result-table .question-flaw-essay", ->
+      flaw_kind = $(this).closest(".question-flaw-essay").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（时间: 一周内）
+    @$elm.on "click", ".result-table .flaw-in-aweek", ->
+      flaw_kind = $(this).closest(".flaw-in-aweek").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（时间: 一个月内）
+    @$elm.on "click", ".result-table .flaw-in-amonth", ->
+      flaw_kind = $(this).closest(".flaw-in-amonth").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（时间: 一个月内）
+    @$elm.on "click", ".result-table .flaw-three-month", ->
+      flaw_kind = $(this).closest(".flaw-three-month").attr("data-kind")
+      $.ajax
+        url: "/question_flaw/#{flaw_kind}",
+        method: "GET",
+        data: {kind: flaw_kind},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 条件查询（时间: 某一时段内）
+    @$elm.on "click", ".result-table .flaw-time-fragment", ->
+      flaw_kind = $(this).closest(".flaw-time-fragment").attr("data-kind")
+      time_first = $("#time_first").val()
+      time_second = $("#time_second").val()
+      $.ajax
+        url: "/question_flaw/#{time_first}",
+        method: "GET"
+        data: {kind: flaw_kind, second: time_second},
+        dataType: "json"
+      .success (msg) ->
+        that.set_body(msg.body)
+      .error (msg) ->
+        console.log(msg)
+
+    # 全选
+    @$elm.on "click", ".flaw-bottom .flaw-checked-all", ->
+      console.log("checked")
+      $('.flaw-checkBoxes:checkbox:checked')
+
+
 
 $(document).on 'ready page:load', ->
   if $('.question-record').length > 0 

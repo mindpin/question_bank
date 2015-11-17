@@ -21,6 +21,16 @@ module QuestionBank
     def destroy
       @question_record_single = QuestionBank::QuestionRecord.find(params[:id])
       @question_record_single.destroy
+      if current_user == nil
+        @question_record = []
+      else 
+        @question_record = QuestionBank::QuestionRecord.where(user_id: current_user.id).to_a
+        form_html = render_to_string :partial => 'record_index_tr',locals: { question_record: @question_record } 
+        render :json => {
+          :status => 200,
+          :body => form_html
+          }
+      end
     end
 
     private
@@ -42,12 +52,16 @@ module QuestionBank
             end
           end
           question_single_in_record = record_single.flatten.compact
-          question_single_in_record.each do |siglchois|
-            if siglchois.user_id == current_user.id
-              temp.push(siglchois)
+          if question_single_in_record != []
+            question_single_in_record.each do |siglchois|
+              if siglchois.user_id == current_user.id
+                temp.push(siglchois)
+              end
             end
+            return temp
+          else
+            return temp
           end
-          return temp
         end
 
         # 查询类型为多选题的记录
@@ -59,12 +73,16 @@ module QuestionBank
             end
           end
           question_multi_in_record = record_multi.flatten.compact
-          question_multi_in_record.each do |mutchois|
-            if mutchois.user_id == current_user.id
-              temp.push(mutchois)
+          if question_multi_in_record != []  
+            question_multi_in_record.each do |mutchois|
+              if mutchois.user_id == current_user.id
+                temp.push(mutchois)
+              end
             end
+            return temp
+          else
+            return temp
           end
-          return temp
         end
 
         # 查询类型为填空题的记录
@@ -76,12 +94,16 @@ module QuestionBank
             end
           end
           question_fill_in_record = record_fill.flatten.compact
-          question_fill_in_record.each do |filchois|
-            if filchois.user_id == current_user.id
-              temp.push(filchois)
+          if question_fill_in_record != []
+            question_fill_in_record.each do |filchois|
+              if filchois.user_id == current_user.id
+                temp.push(filchois)
+              end
             end
+            return temp
+          else
+            return temp
           end
-          return temp
         end
 
         # 查询类型为连线题的记录
@@ -93,12 +115,16 @@ module QuestionBank
             end
           end
           question_mapping_in_record = record_mapping.flatten.compact
-          question_mapping_in_record.each do |mapnchois|
-            if mapnchois.user_id == current_user.id
-              temp.push(mapnchois)
+          if question_mapping_in_record != []
+            question_mapping_in_record.each do |mapnchois|
+              if mapnchois.user_id == current_user.id
+                temp.push(mapnchois)
+              end
             end
+            return temp
+          else
+            return temp
           end
-          return temp
         end
 
         # 查询类型为判断题的记录
@@ -110,12 +136,16 @@ module QuestionBank
             end
           end
           question_bool_in_record = record_bool.flatten.compact
-          question_bool_in_record.each do |buchois|
-            if buchois.user_id == current_user.id
-              temp.push(buchois)
+          if question_bool_in_record != []
+            question_bool_in_record.each do |buchois|
+              if buchois.user_id == current_user.id
+                temp.push(buchois)
+              end
             end
+            return temp
+          else
+            return temp
           end
-          return temp
         end
 
         # 查询类型为论述题的记录
@@ -127,12 +157,16 @@ module QuestionBank
             end
           end
           question_essay_in_record = record_essay.flatten.compact
-          question_essay_in_record.each do |esaychois|
-            if esaychois.user_id == current_user.id
-              temp.push(esaychois)
+          if question_essay_in_record != []
+            question_essay_in_record.each do |esaychois|
+              if esaychois.user_id == current_user.id
+                temp.push(esaychois)
+              end
             end
+            return temp
+          else
+            return temp
           end
-          return temp
         end
 
         # 查询时间在一周内的记录
