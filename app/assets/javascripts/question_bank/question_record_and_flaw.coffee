@@ -14,7 +14,7 @@ class QuestionRecord
       $.ajax
         url: "/question_flaw",
         method: "post",
-        data: {"question_record_id":  $(this).closest(".insert-flaw").attr("data-question-record-id")}
+        data: {question_record_id:  $(this).closest(".insert-flaw").attr("data-question-record-id")}
       .success (msg) ->
         window.location.reload()
       .error (msg) ->
@@ -196,6 +196,56 @@ class QuestionRecord
       .error (msg) ->
         console.log(msg)
 
+    # 全选
+    @$elm.on "click", ".record-table .record_thead .th_record_check .flaw-checked-all", ->
+      $('.flaw-checked-all').change( ->
+        checkboxes = $(this).closest('.record-table').find(':checkbox')
+        if $(this).is(':checked') 
+          checkboxes.prop('checked', true)
+        else
+          checkboxes.prop('checked', false)
+      )
+
+    # 批量加入错题本
+    @$elm.on "click", ".record-bottom .batch-into-flaw", ->
+      checkedValues = $('input:checkbox:checked').map( ->
+        this.value
+      ).get()
+      if checkedValues.length == 0
+        console.log("请选择条目")
+        alert("请选择条目")
+      else
+        $.ajax
+          url: "/question_flaw",
+          method: "POST",
+          data: {question_record_id:  checkedValues, whether_batch:"batch_operation"},
+        .success (msg) ->
+          window.location.reload()
+        .error (msg) ->
+          console.log(msg)
+
+    # 批量删除
+    @$elm.on "click", ".record-bottom .batch-delete-record", ->
+      checkedValues = $('input:checkbox:checked').map( ->
+        this.value
+      ).get()
+      if checkedValues.length == 0
+        console.log("请选择条目")
+        alert("请选择条目")
+      else
+        if confirm("确认批量删除吗？")
+          $.ajax
+            url: "/question_record/#{checkedValues}",
+            method: "DELETE",
+            data: {checked_ids: checkedValues}
+            dataType: "json"
+          .success (msg) ->
+            that.set_body(msg.body)
+          .error (msg) ->
+            console.log(msg)
+        else
+          console.log("已取消删除")
+
 
 # 错题本
 class QuestionFlaw
@@ -356,10 +406,37 @@ class QuestionFlaw
         console.log(msg)
 
     # 全选
-    @$elm.on "click", ".flaw-bottom .flaw-checked-all", ->
-      console.log("checked")
-      $('.flaw-checkBoxes:checkbox:checked')
+    @$elm.on "click", ".flaw-table .flaw_thead .th_record_check .flaw-checked-all", ->
+      $('.flaw-checked-all').change( ->
+        checkboxes = $(this).closest('.flaw-table').find(':checkbox')
+        if $(this).is(':checked') 
+          checkboxes.prop('checked', true)
+        else
+          checkboxes.prop('checked', false)
+      )
 
+
+    # 批量删除
+    @$elm.on "click", ".flaw-bottom .batch-delete-flaw", -> 
+      checkedValues = $('input:checkbox:checked').map( ->
+        this.value
+      ).get()
+      if checkedValues.length == 0
+        console.log("请选择条目")
+        alert("请选择条目")
+      else
+        if confirm("确认批量删除吗？")
+          $.ajax
+            url: "/question_flaw/#{checkedValues}"
+            method: "DELETE"
+            data: {checked_ids: checkedValues}
+            dataType: "json"
+          .success (msg) ->
+            that.set_body(msg.body)
+          .error (msg) ->
+            console.log(msg)
+        else
+          console.log("已取消删除")
 
 
 $(document).on 'ready page:load', ->

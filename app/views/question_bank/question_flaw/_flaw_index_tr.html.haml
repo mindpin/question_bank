@@ -4,7 +4,7 @@
 - question_flaw.each do |flaw|
   %tr
     %td
-      %input.flaw-checkBoxes{type: "checkbox"}
+      %input.flaw-checkBoxes{type: "checkbox", value: flaw.id}
     %td
       = flaw.created_at
     - questions = QuestionBank::Question.find(flaw.question_id)

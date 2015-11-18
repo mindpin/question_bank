@@ -10,14 +10,32 @@ module QuestionBank
     end
 
     def create
-      question_record = QuestionBank::QuestionRecord.find(params[:question_record_id])
-      @question_id = question_record.questions_id
-      @user_id = question_record.user_id
-      @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
-      if @question_flaw.save
-        redirect_to "/question_record", notice: "insert success"
+      whether_batch_add = params[:whether_batch]
+      if whether_batch_add == nil
+        question_record = QuestionBank::QuestionRecord.find(params[:question_record_id])
+        @question_id = question_record.questions_id
+        @user_id = question_record.user_id
+        @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
+        if @question_flaw.save
+          redirect_to "/question_record", notice: "insert success"
+        else
+          render "index"
+        end
       else
-        render "index"
+        record_ids = params[:question_record_id]
+        record_ids.each do |recordid|
+          if recordid != "on"
+            question_record = QuestionBank::QuestionRecord.find(recordid)
+            @question_id = question_record.questions_id
+            @user_id = question_record.user_id
+            @search_flaw = QuestionBank::QuestionFlaw.where(question_id:@question_id).to_a
+            if @search_flaw.length == 0
+              @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
+              @question_flaw.save
+            end
+          end 
+        end
+        redirect_to "/question_record", notice: "insert success"
       end
     end
 
@@ -31,17 +49,37 @@ module QuestionBank
     end
 
     def destroy
-      @question_flaw_single = QuestionBank::QuestionFlaw.find(params[:id])
-      @question_flaw_single.destroy
-      if current_user == nil
-        @question_flaw = []
-      else 
-        @question_flaw = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
-        form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaw: @question_flaw}
-        render json: {
-          status: 200,
-          body: form_html
-        }
+      checked_flaw_ids = params[:checked_ids]
+      if checked_flaw_ids == nil
+        @question_flaw_single = QuestionBank::QuestionFlaw.find(params[:id])
+        @question_flaw_single.destroy
+        if current_user == nil
+          @question_flaw = []
+        else 
+          @question_flaw = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
+          form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaw: @question_flaw}
+          render json: {
+            status: 200,
+            body: form_html
+          }
+        end
+      else
+        checked_flaw_ids.each do |flawid|
+          if flawid != "on"
+            @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
+            @question_flaw_single.destroy
+          end
+        end
+        if current_user == nil
+          @question_flaw = []
+        else 
+          @question_flaw = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
+          form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaw: @question_flaw}
+          render json: {
+            status: 200,
+            body: form_html
+          }
+        end
       end
     end
 

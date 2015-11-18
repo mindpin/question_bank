@@ -11,12 +11,16 @@
     padding-top: 20px;
     .record_thead{
       background: #E4E4E4;
+      .th_record_check{
+        width: 5%;
+        text-align: center;
+      }
       .th_record_one{
         width: 12%;
         text-align: center;
       }
       .th_record_two{
-        width: 52%;
+        width: 47%;
         text-align: center;
       }
       .th_record_three{
@@ -38,7 +42,7 @@
   .record-bottom{
     padding-top: 50px;
   }
-  
+
 }
 
 .question-flaw{
@@ -55,16 +59,20 @@
     padding-top: 20px;
     .flaw_thead{
       background: #E4E4E4;
+      .th_record_check{
+        width: 5%;
+        text-align: center;
+      }
       .th_record_one{
         width: 9%;
         text-align: center;
       }
       .th_record_two{
-        width: 50%;
+        width: 47%;
         text-align: center;
       }
       .th_record_three{
-        width: 15%;
+        width: 12%;
         text-align: center;
       }
       .th_record_four{
@@ -72,7 +80,7 @@
         text-align: center;
       }
       .th_record_five{
-        width: 15%;
+        width: 16%;
         text-align: center;
       }
     }

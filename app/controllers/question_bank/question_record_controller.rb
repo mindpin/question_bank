@@ -19,17 +19,37 @@ module QuestionBank
     end
 
     def destroy
-      @question_record_single = QuestionBank::QuestionRecord.find(params[:id])
-      @question_record_single.destroy
-      if current_user == nil
-        @question_record = []
-      else 
-        @question_record = QuestionBank::QuestionRecord.where(user_id: current_user.id).to_a
-        form_html = render_to_string :partial => 'record_index_tr',locals: { question_record: @question_record } 
-        render :json => {
-          :status => 200,
-          :body => form_html
-          }
+      checked_ids = params[:checked_ids]
+      if checked_ids == nil
+        @question_record_single = QuestionBank::QuestionRecord.find(params[:id])
+        @question_record_single.destroy
+        if current_user == nil
+          @question_record = []
+        else 
+          @question_record = QuestionBank::QuestionRecord.where(user_id: current_user.id).to_a
+          form_html = render_to_string :partial => 'record_index_tr',locals: { question_record: @question_record } 
+          render :json => {
+            :status => 200,
+            :body => form_html
+            }
+        end
+      else
+        checked_ids.each do |recordid|
+          if recordid != "on"
+            @question_record_single = QuestionBank::QuestionRecord.find(recordid)
+            @question_record_single.destroy
+          end
+        end
+        if current_user == nil
+          @question_record = []
+        else 
+          @question_record = QuestionBank::QuestionRecord.where(user_id: current_user.id).to_a
+          form_html = render_to_string :partial => 'record_index_tr',locals: { question_record: @question_record } 
+          render :json => {
+            :status => 200,
+            :body => form_html
+            }
+        end
       end
     end
 

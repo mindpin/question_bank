@@ -47,7 +47,8 @@
 
   %table.table.table-hover.flaw-table
     %thead.flaw_thead
-      %td
+      %td.th_record_check
+        %input.flaw-checked-all{ type: "checkbox" } 全选
       %th.th_record_one 时间
       %th.th_record_two 题目
       %th.th_record_three 正确答案
@@ -56,8 +57,7 @@
     %tbody.flaw_tbody
       = render partial: "flaw_index_tr", locals: {question_flaw: @question_flaw}
   .flaw-bottom
-    %input.flaw-checked-all{ type: "checkbox" } 全选
-    %button.btn.btn-default{ type: "button" }
+    %a.btn.btn-default.batch-delete-flaw{:role=>"button"}
       %i.glyphicon.glyphicon-trash
       %span 批量删除记录
   .user_name

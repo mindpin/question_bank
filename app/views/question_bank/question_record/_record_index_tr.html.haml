@@ -4,7 +4,7 @@
 - question_record.each do |record|
   %tr
     %td
-      %input{type: "checkbox"}
+      %input{type: "checkbox", value: record.id}
     %td
       = record.created_at
     - questions = QuestionBank::Question.find(record.questions_id)

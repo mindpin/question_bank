@@ -62,7 +62,8 @@
   %table.table.table-hover.record-table
     %thead.record_thead
       %tr
-        %td
+        %td.th_record_check
+          %input.flaw-checked-all{ type: "checkbox" } 全选
         %th.th_record_one 时间
         %th.th_record_two 题目
         %th.th_record_three 类型
@@ -71,11 +72,10 @@
     %tbody.record-tbody
       = render :partial => "record_index_tr",locals: { question_record: @question_record }
   .record-bottom
-    %input{ type: "checkbox" } 全选
-    %button.btn.btn-default{ type: "button" }
+    %a.btn.btn-default.batch-into-flaw{:role=>"button"}
       %i.glyphicon.glyphicon-plus
       %span 批量加入错题本
-    %button.btn.btn-default{ type: "button" }
+    %a.btn.btn-default.batch-delete-record{:role=>"button"}
       %i.glyphicon.glyphicon-trash
       %span 批量删除记录
 
