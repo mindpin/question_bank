@@ -10,7 +10,7 @@
   %table.table
     %tr
       %td
-  %table.table.result-table
+  %table.table.table-bordered.borderless.result-table
     %tr
       %td 类型：
       %td
@@ -38,12 +38,11 @@
       %td
         %a.btn-default.flaw-three-month{href: 'javaScript:;', data:{kind: "three_month"}} 三个月内
       %td{colspan: 3} 
-        %input{type: "text", id: "time_first"}
+        %input{type: "date", id: "time_first"}
         ——
-        %input{type: "text", id: "time_second"}
+        %input{type: "date", id: "time_second"}
         %a.btn-default.flaw-time-fragment{href: 'javaScript:;', data:{kind: "time_fragment"}}
           %i.glyphicon.glyphicon-search
-        %span (例：2015-11-11)
 
   %table.table.table-hover.flaw-table
     %thead.flaw_thead
@@ -60,9 +59,4 @@
     %a.btn.btn-default.batch-delete-flaw{:role=>"button"}
       %i.glyphicon.glyphicon-trash
       %span 批量删除记录
-  .user_name
-    - if current_user != nil 
-      = current_user.name
-    - else 
-      %span 请登录
 

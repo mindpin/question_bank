@@ -186,6 +186,7 @@ class QuestionRecord
       record_kind = $(this).closest(".question-time-fragment").attr("data-kind")
       time_first = $("#time_first").val()
       time_second = $("#time_second").val()
+      console.log(time_first)
       $.ajax
         url: "/question_record/#{time_first}",
         method: "GET"
@@ -397,7 +398,7 @@ class QuestionFlaw
       time_second = $("#time_second").val()
       $.ajax
         url: "/question_flaw/#{time_first}",
-        method: "GET"
+        method: "GET",
         data: {kind: flaw_kind, second: time_second},
         dataType: "json"
       .success (msg) ->

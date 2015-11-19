@@ -6,9 +6,17 @@
     a:active {color: #0000FF;}
   }
 
+  .borderless td, .borderless th {
+    border: none;
+  }
+
+  .borderless tr {
+    border-bottom:1px dashed #DDDDDD;
+  }
+
   .record-table{
     display: block;
-    padding-top: 20px;
+    padding-top: 10px;
     .record_thead{
       background: #E4E4E4;
       .th_record_check{
@@ -54,9 +62,17 @@
     a:active {color: #0000FF;}
   }
 
+  .borderless td, .borderless th {
+    border: none;
+  }
+
+  .borderless tr {
+    border-bottom:1px dashed #DDDDDD;
+  }
+
   .flaw-table{
     display: block;
-    padding-top: 20px;
+    padding-top: 10px;
     .flaw_thead{
       background: #E4E4E4;
       .th_record_check{
@@ -91,8 +107,3 @@
     padding-top:50px;
   }
 }
-
-.user_name{
-    padding-top: 20px;
-    color: #4395FF;
-  }

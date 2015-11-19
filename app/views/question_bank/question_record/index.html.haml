@@ -11,7 +11,7 @@
   %table.table
     %tr
       %td
-  %table.table.result-table
+  %table.table.table-bordered.borderless.result-table
     %tr
       %td 结果：
       %td
@@ -47,17 +47,11 @@
       %td
         %a.btn-default.question-three-months{href: 'javaScript:;', data:{kind: "three_months"}} 三个月内
       %td{colspan: 3} 
-        / .container.col-md-5.form-group
-        /   .input-group.date{id: "datetimepicker6"}
-        /     %input.form-control{type: "text", id: "time_first"}
-        /     %span.input-group-addon
-        /       %span.glyphicon.glyphicon-calendar
-        %input{type: "text", id: "time_first"}
+        %input{type: "date", id: "time_first"}
         ——
-        %input{type: "text", id: "time_second"}
+        %input{type: "date", id: "time_second"}
         %a.btn-default.question-time-fragment{href: 'javaScript:;', data:{kind: "time_fragment"}}
           %i.glyphicon.glyphicon-search
-        %span (例：2015-11-11)
 
   %table.table.table-hover.record-table
     %thead.record_thead
@@ -79,8 +73,3 @@
       %i.glyphicon.glyphicon-trash
       %span 批量删除记录
 
-  .user_name
-    - if current_user != nil 
-      = current_user.name
-    - else 
-      %span 请登录
