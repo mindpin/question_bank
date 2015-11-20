@@ -1,6 +1,6 @@
 - if question_record.blank?
   %tr
-    %td{colspan: 3} 没有数据
+    %td{colspan: 6} 没有数据
 - question_record.each do |record|
   %tr
     %td
@@ -25,9 +25,9 @@
         论述题
     %td
       - if record.is_correct == false
-        错误
+        %span.font-format-error 错误
       - if record.is_correct == true
-        正确
+        %span.font-format-right 正确
     %td 
       - if record.is_correct == false
         - whether_blank_flaw = QuestionBank::QuestionFlaw.where(question_id: record.questions_id).to_a

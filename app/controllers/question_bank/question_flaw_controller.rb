@@ -11,7 +11,7 @@ module QuestionBank
 
     def create
       whether_batch_add = params[:whether_batch]
-      if whether_batch_add == nil
+      if whether_batch_add != "batch_operation"
         question_record = QuestionBank::QuestionRecord.find(params[:question_record_id])
         @question_id = question_record.questions_id
         @user_id = question_record.user_id
@@ -21,17 +21,20 @@ module QuestionBank
         else
           render "index"
         end
-      else
+      end
+      if whether_batch_add == "batch_operation"
         record_ids = params[:question_record_id]
         record_ids.each do |recordid|
           if recordid != "on"
             question_record = QuestionBank::QuestionRecord.find(recordid)
-            @question_id = question_record.questions_id
-            @user_id = question_record.user_id
-            @search_flaw = QuestionBank::QuestionFlaw.where(question_id:@question_id).to_a
-            if @search_flaw.length == 0
-              @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
-              @question_flaw.save
+            if question_record.is_correct == false
+              @question_id = question_record.questions_id
+              @user_id = question_record.user_id
+              @search_flaw = QuestionBank::QuestionFlaw.where(question_id:@question_id).to_a
+              if @search_flaw.length == 0
+                @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
+                @question_flaw.save
+              end
             end
           end 
         end
@@ -247,7 +250,8 @@ module QuestionBank
         if kind == "time_fragment"
           @question = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
           @question.each do |fragment|
-            if fragment.created_at >= id &&  fragment.created_at <= second
+            search_time = fragment.created_at.strftime("%Y-%m-%d")
+            if search_time >= id &&  search_time <= second
               temp.push(fragment)
             end
           end

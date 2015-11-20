@@ -226,7 +226,8 @@ module QuestionBank
         if kind == "time_fragment"
           @question_record = QuestionBank::QuestionRecord.where(user_id: current_user.id).to_a
           @question_record.each do |fragment|
-            if fragment.created_at >= record_result &&  fragment.created_at <= second
+            search_time = fragment.created_at.strftime("%Y-%m-%d")
+            if search_time >= record_result &&  search_time <= second
               temp.push(fragment)
             end
           end

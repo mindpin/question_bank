@@ -11,7 +11,7 @@
   %table.table
     %tr
       %td
-  %table.table.table-bordered.borderless.result-table
+  %table.table.table-bordered.result-table
     %tr
       %td 结果：
       %td
@@ -54,15 +54,15 @@
           %i.glyphicon.glyphicon-search
 
   %table.table.table-hover.record-table
-    %thead.record_thead
+    %thead.record-thead
       %tr
-        %td.th_record_check
+        %td.th-record-check
           %input.flaw-checked-all{ type: "checkbox" } 全选
-        %th.th_record_one 时间
-        %th.th_record_two 题目
-        %th.th_record_three 类型
-        %th.th_record_four 做题结果
-        %th.th_record_five 操作
+        %th.th-record-one 时间
+        %th.th-record-two 题目
+        %th.th-record-three 类型
+        %th.th-record-four 做题结果
+        %th.th-record-five 操作
     %tbody.record-tbody
       = render :partial => "record_index_tr",locals: { question_record: @question_record }
   .record-bottom

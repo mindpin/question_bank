@@ -1,49 +1,71 @@
+@mixin format_td{
+  text-align: center;
+}
+
+@mixin format_tag_a{
+  a{text-decoration: none;}
+  a:link {color: #515151;}     
+  a:hover {color: #0099FF;}
+  a:active {color: #0000FF;}
+}
+
+@mixin font_format($color){
+  color: $color
+}
+
 .question-record{
   .result-table{
-    a{text-decoration: none;}
-    a:link {color: #515151;}     
-    a:hover {color: #515151;}
-    a:active {color: #0000FF;}
+    @include format_tag_a;
   }
 
-  .borderless td, .borderless th {
+  .result-table td, .result-table th {
     border: none;
   }
 
-  .borderless tr {
+  .result-table table { border-collapse: collapse; }
+
+  .result-table tr {
     border-bottom:1px dashed #DDDDDD;
   }
 
   .record-table{
     display: block;
     padding-top: 10px;
-    .record_thead{
+    .record-thead{
       background: #E4E4E4;
-      .th_record_check{
+      .th-record-check{
         width: 5%;
-        text-align: center;
+        @include format_td;
       }
-      .th_record_one{
+      .th-record-one{
         width: 12%;
-        text-align: center;
+        @include format_td;
       }
-      .th_record_two{
+      .th-record-two{
         width: 47%;
-        text-align: center;
+        @include format_td;
       }
-      .th_record_three{
+      .th-record-three{
         width: 6%;
-        text-align: center;
+        @include format_td;
       }
-      .th_record_four{
+      .th-record-four{
         width: 7%;
-        text-align: center;
+        @include format_td;
       }
-      .th_record_five{
+      .th-record-five{
         width: 23%;
-        text-align: center;
+        @include format_td;
       }
-
+    }
+    .record-tbody{
+      text-align: center;
+      .font-format-error{
+        @include font_format(red)
+      }
+      .font-format-right{
+        @include font_format(green)
+      }
     }
   }
 
@@ -55,18 +77,16 @@
 
 .question-flaw{
   .result-table{
-    padding-top: 20px;
-    a{text-decoration: none;}
-    a:link {color: #515151;}     
-    a:hover {color: #515151;}
-    a:active {color: #0000FF;}
+    @include format_tag_a;
   }
 
-  .borderless td, .borderless th {
+  .result-table td, .result-table th {
     border: none;
   }
+  
+  .result-table table { border-collapse: collapse; }
 
-  .borderless tr {
+  .result-table tr {
     border-bottom:1px dashed #DDDDDD;
   }
 
@@ -77,27 +97,27 @@
       background: #E4E4E4;
       .th_record_check{
         width: 5%;
-        text-align: center;
+        @include format_td;
       }
       .th_record_one{
         width: 9%;
-        text-align: center;
+        @include format_td;
       }
       .th_record_two{
         width: 47%;
-        text-align: center;
+        @include format_td;
       }
       .th_record_three{
         width: 12%;
-        text-align: center;
+        @include format_td;
       }
       .th_record_four{
         width: 11%;
-        text-align: center;
+        @include format_td;
       }
       .th_record_five{
         width: 16%;
-        text-align: center;
+        @include format_td;
       }
     }
   }
