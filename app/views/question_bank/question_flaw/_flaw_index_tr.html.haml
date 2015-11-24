@@ -30,9 +30,10 @@
     %td 
       =questions.analysis
     %td 
-      %a.btn.btn-default{ href: "javaScript:;" } 
+      %a.btn.btn-default{ href: "javaScript:;" ,class: "redo"} 
         %i.glyphicon.glyphicon-repeat
         %span 重做
       %a.btn.btn-default.flaw-delete{ href: "javaScript:;", data: { :question_flaw_id => flaw.id} } 
         %i.glyphicon.glyphicon-trash
         %span 删除
+

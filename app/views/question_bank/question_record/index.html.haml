@@ -8,50 +8,21 @@
       %a{href: "/question_flaw"} 错题本
     %li{role: "presentation"}
       %a 题目收藏
-  %table.table
-    %tr
-      %td
-  %table.table.table-bordered.result-table
-    %tr
-      %td 结果：
-      %td
-        %a.btn-default.question-result-all{href: '/question_record'} 全部
-      %td 
-        %a.btn-default.question-right{href: 'javaScript:;', data:{ whether_correct: "true", kind: "is_correct" }} 正确
-      %td{colspan: 5} 
-        %a.btn-default.question-wrong{href: 'javaScript:;', data:{ whether_correct: "false", kind: "is_correct" }} 错误 
-    %tr
-      %td 类型：
-      %td
-        %a.btn-default.question-type-all{href: '/question_record'} 全部
-      %td 
-        %a.btn-default.question-single{href: 'javaScript:;', data:{ kind: "single_choice" }} 单选题
-      %td 
-        %a.btn-default.question-multi{href: 'javaScript:;', data:{kind: "multi_choice"}} 多选题
-      %td
-        %a.btn-default.question-fill{href: 'javaScript:;', data:{kind: "fill"}} 填空题
-      %td
-        %a.btn-default.question-mapping{href: 'javaScript:;', data:{kind: "mapping"}} 连线题
-      %td
-        %a.btn-default.question-bool{href: 'javaScript:;', data:{kind: "bool"}} 判断题
-      %td
-        %a.btn-default.question-essay{href: 'javaScript:;', data:{kind: "essay"}} 论述题
-    %tr
-      %td 时间：
-      %td 
-        %a.btn-default.question-time-all{href: '/question_record'} 全部
-      %td
-        %a.btn-default.question-a-week{href: 'javaScript:;', data:{kind: "a_week"}} 一周内
-      %td
-        %a.btn-default.question-a-month{href: 'javaScript:;', data:{kind: "a_month"}} 一个月内
-      %td
-        %a.btn-default.question-three-months{href: 'javaScript:;', data:{kind: "three_months"}} 三个月内
-      %td{colspan: 3} 
-        %input{type: "date", id: "time_first"}
-        ——
-        %input{type: "date", id: "time_second"}
-        %a.btn-default.question-time-fragment{href: 'javaScript:;', data:{kind: "time_fragment"}}
-          %i.glyphicon.glyphicon-search
+  = quick_filter_bar do |builder|
+    - builder.group :result, :text => "结果" do |group|
+      - group.add "true",   :text => "正确"
+      - group.add "false", :text => "错误"
+    - builder.group :kind, :text => "类型" do |group|
+      - group.add "single_choice",   :text => "单选题"
+      - group.add "multi_choice", :text => "多选题"
+      - group.add "fill", :text => "填空题"
+      - group.add "mapping", :text => "连线题"
+      - group.add "bool", :text => "判断题"
+      - group.add "essay", :text => "论述题"
+    - builder.group :time, :text => "时间" do |group|
+      - group.add "a_week",   :text => "一周内"
+      - group.add "a_month", :text => "一个月内"
+      - group.add "three_months", :text => "三个月内"
 
   %table.table.table-hover.record-table
     %thead.record-thead

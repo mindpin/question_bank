@@ -4,8 +4,12 @@ module QuestionBank
     def index
       if current_user == nil
         @question_flaw = []
-      else 
-        @question_flaw = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
+      else
+        if params[:kind] ==nil && params[:time] == nil 
+          @question_flaw = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
+        else
+          @question_flaw = _show(params[:kind],params[:time])
+        end
       end
     end
 
@@ -43,12 +47,12 @@ module QuestionBank
     end
 
     def show
-      @question_flaw = _show(params[:id],params[:kind],params[:second])
-      form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaw: @question_flaw}
-      render json: {
-        status: 200,
-        body: form_html
-      }
+      # @question_flaw = _show(params[:id],params[:kind],params[:second])
+      # form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaw: @question_flaw}
+      # render json: {
+      #   status: 200,
+      #   body: form_html
+      # }
     end
 
     def destroy
@@ -91,173 +95,101 @@ module QuestionBank
         params.require(:question_flaw).permit(:question_id, :user_id )
       end
 
-      def _show(id, kind, second)
+      def _show(kind, time)
+        # 根据类型查询
+        if kind != nil && time == nil
+          if kind == "single_choice"
+            @question_single_flaw = _kind_search_flaw(kind)
+            return @question_single_flaw
+          end
+          if kind == "multi_choice"
+            @question_multi_flaw = _kind_search_flaw(kind)
+            return @question_multi_flaw
+          end
+
+          if kind == "fill"
+            @question_fill_flaw = _kind_search_flaw(kind)
+            return @question_fill_flaw
+          end
+
+          if kind == "mapping"
+            @question_mapping_flaw = _kind_search_flaw(kind)
+            return @question_mapping_flaw
+          end
+
+          if kind == "bool"
+            @question_bool_flaw = _kind_search_flaw(kind)
+            return @question_bool_flaw
+          end
+
+          if kind == "essay"
+            @question_essay_flaw = _kind_search_flaw(kind)
+            return @question_essay_flaw
+          end
+        end
+        # 根据时间查询
+        if kind == nil && time != nil
+          @question = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
+          if time == "a_week"
+            @question_a_week = _time_search_flaw(7, @question)
+            return @question_a_week
+          end
+          if time == "a_month"
+            @question_a_month = _time_search_flaw(30, @question)
+            return @question_a_month
+          end
+          if time == "three_months"
+            @question_three_months = _time_search_flaw(90, @question)
+            return @question_three_months
+          end
+        end
+        # 根据类型和时间查询双条件查询
+        if kind != nil && time != nil
+          @question_kind = _kind_search_flaw(kind)
+          if time == "a_week"
+            @question_a_week = _time_search_flaw(7, @question_kind)
+            return @question_a_week
+          end
+          if time == "a_month"
+            @question_a_month = _time_search_flaw(30, @question_kind)
+            return @question_a_month
+          end
+          if time == "three_months"
+            @question_three_months = _time_search_flaw(90, @question_kind)
+            return @question_three_months
+          end
+        end
+      end
+
+      def _kind_search_flaw(kind)
         temp = []
-        if kind == "single_choice"
-          @question = QuestionBank::Question.where(kind: kind).to_a
-          flaw_single = @question.map do |single|
-            if single.questionflaws != []
-              single.questionflaws
-            end
-          end
-          quesiton_single_flaw = flaw_single.flatten.compact
-          if quesiton_single_flaw != []
-            quesiton_single_flaw.each do |sigchois|
-              if sigchois.user_id == current_user.id
-                temp.push(sigchois)
-              end
-            end
-            return temp
-          else
-            return temp
+        @question = QuestionBank::Question.where(kind: kind).to_a
+        flaw_kind_data = @question.map do |kind_data|
+          if kind_data.questionflaws != []
+            kind_data.questionflaws
           end
         end
-
-        if kind == "multi_choice" 
-          @question = QuestionBank::Question.where(kind: kind).to_a
-          flaw_multi = @question.map do |multi|
-            if multi.questionflaws != []
-              multi.questionflaws
-            end
-          end
-          question_multi_flaw = flaw_multi.flatten.compact
-          if question_multi_flaw != []
-            question_multi_flaw.each do |mutichois|
-              if mutichois.user_id == current_user.id
-                temp.push(mutichois)
-              end
-            end
-            return temp
-          else
-            return temp
-          end
-        end
-
-        if kind == "fill"
-          @quesiton = QuestionBank::Question.where(kind: kind).to_a
-          flaw_fill = @quesiton.map do |fill|
-            if fill.questionflaws != []
-              fill.questionflaws
-            end
-          end
-          question_fill_flaw = flaw_fill.flatten.compact
-          if question_fill_flaw != []
-            question_fill_flaw.each do |fillchoice|
-              if fillchoice.user_id == current_user.id
-                temp.push(fillchoice)
-              end
-            end
-            return temp
-          else
-            return temp
-          end
-        end
-
-        if kind == "mapping"
-          @question = QuestionBank::Question.where(kind: kind).to_a
-          flaw_mapping = @question.map do |mapping|
-            if mapping.questionflaws != []
-              mapping.questionflaws
-            end
-          end
-          question_mapping_flaw = flaw_mapping.flatten.compact
-          if question_mapping_flaw != []
-            question_mapping_flaw.each do |mapinchois|
-              if mapinchois.user_id == current_user.id
-                temp.push(mapinchois)
-              end
-            end
-            return temp
-          else
-            return temp
-          end    
-        end
-
-        if kind == "bool"
-          @question = QuestionBank::Question.where(kind: kind).to_a
-          flaw_bool = @question.map do |bool|
-            if bool.questionflaws != []
-              bool.questionflaws
-            end
-          end
-          question_bool_flaw = flaw_bool.flatten.compact
-          if question_bool_flaw != []
-            question_bool_flaw.each do |buchoice|
-              if buchoice.user_id == current_user.id
-                temp.push(buchoice)
-              end
-            end
-            return temp
-          else
-            return temp
-          end  
-        end
-
-        if kind == "essay"
-          @question = QuestionBank::Question.where(kind: kind).to_a
-          flaw_essay = @question.map do |essay|
-            if essay.questionflaws != []
-              essay.questionflaws
-            end
-          end
-          question_essay_flaw = flaw_essay.flatten.compact
-          if question_essay_flaw != []
-            question_essay_flaw.each do |esaychoice|
-              if esaychoice.user_id == current_user.id
-                temp.push(esaychoice)
-              end
-            end
-            return temp
-          else
-            return temp
-          end  
-        end
-
-        # 查询时间在一周内的记录
-        if kind == "a_week"
-          @question = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
-          @question.each do |week|
-            if week.created_at >= (Time.now - (7*24*60*60))
-              temp.push(week)
+        question_kind_flaw = flaw_kind_data.flatten.compact
+        if question_kind_flaw != []
+          question_kind_flaw.each do |kindchoice|
+            if kindchoice.user_id == current_user.id
+              temp.push(kindchoice)
             end
           end
           return temp
-        end
-
-        # 查询时间在一个月内的记录
-        if kind == "a_month"
-          @question = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
-          @question.each do |amonth|
-            if amonth.created_at >= (Time.now - (30*24*60*60))
-              temp.push(amonth)
-            end
-          end
+        else
           return temp
-        end
+        end  
+      end
 
-        # 查询时间在三个月内的记录
-        if kind == "three_month"
-          @question = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
-          @question.each do |three_month|
-            if three_month.created_at >= (Time.now - (3*30*24*60*60))
-              temp.push(three_month)
-            end
+      def _time_search_flaw(number, question)
+        temp = []
+        question.each do |a_time|
+          if a_time.created_at >= (Time.now - (number*24*60*60))
+            temp.push(a_time)
           end
-          return temp
         end
-
-        # 查询时间在某一个时间段内的记录
-        if kind == "time_fragment"
-          @question = QuestionBank::QuestionFlaw.where(user_id: current_user.id).to_a
-          @question.each do |fragment|
-            search_time = fragment.created_at.strftime("%Y-%m-%d")
-            if search_time >= id &&  search_time <= second
-              temp.push(fragment)
-            end
-          end
-          return temp
-        end
-
+        return temp
       end
   end
 end

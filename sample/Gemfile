@@ -46,3 +46,5 @@ gem 'play_auth', :github => 'mindpin/play_auth',
 
 gem 'question_bank', path: '../'
 gem 'rails-i18n', '~> 4.0.0'
+gem 'simple-navbar', :github => 'mindpin/simple-navbar',
+                     :tag => "~> 0.0.5"

@@ -214,9 +214,23 @@ class QuestionFlaw
     else
       console.log("已取消删除")
 
-
+  set_redo_ajax: (id)->
+    jQuery.ajax
+      url: "/questions/do_question"
+      method: "GET"
+      data: {redo_id: id}
+      dataType: "json"
+    .success (msg) =>
+      console.log('redo success')
+      # @set_body(msg.body)
+# 
+# 
   bind_events: ->
     that = this
+    # 重做
+    @$elm.on "click", ".redo", ()->
+      id = jQuery(this).parent().find('.flaw-delete').attr('data-question-flaw-id')
+      that.set_redo_ajax(id)
     # 删除记录
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = jQuery(this).closest(".flaw-delete").attr("data-question-flaw-id")

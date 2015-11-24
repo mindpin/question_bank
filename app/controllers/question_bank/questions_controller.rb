@@ -65,10 +65,21 @@ module QuestionBank
     end
 
     def do_question
-      @questions_array = Question.all.to_a
-      params[:questions_array_index] ||= 0
-      @index = params[:questions_array_index].to_i
-      @length = @questions_array.length
+      p '_____'
+      if params[:redo_id].present?
+        @length = 1
+        @questions_array = QuestionFlaw.find(params[:redo_id]).question.to_a
+        form_html = render_to_string :partial => 'do_question',locals: { questions_array: @questions_array ,length: 1,index: 0} 
+        render :json => {
+        :status => 200,
+        :body => form_html
+        }
+      else
+        @questions_array = Question.all.to_a
+        params[:questions_array_index] ||= 0
+        @index = params[:questions_array_index].to_i
+        @length = @questions_array.length
+      end
     end
 
     def do_question_validation
@@ -86,6 +97,8 @@ module QuestionBank
           _single_choice_validation(answer,question_id)
         when 'multi_choice' then
           _multi_choice_validation(answer,question_id)
+        when 'essay' then
+          _essay_without_validation(answer,question_id)
       end
     end
 
@@ -116,22 +129,38 @@ module QuestionBank
     end
 
     private
-      def make_record(msg)
-        if msg.length == 0
+      def make_record(kind,answer,question_id,wrong_msg)
+        if wrong_msg.length == 0
+          p '正确'
+          flaw = QuestionBank::QuestionRecord.new(:user=>current_user,:questions=>QuestionBank::Question.find(question_id),:is_correct=>true,"#{kind}_answer"=>answer)                    
+          p flaw.valid?
+          p flaw.errors
+          flaw.save
+        else
+          p '错误'
+          p answer.class
+          flaw = QuestionBank::QuestionRecord.new(:user=>current_user,:questions=>QuestionBank::Question.find(question_id),:is_correct=>false,"#{kind}_answer"=>answer)
+          p flaw.valid?
+          p flaw.errors
+          flaw.save
         end
+      end
+
+      def _essay_without_validation(content,question_id)
+        wrong_msg =[]
+        make_record("essay",content,question_id,wrong_msg)
       end
 
       def _fill_validation(array,question_id)
         query_right_answer = Question.find(question_id).fill_answer
         wrong_information = []
         0.upto(query_right_answer.length-1).each do |i|
-          if query_right_answer[i] == array[i]
-            next;
-          else
+          if query_right_answer[i] != array[i]
             wrong_information.push({:index=>i,:right_answer=>query_right_answer[i]})
           end
         end
-        p wrong_information
+        render :json => {:information => wrong_information}.to_json
+        make_record("fill",array,question_id,wrong_information)
       end
 
       def _bool_validation(answer,question_id)
@@ -140,21 +169,90 @@ module QuestionBank
         if query_right_answer.to_s!=answer
           wrong_information.push(query_right_answer)
         end
-        p '~~~~~~~~~~'
-        p wrong_information
-        p current_user.name
-        # make_record(wrong_information)
+        if answer == 'true'
+          answer_flaw = true
+        else
+          answer_flaw = false
+        end
+        render :json => {:information => wrong_information}.to_json
+        make_record("bool",answer_flaw,question_id,wrong_information)
       end
 
       def _single_choice_validation(answer,question_id)
-        p answer
-        p question_id
+        wrong_information = []
+        query_right_answer = Question.find(question_id).choice_answer
+        right_option = query_right_answer.select{|x| x[1]==true}.first
+        query_right_answer.each_with_index do |right_answer,index|
+          if right_answer[0] == answer
+            if right_answer[1] == true
+              wrong_information = []
+              break;
+            else
+              wrong_information.push(right_option)
+            end
+          end
+        end
+        render :json => {:information => wrong_information}.to_json
+        answer_flaw_format = query_right_answer.map do |option|
+          if option[0] == answer
+            [option[0],true]
+          else
+            [option[0],false]
+          end
+        end
+        # 制作标准答案格式
+        make_record("choice",answer_flaw_format,question_id,wrong_information)
       end
 
       def _multi_choice_validation(answer,question_id)
+        wrong_information = []
+        query_right_answer = Question.find(question_id).choice_answer
+        p answer
+        p '正确的答案'
+        p query_right_answer
+        query_right_answer_true_option = query_right_answer.select{|x| x[1] ==true}
+        p query_right_answer_true_option
+        answer = answer.to_a.map do |a|
+          a[1]
+        end
+        answer= answer.map do |a| 
+          if a[1] =='true'
+            [a[0],true]
+          else
+            [a[0],false]
+          end
+        end
+        p '加工后的 做的答案'
+        p answer
+        query_right_answer.each_with_index do |right_answer,index|
+          p right_answer[1]
+          p answer[index][1]
+          if right_answer[1] != answer[index][1]
+            wrong_information.push({:index=>index,:right_answer=>right_answer})
+          end
+        end
+        p wrong_information
+        render :json => {:information => wrong_information,:checked_option=>query_right_answer_true_option}.to_json
+        make_record("choice",answer,question_id,wrong_information)
       end
 
-      def _mapping_
+      def _mapping_validation(answer,question_id)
+        wrong_information = []
+        query_right_answer = Question.find(question_id).mapping_answer 
+        answer = answer.to_a.map do |a|
+          a[1]
+        end
+        query_right_answer.each_with_index do |right_answer,index|
+          if right_answer[1].to_s != answer[index][1]
+            wrong_information.push({:index=>index,:right_answer=>right_answer})
+          end
+        end
+        p '##############'
+        p answer
+        p wrong_information
+        make_record("mapping",answer,question_id,wrong_information)
+        render :json => {:information => wrong_information,:right_option=>query_right_answer}.to_json
+      end
 
 
       def _new(kind)

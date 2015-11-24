@@ -1,5 +1,6 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import "quick_filter_bar";
 
 body {
   background-color: #fafafa;
@@ -38,4 +39,50 @@ body {
       display:inline
     }
   } 
+}
+
+// 做题页
+.page-new-question-single-choice{
+  .radio{
+    margin-left: 20px;
+  }
+}
+.page-new-question-multi-choice{
+  .checkbox{
+    margin-left: 20px;
+  }
+}
+.question-single-choice{
+  .option{
+    .option-radio{
+      display: inline
+    }
+    .option-content{
+      display:inline
+    }
+  } 
+}
+.do-question-msg{
+  height: 100px;
+  color:red
+}
+.option-checkbox{
+display:inline
+}
+.option-content{
+display:inline
+}
+.glyphicon-remove{
+  color: red
+}
+.question-border{
+    border-radius: 25px;
+    border: 2px solid #0099CC;
+    padding: 20px;   
+}
+.question-title-1{
+  font-size: 1.5em;
+}
+.question-title-2{
+  font-size: 1.2em;
 }

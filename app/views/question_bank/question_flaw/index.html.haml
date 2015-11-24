@@ -7,42 +7,18 @@
     %li{role: "presentation"}
       %a 题目收藏
 
-  %table.table
-    %tr
-      %td
-  %table.table.table-bordered.result-table
-    %tr
-      %td 类型：
-      %td
-        %a.btn-default{href: '/question_flaw'} 全部
-      %td
-        %a.btn-default.question-flaw-single{href: 'javaScript:;', data:{ kind: "single_choice" }} 单选题
-      %td
-        %a.btn-default.question-flaw-multi{href: 'javaScript:;', data:{ kind: "multi_choice" }} 多选题
-      %td
-        %a.btn-default.question-flaw-fill{href: 'javaScript:;', data:{ kind: "fill" }} 填空题
-      %td
-        %a.btn-default.question-flaw-mapping{href: 'javaScript:;', data:{ kind: "mapping" }} 连线题
-      %td
-        %a.btn-default.question-flaw-bool{href: 'javaScript:;', data:{ kind: "bool" }} 判断题
-      %td
-        %a.btn-default.question-flaw-essay{href: 'javaScript:;', data:{ kind: "essay" }} 论述题
-    %tr
-      %td 时间：
-      %td 
-        %a.btn-default{href: '/question_flaw'} 全部
-      %td
-        %a.btn-default.flaw-in-aweek{href: 'javaScript:;', data:{kind: "a_week"}} 一周内
-      %td
-        %a.btn-default.flaw-in-amonth{href: 'javaScript:;', data:{kind: "a_month"}} 一个月内
-      %td
-        %a.btn-default.flaw-three-month{href: 'javaScript:;', data:{kind: "three_month"}} 三个月内
-      %td{colspan: 3} 
-        %input{type: "date", id: "time_first"}
-        ——
-        %input{type: "date", id: "time_second"}
-        %a.btn-default.flaw-time-fragment{href: 'javaScript:;', data:{kind: "time_fragment"}}
-          %i.glyphicon.glyphicon-search
+  = quick_filter_bar do |builder|
+    - builder.group :kind, :text => "类型" do |group|
+      - group.add "single_choice",   :text => "单选题"
+      - group.add "multi_choice", :text => "多选题"
+      - group.add "fill", :text => "填空题"
+      - group.add "mapping", :text => "连线题"
+      - group.add "bool", :text => "判断题"
+      - group.add "essay", :text => "论述题"
+    - builder.group :time, :text => "时间" do |group|
+      - group.add "a_week",   :text => "一周内"
+      - group.add "a_month", :text => "一个月内"
+      - group.add "three_months", :text => "三个月内"
 
   %table.table.table-hover.flaw-table
     %thead.flaw_thead
@@ -59,4 +35,3 @@
     %a.btn.btn-default.batch-delete-flaw{:role=>"button"}
       %i.glyphicon.glyphicon-trash
       %span 批量删除记录
-
