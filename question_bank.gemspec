@@ -31,18 +31,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'simple_form'
   spec.add_dependency 'enumerize'
   spec.add_dependency 'kaminari'
-  #a abc你编辑啊
-  # 什么情况
-  # 呵呵
-  # 什么鬼
-  #
-  # 鞥看到
-  # 123
-  # abc
-  # 1111
-  #真该超子
-  #正在操作
-  #正在操作
-  
-  # ni
 end

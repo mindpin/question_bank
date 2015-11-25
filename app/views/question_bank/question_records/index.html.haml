@@ -9,7 +9,7 @@
     %li{role: "presentation"}
       %a 题目收藏
   = quick_filter_bar do |builder|
-    - builder.group :result, :text => "结果" do |group|
+    - builder.group :is_correct, :text => "结果" do |group|
       - group.add "true",   :text => "正确"
       - group.add "false", :text => "错误"
     - builder.group :kind, :text => "类型" do |group|
@@ -35,7 +35,7 @@
         %th.th-record-four 做题结果
         %th.th-record-five 操作
     %tbody.record-tbody
-      = render :partial => "record_index_tr",locals: { question_record: @question_record }
+      = render :partial => "record_index_tr", locals: { question_records: @question_records }
   .record-bottom
     %a.btn.btn-default.batch-into-flaw{:role=>"button"}
       %i.glyphicon.glyphicon-plus
@@ -43,4 +43,3 @@
     %a.btn.btn-default.batch-delete-record{:role=>"button"}
       %i.glyphicon.glyphicon-trash
       %span 批量删除记录
-

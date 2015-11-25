@@ -515,3 +515,15 @@ zh-CN:
         score: 每题分值
         min_level: 难度系数下限
         max_level: 难度系数上限
+
+
+  custom:
+    model:
+      question:
+        human_kind:
+          single_choice: 单选题
+          multi_choice: 多选题
+          bool:  判断题
+          fill: 填空题
+          essay: 论述题
+          mapping: 连线题

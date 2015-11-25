@@ -18,6 +18,6 @@ QuestionBank::Engine.routes.draw do
     post :preview, on: :collection
   end
 
-  resources :question_record
+  resources :question_records
   resources :question_flaw
 end
