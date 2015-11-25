@@ -4,8 +4,8 @@ module QuestionBank
     config.to_prepare do
       ApplicationController.helper ::ApplicationHelper
       User.class_eval do
-        has_many :questionflaws,class_name:'QuestionBank::QuestionFlaw'
-        has_many :questionrecords,class_name:'QuestionBank::QuestionRecord'
+        has_many :questionflaws, class_name:'QuestionBank::QuestionFlaw'
+        has_many :question_records, class_name:'QuestionBank::QuestionRecord'
         include QuestionBank::QuestionFlaw::UserMethods
       end
     end

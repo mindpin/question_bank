@@ -11,9 +11,11 @@ module QuestionBank
     include QuestionBank::EssayMethods
     include QuestionBank::FillMethods
     include QuestionBank::MappingMethods
+    include QuestionBank::QuestionFlaw::QuestionMethods
 
     # 题目类型 枚举: 单选题 多选题 判断题 填空题 论述题 连线题
     KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping]
+
     enumerize :kind, in: KINDS
 
     # 题目正文
@@ -35,7 +37,10 @@ module QuestionBank
     validates :content, :presence => true
     validates :level, :presence => true
     has_many :questionflaws,class_name:'QuestionBank::QuestionFlaw'
-    has_many :questionrecords ,class_name:'QuestionBank::QuestionRecord'
+    has_many :question_records ,class_name:'QuestionBank::QuestionRecord'
 
+    def human_kind
+      I18n.n("custom.model.question.human_kind.#{self.kind}")
+    end
   end
 end

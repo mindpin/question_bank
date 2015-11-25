@@ -20,5 +20,14 @@ module QuestionBank
           questionflaw.destroy
         end
     end
+
+
+    module QuestionMethods
+      # 是否已经加入了错题本
+      # TODO 需要补充测试
+      def is_in_flaw_list_of?(user)
+        user.question_flaws.where(:question_id => self.id.to_s).exists?
+      end
+    end
   end
 end
