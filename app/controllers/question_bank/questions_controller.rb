@@ -64,22 +64,33 @@ module QuestionBank
       redirect_to "/questions"
     end
 
+    def radom_question
+      return Question.skip(rand(0..Question.count-1)).first
+    end
+
     def do_question
-      p '_____'
-      if params[:redo_id].present?
-        @length = 1
-        @questions_array = QuestionFlaw.find(params[:redo_id]).question.to_a
-        form_html = render_to_string :partial => 'do_question',locals: { questions_array: @questions_array ,length: 1,index: 0} 
-        render :json => {
-        :status => 200,
-        :body => form_html
-        }
-      else
-        @questions_array = Question.all.to_a
-        params[:questions_array_index] ||= 0
-        @index = params[:questions_array_index].to_i
-        @length = @questions_array.length
-      end
+      p 'do_question'
+      # if params[:redo_id].present?
+      #   @length = 1
+      #   @questions_array = QuestionFlaw.find(params[:redo_id]).question.to_a
+      #   form_html = render_to_string :partial => 'do_question',locals: { questions_array: @questions_array ,length: 1,index: 0}
+      #   render :json => {
+      #   :status => 200,
+      #   :body => form_html
+      #   }
+      # 用ajax发重做页面（取消）
+      # else
+      #   @questions_array = Question.all.to_a
+      #   params[:questions_array_index] ||= 0
+      #   @index = params[:questions_array_index].to_i
+      #   @length = @questions_array.length
+      # 原来在页面加载一组题（取消）
+      # end
+      @question = radom_question()
+    end
+
+    def redo
+      
     end
 
     def do_question_validation
@@ -132,7 +143,7 @@ module QuestionBank
       def make_record(kind,answer,question_id,wrong_msg)
         if wrong_msg.length == 0
           p '正确'
-          flaw = QuestionBank::QuestionRecord.new(:user=>current_user,:questions=>QuestionBank::Question.find(question_id),:is_correct=>true,"#{kind}_answer"=>answer)                    
+          flaw = QuestionBank::QuestionRecord.new(:user=>current_user,:questions=>QuestionBank::Question.find(question_id),:is_correct=>true,"#{kind}_answer"=>answer)
           p flaw.valid?
           p flaw.errors
           flaw.save
@@ -215,7 +226,7 @@ module QuestionBank
         answer = answer.to_a.map do |a|
           a[1]
         end
-        answer= answer.map do |a| 
+        answer= answer.map do |a|
           if a[1] =='true'
             [a[0],true]
           else
@@ -238,7 +249,7 @@ module QuestionBank
 
       def _mapping_validation(answer,question_id)
         wrong_information = []
-        query_right_answer = Question.find(question_id).mapping_answer 
+        query_right_answer = Question.find(question_id).mapping_answer
         answer = answer.to_a.map do |a|
           a[1]
         end
@@ -253,6 +264,7 @@ module QuestionBank
         make_record("mapping",answer,question_id,wrong_information)
         render :json => {:information => wrong_information,:right_option=>query_right_answer}.to_json
       end
+
 
 
       def _new(kind)

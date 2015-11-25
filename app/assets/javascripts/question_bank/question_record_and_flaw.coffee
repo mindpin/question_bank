@@ -63,7 +63,7 @@ class QuestionRecord
     @$elm.on "click", ".record-table .record-tbody .delete-record", ->
       record_id = $(this).closest(".delete-record").attr("data-question-record-id")
       that.set_delete_ajax(record_id)
-        
+
 
     # 条件查询( 结果： 正确 )
     @$elm.on "click", ".result-table .question-right", ->
@@ -133,7 +133,7 @@ class QuestionRecord
     @$elm.on "click", ".record-table .record-thead .th-record-check .flaw-checked-all", ->
       jQuery('.flaw-checked-all').change( ->
         checkboxes = jQuery(this).closest('.record-table').find(':checkbox')
-        if jQuery(this).is(':checked') 
+        if jQuery(this).is(':checked')
           checkboxes.prop('checked', true)
         else
           checkboxes.prop('checked', false)
@@ -214,23 +214,9 @@ class QuestionFlaw
     else
       console.log("已取消删除")
 
-  set_redo_ajax: (id)->
-    jQuery.ajax
-      url: "/questions/do_question"
-      method: "GET"
-      data: {redo_id: id}
-      dataType: "json"
-    .success (msg) =>
-      console.log('redo success')
-      # @set_body(msg.body)
-# 
-# 
+
   bind_events: ->
     that = this
-    # 重做
-    @$elm.on "click", ".redo", ()->
-      id = jQuery(this).parent().find('.flaw-delete').attr('data-question-flaw-id')
-      that.set_redo_ajax(id)
     # 删除记录
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = jQuery(this).closest(".flaw-delete").attr("data-question-flaw-id")
@@ -292,14 +278,14 @@ class QuestionFlaw
     @$elm.on "click", ".flaw-table .flaw_thead .th_record_check .flaw-checked-all", ->
       jQuery('.flaw-checked-all').change( ->
         checkboxes = jQuery(this).closest('.flaw-table').find(':checkbox')
-        if jQuery(this).is(':checked') 
+        if jQuery(this).is(':checked')
           checkboxes.prop('checked', true)
         else
           checkboxes.prop('checked', false)
       )
 
     # 批量删除
-    @$elm.on "click", ".flaw-bottom .batch-delete-flaw", -> 
+    @$elm.on "click", ".flaw-bottom .batch-delete-flaw", ->
       checkedValues = jQuery('input:checkbox:checked').map( ->
         this.value
       ).get()
@@ -309,8 +295,8 @@ class QuestionFlaw
         that.set_delete_ajax(checkedValues)
 
 jQuery(document).on 'ready page:load', ->
-  if jQuery('.question-record').length > 0 
+  if jQuery('.question-record').length > 0
     new QuestionRecord jQuery('.question-record')
 
-  if jQuery('.question-flaw').length > 0 
+  if jQuery('.question-flaw').length > 0
     new QuestionFlaw jQuery('.question-flaw')
