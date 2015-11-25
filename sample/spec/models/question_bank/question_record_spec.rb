@@ -12,7 +12,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @choice_answer = [["一条", false], ["两条", false], ["三条", false], ["四条", true]]
         @record = @question.question_records.create(
           :user          => @user,
-          :choice_answer => @choice_answer
+          :answer        => @choice_answer
         )
       end
 
@@ -42,7 +42,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @choice_answer = [["一条", true], ["两条", false], ["三条", false], ["四条", false]]
         @record = @question.question_records.create(
           :user          => @user,
-          :choice_answer => @choice_answer
+          :answer => @choice_answer
         )
       end
 
@@ -72,7 +72,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @choice_answer = [["一条", true], ["两条", false], ["三条", false], ["四条", false]]
         @record = @question.question_records.create(
           :user          => @user,
-          :choice_answer => @choice_answer,
+          :answer => @choice_answer,
           :essay_answer  => "abc"
         )
       end

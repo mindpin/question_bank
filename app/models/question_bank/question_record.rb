@@ -17,14 +17,37 @@ module QuestionBank
     belongs_to :question
     belongs_to :user
 
-    before_validation :set_kind
+    def answer=(answer)
+      @answer = answer
+    end
+
+    before_validation :process_custom_logic
+    def process_custom_logic
+      set_kind
+      set_answer_field_value
+      set_is_correct
+    end
+
     def set_kind
       if !self.question.blank?
         self.kind = self.question.kind
       end
     end
 
-    before_validation :set_is_correct
+    def set_answer_field_value
+      return true if self.question.blank?
+      if self.kind == "single_choice" || self.kind == "multi_choice"
+        self.choice_answer = @answer
+        return true
+      end
+
+      if Question::KINDS.include?(self.kind)
+        field = "#{self.kind}_answer"
+        self.send("#{field}=", @answer)
+        return true
+      end
+    end
+
     def set_is_correct
       return true if self.question.blank?
 
