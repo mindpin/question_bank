@@ -41,7 +41,7 @@ module QuestionBank
         return true
       end
 
-      if Question::KINDS.include?(self.kind)
+      if Question::KINDS.join(",").include?(self.kind)
         field = "#{self.kind}_answer"
         self.send("#{field}=", @answer)
         return true
@@ -56,7 +56,7 @@ module QuestionBank
         return true
       end
 
-      if Question::KINDS.include?(self.kind)
+      if Question::KINDS.join(",").include?(self.kind)
         field = "#{self.kind}_answer"
         self.is_correct = (self.question.send(field) == self.send(field))
         return true
@@ -75,9 +75,9 @@ module QuestionBank
       if self.kind == "single_choice" || self.kind == "multi_choice"
         has_value_field = "choice_answer"
         must_nil_fields.delete "choice_answer"
-      elsif Question::KINDS.include?(self.kind)
-        has_value_field = self.kind
-        must_nil_fields.delete self.kind
+      elsif Question::KINDS.join(",").include?(self.kind)
+        has_value_field = "#{self.kind}_answer"
+        must_nil_fields.delete "#{self.kind}_answer"
       end
 
       if self.send(has_value_field).blank?
