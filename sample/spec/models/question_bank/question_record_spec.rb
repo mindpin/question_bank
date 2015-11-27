@@ -261,118 +261,303 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         expect(@record.fill_answer).to eq(@fill_answer)
       }
     end
+
+    describe "fill_answer 字段之外的答案字段必须为 nil" do
+      it{
+        answer_fields = {
+          :choice_answer => [["hello",true],["nihao",false]],
+          :mapping_answer => [["hony","baby"],["coat","shirt"]],
+          :bool_answer => true,
+          :essay_answer => "Alan is a good man"
+        }
+        answer_fields.each do |field|
+          fill_answer = ["北京", "伦敦"]
+          record = @question.question_records.create(
+            :user => @user,
+            :answer =>fill_answer,
+            field[0] => field[1]
+          )
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[field[0]]).not_to be_nil
+        end
+      }
+    end
+
+    describe "答案格式不正确" do 
+      it{
+        fill_answers = [
+          [true,1452],
+          [["北京"],["伦敦"]]
+        ]
+        fill_answers.each do |answer|
+          record = @question.question_records.create(
+            :user => @user,
+            :answer => answer
+          )
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[:answer]).to be_nil
+        end
+      }
+    end
   end
-  # describe "连线题" do
-  #   before :each do
-  #     @id             = "2254879564145210"
-  #     @kind           = "mapping"
-  #     @mapping_answer = [["bbbb", "bbbb"], ["cccccc", "dddddd"]]
-  #     @content        = "yyybby3331213131"
-  #     @analysis       = nil
-  #     @level          = 1
-  #     @enabled        = true
-  #     @question = QuestionBank::Question.create(id: @id, kind: @kind,mapping_answer: @mapping_answer, content: @content, analysis: @analysis, level: @level, enabled: @enabled )
-  #   end
-  #
-  #   it{
-  #     @questions            = @question
-  #     @user                 = create(:user)
-  #     @is_correct           = true
-  #     @bool_answer          = nil
-  #     @choice_answer        = nil
-  #     @essay_answer         = nil
-  #     @fill_answer          = nil
-  #     @mapping_answer       = [["bbbb", "bbbb"], ["cccccc", "dddddd"]]
-  #
-  #     @question_record = QuestionBank::QuestionRecord.new(questions: @questions, user: @user, is_correct: @is_correct, bool_answer: @bool_answer, choice_answer: @choice_answer, essay_answer: @essay_answer, fill_answer: @fill_answer, mapping_answer: @mapping_answer )
-  #
-  #     @question_record.save
-  #     @question_record.valid?
-  #     @question_record_db = QuestionBank::QuestionRecord.where(:questions =>@questions).first
-  #     expect(@question_record_db.user).to eq(@user)
-  #     expect(@question_record_db.is_correct).to eq(@is_correct)
-  #     expect(@question_record_db.bool_answer).to eq(@bool_answer)
-  #     expect(@question_record_db.choice_answer).to eq(@choice_answer)
-  #     expect(@question_record_db.essay_answer).to eq(@essay_answer)
-  #     expect(@question_record_db.fill_answer).to eq(@fill_answer)
-  #     expect(@question_record_db.mapping_answer).to eq(@mapping_answer)
-  #   }
-  #
-  #   it{
-  #     @questions            = @question
-  #     @user                 = create(:user)
-  #     @is_correct           = false
-  #     @bool_answer          = nil
-  #     @choice_answer        = nil
-  #     @essay_answer         = nil
-  #     @fill_answer          = nil
-  #     @mapping_answer       = ["niao"]
-  #
-  #     @question_record = QuestionBank::QuestionRecord.new(questions: @questions, user: @user, is_correct: @is_correct, bool_answer: @bool_answer, choice_answer: @choice_answer, essay_answer: @essay_answer, fill_answer: @fill_answer, mapping_answer: @mapping_answer )
-  #
-  #     @question_record.save
-  #     @question_record.valid?
-  #     @question_record_db = QuestionBank::QuestionRecord.where(:questions =>@questions).first
-  #     expect(@question_record_db).to eq(nil)
-  #   }
-  # end
-  #
-  # describe "论述题" do
-  #   before :each do
-  #     @id             = "2354879564145238"
-  #     @kind           = "essay"
-  #     @essay_answer   = "很关键"
-  #     @content        = "论亲情"
-  #     @analysis       = nil
-  #     @level          = 1
-  #     @enabled        = true
-  #     @question = QuestionBank::Question.create(id: @id, kind: @kind, essay_answer: @essay_answer, content: @content, analysis: @analysis, level: @level, enabled: @enabled )
-  #   end
-  #
-  #   it{
-  #     @questions            = @question
-  #     @user                 = create(:user)
-  #     @is_correct           = true
-  #     @bool_answer          = nil
-  #     @choice_answer        = nil
-  #     @essay_answer         = "很美好"
-  #     @fill_answer          = nil
-  #     @mapping_answer       = nil
-  #
-  #     @question_record = QuestionBank::QuestionRecord.new(questions: @questions, user: @user, is_correct: @is_correct, bool_answer: @bool_answer, choice_answer: @choice_answer, essay_answer: @essay_answer, fill_answer: @fill_answer, mapping_answer: @mapping_answer )
-  #
-  #     @question_record.save
-  #     @question_record.valid?
-  #     @question_record_db = QuestionBank::QuestionRecord.where(:questions =>@questions).first
-  #     expect(@question_record_db.questions).to eq(@questions)
-  #     expect(@question_record_db.user).to eq(@user)
-  #     expect(@question_record_db.is_correct).to eq(@is_correct)
-  #     expect(@question_record_db.bool_answer).to eq(@bool_answer)
-  #     expect(@question_record_db.choice_answer).to eq(@choice_answer)
-  #     expect(@question_record_db.essay_answer).to eq(@essay_answer)
-  #     expect(@question_record_db.fill_answer).to eq(@fill_answer)
-  #     expect(@question_record_db.mapping_answer).to eq(@mapping_answer)
-  #   }
-  #
-  #   it{
-  #     @questions            = @question
-  #     @user                 = create(:user)
-  #     @is_correct           = false
-  #     @bool_answer          = nil
-  #     @choice_answer        = nil
-  #     @essay_answer         = nil
-  #     @fill_answer          = nil
-  #     @mapping_answer       = nil
-  #
-  #     @question_record = QuestionBank::QuestionRecord.new(questions: @questions, user: @user, is_correct: @is_correct, bool_answer: @bool_answer, choice_answer: @choice_answer, essay_answer: @essay_answer, fill_answer: @fill_answer, mapping_answer: @mapping_answer )
-  #
-  #     @question_record.save
-  #     @question_record.valid?
-  #     @question_record_db = QuestionBank::QuestionRecord.where(:questions =>@questions).first
-  #     expect(@question_record_db).to eq(nil)
-  #   }
-  # end
-  #
+
+  describe "连线题" do 
+    before :all do
+      @question = create :mapping_question_letter
+      @user = create(:user)
+    end
+    describe "回答正确" do
+      before :all do
+        @mapping_answer = [["A","a"],["B", "b"], ["C", "c"]]
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @mapping_answer
+        )
+      end
+      it{
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(true)
+      }
+      it{
+        expect(@record.fill_answer).to eq(nil)
+        expect(@record.bool_answer).to eq(nil)
+        expect(@record.essay_answer).to eq(nil)
+        expect(@record.choice_answer).to eq(nil)
+        expect(@record.mapping_answer).to eq(@mapping_answer)
+      }
+    end
+
+    describe "回答错误" do 
+      before :all do 
+        @mapping_answer = [["A","b"],["B", "a"], ["C", "c"]]
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @mapping_answer
+        )
+      end
+      it{
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(false)
+      }
+      it{
+        expect(@record.fill_answer).to eq(nil)
+        expect(@record.bool_answer).to eq(nil)
+        expect(@record.essay_answer).to eq(nil)
+        expect(@record.choice_answer).to eq(nil)
+        expect(@record.mapping_answer).to eq(@mapping_answer)
+      }
+    end 
+
+    describe "mapping_answer 字段之外的答案字段必须为 nil" do
+      it{
+        answer_fields = {
+          :fill_answer => ["peking"],
+          :bool_answer => true,
+          :essay_answer => "I love you sweet",
+          :choice_answer => [["一条", false], ["两条", false], ["三条", false], ["四条", true]],
+        }
+        @mapping_answer = [["A","a"],["B", "b"], ["C", "c"]]
+        answer_fields.each do |field|
+          record = @question.question_records.create(
+            :user => @user,
+            :answer => @mapping_answer,
+            field[0] => field[1]
+          )
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[field[0]]).not_to be_nil
+        end
+      }
+    end
+
+    describe "答案格式不正确" do
+      it{
+        mapping_answer = [
+          ["hello"],
+          [["hei",true],[345,true]],
+          [[nil,nil],[nil,nil]]
+        ]
+        mapping_answer.each do |answer|
+          record = @question.question_records.create(
+            :user => @user,
+            :answer => answer
+          )
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[:answer]).to be_nil
+        end
+      }
+    end
+  end
+
+  describe "论述题" do
+    before :all do
+      @question = create :essay_question_relative
+      @user = create(:user)
+    end
+
+    describe "回答正确" do
+      before :all do 
+        @essay_answer = "很关键"
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @essay_answer
+        )
+      end
+      it{
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(true)
+      }
+      it{
+        expect(@record.fill_answer).to eq(nil)
+        expect(@record.bool_answer).to eq(nil)
+        expect(@record.mapping_answer).to eq(nil)
+        expect(@record.choice_answer).to eq(nil)
+        expect(@record.essay_answer).to eq(@essay_answer)
+      }
+    end
+
+    describe "回答错误" do 
+      before :all do
+        @essay_answer = "I don't know"
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @essay_answer
+        )
+      end
+      it{
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(false)
+      }
+      it{
+        expect(@record.fill_answer).to eq(nil)
+        expect(@record.bool_answer).to eq(nil)
+        expect(@record.mapping_answer).to eq(nil)
+        expect(@record.choice_answer).to eq(nil)
+        expect(@record.essay_answer).to eq(@essay_answer)
+      }
+    end
+
+    describe "essay_answer 字段之外的答案字段必须为 nil" do
+      it{
+        answer_fields = {
+          :bool_answer => true,
+          :fill_answer => ["right"],
+          :mapping_answer => [["A","a"],["B","b"]],
+          :choice_answer => [["two",false],["four",false],["three",true],["one",false]]
+        }
+        @essay_answer = "很关键"
+        answer_fields.each do |field|
+          record = @question.question_records.create(
+            :user => @user,
+            :answer => @essay_answer,
+            field[0] => field[1]
+          )
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[field[0]]).not_to be_nil
+        end
+      }
+    end
+  end
+
+  describe "判断题" do
+    before :all do 
+      @question = create :bool_question_dog
+      @user = create(:user)
+    end
+
+    describe "回答正确" do
+      before :all do 
+        @bool_answer = true
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @bool_answer
+        )
+      end
+      it{
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(true)
+      }
+      it{
+        expect(@record.fill_answer).to eq(nil)
+        expect(@record.mapping_answer).to eq(nil)
+        expect(@record.choice_answer).to eq(nil)
+        expect(@record.essay_answer).to eq(nil)
+        expect(@record.bool_answer).to eq(@bool_answer)
+      }
+    end
+
+    describe "回答错误" do
+      before :all do
+        @bool_answer = false
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @bool_answer
+        )
+      end
+      it{
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(false)
+      }
+      it{
+        expect(@record.fill_answer).to eq(nil)
+        expect(@record.mapping_answer).to eq(nil)
+        expect(@record.choice_answer).to eq(nil)
+        expect(@record.essay_answer).to eq(nil)
+        expect(@record.bool_answer).to eq(@bool_answer)
+      }
+    end
+
+    describe "bool_answer 字段之外的答案字段必须为 nil" do
+      it{
+        answer_fields = {
+          :fill_answer => ["abc"],
+          :mapping_answer => [["A","a"],["B","b"],["C","c"]],
+          :choice_answer => [["jkl",true],["ghi",false],["def",false],["abc",false]],
+          :essay_answer => "Hello world"
+        }
+        @bool_answer = true
+        answer_fields.each do |field|
+          record = @question.question_records.create(
+            :user => @user,
+            :answer => @bool_answer,
+            field[0] => field[1]
+          )
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[field[0]]).not_to be_nil
+        end
+      }
+    end
+  end
+  
   # describe "判断题" do
   #   before :each do
   #     @id             = "2354879564145321"

@@ -41,4 +41,28 @@ FactoryGirl.define do
     level 1
     enabled true
   end
+
+  factory :mapping_question_letter, class: QuestionBank::Question do
+    kind "mapping"
+    content "英文字母连线"
+    mapping_answer [["A","a"],["B", "b"], ["C", "c"]]
+    level 1
+    enabled true
+  end
+
+  factory :essay_question_relative, class: QuestionBank::Question do
+    kind "essay"
+    content "论亲情"
+    essay_answer "很关键"
+    level 1
+    enabled true
+  end
+
+  factory :bool_question_dog, class: QuestionBank::Question do
+    kind "bool"
+    content "阿黄是小狗"
+    bool_answer true
+    level 1 
+    enabled true
+  end
 end

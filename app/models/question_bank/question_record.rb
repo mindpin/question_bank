@@ -96,11 +96,6 @@ module QuestionBank
 
     # 校验格式
     def validates_answer_format
-      if self.kind == "bool"
-          if !self.bool_answer.is_a?(Boolean)
-            errors.add(:bool_answer, "判断题格式不正确")
-          end
-      end
       if self.kind == "single_choice"
         if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count != 1
           errors.add(:single_choice_answer, "单选题答案格式不正确")
@@ -113,21 +108,14 @@ module QuestionBank
         end
       end
 
-      if self.kind == "essay"
-        if !self.essay_answer.is_a?(String)
-          errors.add(:essay_answer, "论述题答案格式不正确")
-        end
-      end
-
       if self.kind == "fill"
-        if !self.fill_answer.is_a?(Array) || (self.fill_count != self.fill_answer.count)
+        if self.fill_answer.map{|item| item.is_a?(String) }.include?(false)
           errors.add(:fill_answer, "填空题答案格式不正确")
         end
       end
 
       if self.kind == "mapping"
-        question_mapping_answer = QuestionBank::Question.find( self.question_id ).mapping_answer
-        if self.mapping_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(String) }.include?(false) || self.mapping_answer.count != question_mapping_answer.count
+        if self.mapping_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(String) }.include?(false) && self.question.mapping_answer.count != self.mapping_answer.count
           errors.add(:mapping_answer, "连线题答案格式不正确")
         end
       end
@@ -149,9 +137,5 @@ module QuestionBank
       @choice_answer_indexs = choice_answer_indexs.map{|index|index.to_i}.uniq
     end
 
-    def fill_count
-      question_content = self.question.content
-      question_content.scan(/_+/).size
-    end
   end
 end
