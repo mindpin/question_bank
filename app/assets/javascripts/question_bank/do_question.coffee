@@ -6,14 +6,16 @@ class DoQuestion
     @$elm.find('.question-id').attr('data-id')
 
   answer_right_effect: ()->
+    # 如果要加打叉功能，仿照如下代码
     # @$elm.find(".glyphicon-remove").addClass('hidden')
+    @$elm.find(" .submit-answer").addClass('hidden')
     @$elm.find(" .next a").removeClass('hidden');
     @$elm.find(" .do-question-msg p").text('回答正确')
     @$elm.find(" .do-question-msg p").css("color",'green')
 
-  # answer_isnt_correct
   write_wrong_information: (kind,wrong_msg)->
-    @$elm.find(" .next a").addClass('hidden');
+    @$elm.find(" .submit-answer").addClass('hidden')
+    @$elm.find(" .next a").removeClass('hidden')
     @$elm.find(" .do-question-msg p").css("color",'red')
     switch kind
       when "fill"
@@ -69,6 +71,7 @@ class DoQuestion
           @write_wrong_information('fill',wrong_information_mod)
 
   single_choice_validation: (answer_array)=>
+    console.log(answer_array)
     id = @get_question_id()
     $.ajax
         url: "/questions/do_question_validation",
@@ -214,6 +217,3 @@ $(document).on 'ready page:load', ->
   if $('.do-question-page').length > 0
     new DoQuestion $('.do-question-page')
 
-# $(document).on 'ready page:change', ->
-#   if $('.redo-question-page').length > 0
-#     console.log('重做')

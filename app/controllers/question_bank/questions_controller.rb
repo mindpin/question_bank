@@ -75,21 +75,18 @@ module QuestionBank
       # @question = @questions.skip(rand(0..@questions.count-1)).first
     end
 
-    def redo
+    def redo_question
 
     end
 
     def do_question_validation
+      p params[:answer]
       @question = Question.find(params[:answer_id])
       @record = @question.question_records.new(
           :user          => current_user,
           :answer        => params[:answer]
         )
       @record.save
-      p 'right_answer is'
-      p @record.right_answer
-      p 'result'
-      p @record.is_correct
       if @record.is_correct
         render :json => {:result => true}
       else

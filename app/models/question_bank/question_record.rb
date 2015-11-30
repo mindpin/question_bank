@@ -19,8 +19,6 @@ module QuestionBank
 
     def answer=(answer)
       @answer = answer
-      p 'answer 在赋值的时候'
-      p @answer
     end
 
     before_validation :process_custom_logic
@@ -33,7 +31,6 @@ module QuestionBank
     def set_kind
       if !self.question.blank?
         self.kind = self.question.kind
-        p self.kind
       end
     end
 
@@ -88,9 +85,6 @@ module QuestionBank
 
       if Question::KINDS.include?(self.kind.to_sym)
         field = "#{self.kind}_answer"
-        p '比较对错'
-        p self.question.send(field)
-        p self.send(field)
         self.is_correct = (self.question.send(field) == self.send(field))
         return true
       end
@@ -124,7 +118,6 @@ module QuestionBank
       end
 
       if self.send(has_value_field).nil?
-        p '空了'
         i18n_key = I18n.t("mongoid.errors.models.question_bank/question.attributes.#{has_value_field}.blank")
         errors.add(has_value_field, i18n_key)
       end

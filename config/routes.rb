@@ -11,6 +11,7 @@ QuestionBank::Engine.routes.draw do
       get :search
       get :do_question
       post :do_question_validation
+      get :redo_question
     end
   end
 
