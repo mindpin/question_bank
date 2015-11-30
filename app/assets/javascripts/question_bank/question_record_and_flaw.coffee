@@ -13,7 +13,7 @@ class QuestionRecord
     else
       record_url = other_one
     jQuery.ajax
-      url: "/question_record/#{record_url}",
+      url: "/question_records/#{record_url}",
       method: "GET",
       data: {kind: record_kind, second: other_two},
       dataType: "json"
@@ -26,7 +26,7 @@ class QuestionRecord
     if confirm("确认删除吗？")
       if id.length == 24
         $.ajax
-          url: "/question_record/#{id}",
+          url: "/question_records/#{id}",
           method: "DELETE",
           dataType: "json"
         .success (msg) =>
@@ -35,7 +35,7 @@ class QuestionRecord
           console.log(msg)
       else
         $.ajax
-          url: "/question_record/#{id}",
+          url: "/question_records/#{id}",
           method: "DELETE",
           data: {checked_ids: id}
           dataType: "json"
@@ -50,10 +50,11 @@ class QuestionRecord
     that = this
     # 加入错题本
     @$elm.on "click", ".record-table .insert-flaw", ->
+      question_record_id = jQuery(this).closest(".insert-flaw").attr("data-question-record-id")
       jQuery.ajax
-        url: "/question_flaw",
+        url: "/question_flaws",
         method: "post",
-        data: {question_record_id:  jQuery(this).closest(".insert-flaw").attr("data-question-record-id")}
+        data: {question_records_id: question_record_id }
       .success (msg) ->
         window.location.reload()
       .error (msg) ->
@@ -148,9 +149,9 @@ class QuestionRecord
         alert("请选择条目")
       else
         $.ajax
-          url: "/question_flaw",
+          url: "/question_flaws",
           method: "POST",
-          data: {question_record_id:  checkedValues, whether_batch:"batch_operation"},
+          data: {question_records_id:  checkedValues, whether_batch:"batch_operation"},
         .success (msg) ->
           window.location.reload()
         .error (msg) ->
@@ -181,7 +182,7 @@ class QuestionFlaw
     else
       flaw_url = other_one
     $.ajax
-      url: "/question_flaw/#{flaw_url}",
+      url: "/question_flaws/#{flaw_url}",
       method: "GET",
       data: {kind: flaw_kind, second: other_two},
       dataType: "json"
@@ -194,7 +195,7 @@ class QuestionFlaw
     if confirm("确认删除吗？")
       if id.length == 24
         jQuery.ajax
-          url: "/question_flaw/#{id}"
+          url: "/question_flaws/#{id}"
           method: "DELETE"
           dataType: "json"
         .success (msg) =>
@@ -203,7 +204,7 @@ class QuestionFlaw
           console.log(msg)
       else
         jQuery.ajax
-          url: "/question_flaw/#{id}"
+          url: "/question_flaws/#{id}"
           method: "DELETE"
           data: {checked_ids: id}
           dataType: "json"

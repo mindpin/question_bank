@@ -1,5 +1,5 @@
 module QuestionBank
-  class QuestionFlawController < QuestionBank::ApplicationController
+  class QuestionFlawsController < QuestionBank::ApplicationController
     include QuestionBank::ApplicationHelper
     def index
       if current_user == nil
@@ -16,18 +16,18 @@ module QuestionBank
     def create
       whether_batch_add = params[:whether_batch]
       if whether_batch_add != "batch_operation"
-        question_record = QuestionBank::QuestionRecord.find(params[:question_record_id])
-        @question_id = question_record.questions_id
+        question_record = QuestionBank::QuestionRecord.find(params[:question_records_id])
+        @question_id = question_record.question_id
         @user_id = question_record.user_id
         @question_flaw = QuestionBank::QuestionFlaw.new(question_id: @question_id, user_id: @user_id)
         if @question_flaw.save
-          redirect_to "/question_record", notice: "insert success"
+          redirect_to "/question_record"
         else
           render "index"
         end
       end
       if whether_batch_add == "batch_operation"
-        record_ids = params[:question_record_id]
+        record_ids = params[:question_records_id]
         record_ids.each do |recordid|
           if recordid != "on"
             question_record = QuestionBank::QuestionRecord.find(recordid)
