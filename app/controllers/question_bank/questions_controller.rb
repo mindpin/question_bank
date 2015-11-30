@@ -71,7 +71,7 @@ module QuestionBank
     def do_question
       @question = radom_question()
       # 调试代码（需要删除）
-      # @questions = Question.where(:kind=>'fill')
+      # @questions = Question.where(:kind=>'multi_choice')
       # @question = @questions.skip(rand(0..@questions.count-1)).first
     end
 
@@ -86,10 +86,6 @@ module QuestionBank
           :answer        => params[:answer]
         )
       @record.save
-      p 'right_answer is'
-      p @record.right_answer
-      p 'result'
-      p @record.is_correct
       if @record.is_correct
         render :json => {:result => true}
       else
