@@ -48,10 +48,8 @@
               %span{:class=>'mapping-key'} #{answer[i-1][0]}
               %select{:class=>'form-control select'}
                 %option{:value => '空'}空
-                - options = answer.map{|e| e[1]}
-                - rand_option_indexs = (0..options.length-1).sort_by{rand}
-                - rand_option_indexs.each do |index|
-                  %option{:value => options[index]} #{options[index]}
+                - answer.map{|e| e[1]}.each do |i|
+                  %option{:value => i} #{i}
               %span{:class=>'glyphicon glyphicon-remove hidden'}
               %br
       - when "fill"
@@ -66,6 +64,4 @@
         .question-essay
           %textarea{:class=>"form-control"}
 
-    %a{:class => "btn btn-default submit-answer" ,:href => "#"} 提交
-    .next
-      %a{:class => "btn btn-default next hidden" ,:href => "#"} 下一题
+    %a{:class => "btn btn-default submit-answer" ,:href => "#"} 完成

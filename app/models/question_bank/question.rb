@@ -40,7 +40,7 @@ module QuestionBank
     has_many :question_records ,class_name:'QuestionBank::QuestionRecord'
 
     def human_kind
-      I18n.n("custom.model.question.human_kind.#{self.kind}")
+      I18n.t("custom.model.question.human_kind.#{self.kind}")
     end
   end
 end
