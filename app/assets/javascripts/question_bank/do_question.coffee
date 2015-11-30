@@ -6,7 +6,7 @@ class DoQuestion
     @$elm.find('.question-id').attr('data-id')
 
   answer_right_effect: ()->
-    @$elm.find(".glyphicon-remove").addClass('hidden')
+    # @$elm.find(".glyphicon-remove").addClass('hidden')
     @$elm.find(" .next a").removeClass('hidden');
     @$elm.find(" .do-question-msg p").text('回答正确')
     @$elm.find(" .do-question-msg p").css("color",'green')
@@ -26,6 +26,14 @@ class DoQuestion
         @$elm.find('.do-question-msg p').html(wrong_msg)
       when "multi_choice"
         @$elm.find('.do-question-msg p').html(wrong_msg)
+      when 'essay'
+        @$elm.find('.do-question-msg p').text(wrong_msg)
+
+  bool_to_word:(bool)->
+    if bool == true
+      return '正确'
+    if bool == false
+      return '错误'
 
   bool_validation: (bool_answer)=>
     id = @get_question_id()
@@ -38,16 +46,10 @@ class DoQuestion
           kind : 'bool'
         }
       .success (msg) =>
-        information = msg['information']
-        if information.length == 0
+        if msg['result'] == true 
           @answer_right_effect()
         else
-          wrong_information_mod = "正确答案："
-          if information[0] == true
-            wrong_information_mod += "正确"
-          else
-            wrong_information_mod += "错误"
-          @$elm.find('.question-bool input:checked').closest('.option').find('.glyphicon-remove').removeClass('hidden')
+          wrong_information_mod = "正确答案："+@bool_to_word(msg['right_answer'])
           @write_wrong_information('bool',wrong_information_mod)
 
   fill_validation: (fill_question_array)=>
@@ -58,37 +60,31 @@ class DoQuestion
         data: {
           answer :fill_question_array,
           answer_id:id,
-          kind : 'fill'
         }
       .success (msg) =>
-        information = msg['information']
-        if information.length == 0
+        if msg['result'] == true 
           @answer_right_effect()
         else
-          wrong_information_mod = "正确答案："
-          for x in [0..information.length-1]
-            wrong_information_mod += information[x]['right_answer']+" "
-            index = information[x]['index']
-            @$elm.find(".question-fill:eq(#{index})").find('.glyphicon-remove').removeClass('hidden')
+          wrong_information_mod = "正确答案："+msg['right_answer']
           @write_wrong_information('fill',wrong_information_mod)
 
-  single_choice_validation: (checked_option)=>
+  single_choice_validation: (answer_array)=>
     id = @get_question_id()
     $.ajax
         url: "/questions/do_question_validation",
         method: "post",
         data: {
-          answer :checked_option,
+          answer :answer_array,
           answer_id:id,
-          kind : 'single_choice'
         }
       .success (msg) =>
-        information = msg['information'][0]
-        if information == undefined
+        if msg['result'] == true 
           @answer_right_effect()
         else
-          @$elm.find('.option-radio input:checked').closest('.option').find('.glyphicon-remove').removeClass('hidden')
-          wrong_information_mod = '正确答案：'+information[0]
+          wrong_information_mod = "正确答案："
+          for x in [0..msg['right_answer'].length-1]
+            if msg['right_answer'][x][1] == true
+              wrong_information_mod += msg['right_answer'][x][0]
           @write_wrong_information('single_choice',wrong_information_mod)
 
   multi_choice_validation: (answer_array)=>
@@ -102,15 +98,13 @@ class DoQuestion
           kind : 'multi_choice'
         }
       .success (msg) =>
-        information = msg['information']
-        if information.length == 0
+        if msg['result'] == true 
           @answer_right_effect()
         else
           wrong_information_mod = "正确选项："+'</br>'
-          for x in [0..msg['checked_option'].length-1]
-            wrong_information_mod += msg['checked_option'][x][0]+"</br>"
-          for x in [0..information.length-1]
-            @$elm.find(".option-checkbox:eq(#{information[x].index})").closest('.option').find('.option-content span').removeClass('hidden')
+          for x in [0..msg['right_answer'].length-1]
+            if msg['right_answer'][x][1] == true
+              wrong_information_mod += msg['right_answer'][x][0]+'</br>'
           @write_wrong_information('multi_choice',wrong_information_mod)
 
   mapping_validation: (answer_array)=>
@@ -124,15 +118,12 @@ class DoQuestion
           kind : 'mapping'
         }
       .success (msg) =>
-        information = msg['information']
-        wrong_information_mod = "正确选项："+'</br>'
-        if msg['information'].length == 0
+        if msg['result'] == true 
           @answer_right_effect()
         else
-          for x in [0..msg['information'].length-1]
-            @$elm.find(".mapping-pair:eq(#{information[x].index})").find('.glyphicon-remove').removeClass('hidden')
-          for x in [0..msg['right_option'].length-1]
-            wrong_information_mod += msg['right_option'][x][0]+'-----'+msg['right_option'][x][1]+'</br>'
+          wrong_information_mod = "正确连线："+'</br>'
+          for x in [0..msg['right_answer'].length-1]
+            wrong_information_mod += msg['right_answer'][x][0]+'---'+msg['right_answer'][x][1]+'</br>'
           @write_wrong_information('mapping',wrong_information_mod)
 
   essay_without_validation: (filled_content)=>
@@ -146,7 +137,9 @@ class DoQuestion
           kind : 'essay'
         }
       .success (msg) =>
-        @answer_right_effect()
+        wrong_information_mod = "参考答案："+msg['right_answer']
+        @write_wrong_information('essay',wrong_information_mod)
+        @$elm.find(" .next a").removeClass('hidden')
 
   bind_events: ->
     @$elm.find('.mapping-pair .select').change (event)=>
@@ -195,8 +188,19 @@ class DoQuestion
             @multi_choice_validation(multi_choice_array)
 
         when 'single_choice'
-          checked_option = @$elm.find(":checked").closest('.option-radio input').attr("value")
-          @single_choice_validation(checked_option)
+          # 组织完整数据 1125-1656
+          single_choice_array = []
+          single_choice_array_length = @$elm.find(".question-single-choice .option").length
+          for x in [1..single_choice_array_length]
+            single_choice_option = @$elm.find(".question-single-choice .option-radio:eq(#{x-1})").attr("data-option-content")
+            console.log(single_choice_option)
+            if @$elm.find(".question-single-choice .option-radio:eq(#{x-1}) input").is(':checked')
+              option_check_information = true
+            else
+              option_check_information = false
+            single_choice_array.push([single_choice_option,option_check_information])
+          console.log(single_choice_array)
+          @single_choice_validation(single_choice_array)
 
         when 'bool'
           checked_option = @$elm.find(":checked").closest('.option input').attr("value")

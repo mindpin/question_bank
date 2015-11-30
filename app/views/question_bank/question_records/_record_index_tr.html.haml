@@ -18,7 +18,7 @@
         %span.font-format-right 正确
     %td
       - if record.is_correct == false
-        - is_in_flaw_list = question.is_in_flaw_list_of?(current_user)
+        - is_in_flaw_list = record.question.is_in_flaw_list_of?(current_user)
         - if !is_in_flaw_list
           %a.btn.btn-default.insert-flaw{ href: "javaScript:;", :data =>{:question_record_id => "#{record.id}"}}
             %i.glyphicon.glyphicon-plus
