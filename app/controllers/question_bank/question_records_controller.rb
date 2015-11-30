@@ -24,15 +24,6 @@ module QuestionBank
       end
     end
 
-    def show
-      # @question_record = _show(params[:kind],params[:id],params[:second])
-      # form_html = render_to_string :partial => 'record_index_tr',locals: { question_record: @question_record }
-      # render :json => {
-      #   :status => 200,
-      #   :body => form_html
-      #   }
-    end
-
     def destroy
       checked_ids = params[:checked_ids]
       if checked_ids == nil

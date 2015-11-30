@@ -71,7 +71,7 @@ module QuestionBank
     def do_question
       @question = radom_question()
       # 调试代码（需要删除）
-      # @questions = Question.where(:kind=>'fill')
+      # @questions = Question.where(:kind=>'multi_choice')
       # @question = @questions.skip(rand(0..@questions.count-1)).first
     end
 
