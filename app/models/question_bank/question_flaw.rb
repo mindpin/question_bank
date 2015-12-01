@@ -2,23 +2,25 @@ module QuestionBank
   class QuestionFlaw
     include Mongoid::Document
     include Mongoid::Timestamps
-    belongs_to :question,:class_name=>'QuestionBank::Question'
-    belongs_to :user,:class_name=>QuestionBank.user_class
+    belongs_to :question, :class_name => 'QuestionBank::Question'
+    belongs_to :user, :class_name => QuestionBank.user_class
 
 
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions
-          self.question_flaws
+          # TODO 需要重新实现
+          question_flaws
         end
 
         def add_flaw_question(question)
-          QuestionBank::QuestionFlaw.create(:user => self,:question => question)
+          return if question.question_flaws.where(:user_id => self.id.to_s).exists?
+
+          question.question_flaws.create(:user => self)
         end
 
         def remove_flaw_question(question)
-          question_flaws = QuestionBank::QuestionFlaw.where(:user => self,:question => question).first
-          question_flaws.destroy
+          question.question_flaws.where(:user_id => self.id.to_s).destroy_all
         end
     end
 
