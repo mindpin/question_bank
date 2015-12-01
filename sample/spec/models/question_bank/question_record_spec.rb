@@ -111,7 +111,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           )
           record_after_count = QuestionBank::QuestionRecord.count
           expect(record_before_count).to eq(record_after_count)
-          expect(record.errors.messages[:answer]).not_to be_nil
+          expect(record.errors.messages[:answer]).to be_nil
         end
       }
     end

@@ -5,10 +5,11 @@ module QuestionBank
     belongs_to :question,:class_name=>'QuestionBank::Question'
     belongs_to :user,:class_name=>QuestionBank.user_class
 
+
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions
-          self.questionflaws
+          self.question_flaws
         end
 
         def add_flaw_question(question)
@@ -16,8 +17,8 @@ module QuestionBank
         end
 
         def remove_flaw_question(question)
-          questionflaw = QuestionBank::QuestionFlaw.where(:user => self,:question => question).first
-          questionflaw.destroy
+          question_flaws = QuestionBank::QuestionFlaw.where(:user => self,:question => question).first
+          question_flaws.destroy
         end
     end
 
