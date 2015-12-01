@@ -70,17 +70,13 @@ module QuestionBank
 
     def do_question
       @question = radom_question()
-      # 调试代码（需要删除）
-      # @questions = Question.where(:kind=>'multi_choice')
-      # @question = @questions.skip(rand(0..@questions.count-1)).first
     end
 
     def redo_question
-
+      @question = Question.find(params[:id])
     end
 
     def do_question_validation
-      p params[:answer]
       @question = Question.find(params[:answer_id])
       @record = @question.question_records.new(
           :user          => current_user,

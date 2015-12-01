@@ -7,30 +7,30 @@
       %input.flaw-checkBoxes{type: "checkbox", value: flaw.id}
     %td
       = flaw.created_at
-    - questions = QuestionBank::Question.find(flaw.question_id)
+    - question = QuestionBank::Question.find(flaw.question_id)
     %td 
-      = questions.content
+      = question.content
     %td 
-      - case questions.kind
+      - case question.kind
         - when "single_choice"
-          = questions.choice_answer_indexs[0]+1
+          = question.choice_answer_indexs[0]+1
         - when "multi_choice"
-          - choice_answer_indexs = questions.choice_answer_indexs.map { |e| e=e+1  }
+          - choice_answer_indexs = question.choice_answer_indexs.map { |e| e=e+1  }
           = choice_answer_indexs*","
         - when "bool"
-          = questions.bool_answer
+          = question.bool_answer
         - when "mapping"
-          - questions.mapping_answer.each do |mapping_team|
+          - question.mapping_answer.each do |mapping_team|
             %br
             = mapping_team*","
         - when "fill"
-          = questions.fill_answer*","
+          = question.fill_answer*","
         - when "essay"
-          = questions.essay_answer
+          = question.essay_answer
     %td 
-      =questions.analysis
+      =question.analysis
     %td 
-      %a.btn.btn-default{ href: "javaScript:;" ,class: "redo"} 
+      %a.btn.btn-default{ href: "/questions/#{question.id}/redo_question" ,class: "redo"} 
         %i.glyphicon.glyphicon-repeat
         %span 重做
       %a.btn.btn-default.flaw-delete{ href: "javaScript:;", data: { :question_flaw_id => flaw.id} } 

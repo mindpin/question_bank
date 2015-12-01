@@ -71,7 +71,6 @@ class DoQuestion
           @write_wrong_information('fill',wrong_information_mod)
 
   single_choice_validation: (answer_array)=>
-    console.log(answer_array)
     id = @get_question_id()
     $.ajax
         url: "/questions/do_question_validation",
@@ -216,4 +215,6 @@ class DoQuestion
 $(document).on 'ready page:load', ->
   if $('.do-question-page').length > 0
     new DoQuestion $('.do-question-page')
+  if $('.redo-question-page').length > 0
+    new DoQuestion $('.redo-question-page')
 
