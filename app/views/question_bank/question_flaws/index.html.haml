@@ -30,7 +30,7 @@
       %th.th_record_four 答案解析
       %th.th_record_five 操作
     %tbody.flaw_tbody
-      = render partial: "flaw_index_tr", locals: {question_flaw: @question_flaws}
+      = render partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
   .flaw-bottom
     %a.btn.btn-default.batch-delete-flaw{:role=>"button"}
       %i.glyphicon.glyphicon-trash

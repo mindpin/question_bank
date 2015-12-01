@@ -2,22 +2,11 @@
   text-align: center;
 }
 
-@mixin format_tag_a{
-  a{text-decoration: none;}
-  a:link {color: #515151;}     
-  a:hover {color: #0099FF;}
-  a:active {color: #0000FF;}
-}
-
 @mixin font_format($color){
   color: $color
 }
 
 .question-record{
-  .result-table{
-    @include format_tag_a;
-  }
-
   .result-table td, .result-table th {
     border: none;
   }
@@ -76,10 +65,6 @@
 }
 
 .question-flaw{
-  .result-table{
-    @include format_tag_a;
-  }
-
   .result-table td, .result-table th {
     border: none;
   }

@@ -1,7 +1,7 @@
-- if question_flaw.blank?
+- if question_flaws.blank?
   %tr
     %td{colspan: 6} 没有数据
-- question_flaw.each do |flaw|
+- question_flaws.each do |flaw|
   %tr
     %td
       %input.flaw-checkBoxes{type: "checkbox", value: flaw.id}
