@@ -36,7 +36,7 @@ module QuestionBank
 
     validates :content, :presence => true
     validates :level, :presence => true
-    has_many :questionflaws,class_name:'QuestionBank::QuestionFlaw'
+    has_many :question_flaws,class_name:'QuestionBank::QuestionFlaw'
     has_many :question_records ,class_name:'QuestionBank::QuestionRecord'
 
     def human_kind
