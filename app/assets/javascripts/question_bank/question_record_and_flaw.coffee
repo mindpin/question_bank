@@ -65,64 +65,6 @@ class QuestionRecord
       record_id = $(this).closest(".delete-record").attr("data-question-record-id")
       that.set_delete_ajax(record_id)
 
-
-    # 条件查询( 结果： 正确 )
-    @$elm.on "click", ".result-table .question-right", ->
-      whether_correct = jQuery(this).closest(".question-right").attr("data-whether-correct")
-      record_kind = jQuery(this).closest(".question-right").attr("data-kind")
-      that.set_ajax(record_kind,whether_correct)
-
-    # 条件查询 （结果： 错误）
-    @$elm.on "click", ".result-table .question-wrong", ->
-      whether_correct = jQuery(this).closest(".question-wrong").attr("data-whether-correct")
-      record_kind = jQuery(this).closest(".question-wrong").attr("data-kind")
-      that.set_ajax(record_kind,whether_correct)
-
-    # 条件查询 ( 类型： 单选题 )
-    @$elm.on "click", ".result-table .question-single", ->
-      record_kind = jQuery(this).closest(".question-single").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询（类型： 多选题）
-    @$elm.on "click", ".result-table .question-multi", ->
-      record_kind = jQuery(this).closest(".question-multi").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询（类型： 填空题）
-    @$elm.on "click", ".result-table .question-fill", ->
-      record_kind = jQuery(this).closest(".question-fill").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询（类型： 连线题）
-    @$elm.on "click", ".result-table .question-mapping", ->
-      record_kind = jQuery(this).closest(".question-mapping").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询 （类型： 判断题）
-    @$elm.on "click", ".result-table .question-bool", ->
-      record_kind = jQuery(this).closest(".question-bool").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询（类型：论述题）
-    @$elm.on "click", ".result-table .question-essay", ->
-      record_kind = jQuery(this).closest(".question-essay").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询( 时间： 一个周内 )
-    @$elm.on "click", ".result-table .question-a-week", ->
-      record_kind = jQuery(this).closest(".question-a-week").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询（时间: 一个月内）
-    @$elm.on "click", ".result-table .question-a-month", ->
-      record_kind = jQuery(this).closest(".question-a-month").attr("data-kind")
-      that.set_ajax(record_kind)
-
-    # 条件查询（时间： 三个月内）
-    @$elm.on "click", ".result-table .question-three-months", ->
-      record_kind = jQuery(this).closest(".question-three-months").attr("data-kind")
-      that.set_ajax(record_kind)
-
     # 条件查询（时间: 某一时段内）
     @$elm.on "click", ".result-table .question-time-fragment", ->
       record_kind = jQuery(this).closest(".question-time-fragment").attr("data-kind")
@@ -222,51 +164,6 @@ class QuestionFlaw
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = jQuery(this).closest(".flaw-delete").attr("data-question-flaw-id")
       that.set_delete_ajax(flaw_id)
-
-    # 条件查询（类型：单选题）
-    @$elm.on "click", ".result-table .question-flaw-single", ->
-      flaw_kind = jQuery(this).closest(".question-flaw-single").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（类型：多选题）
-    @$elm.on "click", ".result-table .question-flaw-multi", ->
-      flaw_kind = jQuery(this).closest(".question-flaw-multi").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（类型: 填空题）
-    @$elm.on "click", ".result-table .question-flaw-fill", ->
-      flaw_kind = jQuery(this).closest(".question-flaw-fill").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（类型: 连线题）
-    @$elm.on "click", ".result-table .question-flaw-mapping", ->
-      flaw_kind = jQuery(this).closest(".question-flaw-mapping").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（类型: 判断题）
-    @$elm.on "click", ".result-table .question-flaw-bool", ->
-      flaw_kind = jQuery(this).closest(".question-flaw-bool").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（类型: 论述题）
-    @$elm.on "click", ".result-table .question-flaw-essay", ->
-      flaw_kind = jQuery(this).closest(".question-flaw-essay").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（时间: 一周内）
-    @$elm.on "click", ".result-table .flaw-in-aweek", ->
-      flaw_kind = jQuery(this).closest(".flaw-in-aweek").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（时间: 一个月内）
-    @$elm.on "click", ".result-table .flaw-in-amonth", ->
-      flaw_kind = jQuery(this).closest(".flaw-in-amonth").attr("data-kind")
-      that.set_ajax(flaw_kind)
-
-    # 条件查询（时间: 一个月内）
-    @$elm.on "click", ".result-table .flaw-three-month", ->
-      flaw_kind = jQuery(this).closest(".flaw-three-month").attr("data-kind")
-      that.set_ajax(flaw_kind)
 
     # 条件查询（时间: 某一时段内）
     @$elm.on "click", ".result-table .flaw-time-fragment", ->
