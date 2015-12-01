@@ -43,9 +43,9 @@ module QuestionBank
     def answer_to_format(answer)
       case self.kind
         when "single_choice","multi_choice" then
-          new_answer = answer.map do |a|
-            a[1][1] = string_to_bool(a[1][1])
-            [a[1][0],a[1][1]]
+          new_answer = answer.map do |key,value|
+            value[1] = string_to_bool(value[1])
+            [value[0],value[1]]
           end
         when "mapping"
           new_answer = answer.map do |a|

@@ -1,6 +1,7 @@
 module QuestionBank
   class QuestionsController < QuestionBank::ApplicationController
     include QuestionBank::ApplicationHelper
+    before_action :authorization_user
     def new_single_choice
       _new("single_choice")
     end
