@@ -10,11 +10,15 @@ module QuestionBank
     field :choice_answer , type: Array        # 选择题
     field :essay_answer, type: String         # 论述题
     field :fill_answer, type: Array           # 填空题
-    field :mapping_answer, type: Array        # 连线题\
+    field :mapping_answer, type: Array        # 连线题
 
     enumerize :kind, in: Question::KINDS
     belongs_to :question
     belongs_to :user
+
+    scope :with_created_at, -> (start_time,end_time) {
+      where(:created_at.gte => start_time, :created_at.lte => end_time)
+    }
 
     def answer=(answer)
       @answer = answer

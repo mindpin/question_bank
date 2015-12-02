@@ -4,6 +4,7 @@ module QuestionBank
 
     def index
       @question_records = current_user.question_records
+      
       if params[:is_correct] != nil
         @question_records = @question_records.where(:is_correct => params[:is_correct])
       end
