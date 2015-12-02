@@ -15,13 +15,16 @@ module QuestionBank
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions
-          question_array = []
-          self.question_flaws.map do |flaw|
-            question_array.push(flaw.question)
-          end
+          # question_array = []
+          # self.question_flaws.map do |flaw|
+          #   question_array.push(flaw.question)
+          # end
           # TODO 另一种方式
-          # question_array = self.question_flaws.only(:question_id,:kind).as_json
-          return QuestionBank::Question.where(:id.in => question_array)
+          p self.question_flaws
+          question_array = self.question_flaws.only(:question_id).as_json
+          p question_array.class
+          p question_array
+          return QuestionBank::Question.where(:id.in => [])
         end
 
         def add_flaw_question(question)
