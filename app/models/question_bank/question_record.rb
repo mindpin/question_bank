@@ -36,8 +36,8 @@ module QuestionBank
 
     # 一些答案的格式转换
     def string_to_bool(str)
-      return true if str == "true"
-      return false if str == "false"
+      return true if str == "true" || str == true
+      return false if str == "false" || str == false
     end
 
     def answer_to_format(answer)
@@ -58,6 +58,7 @@ module QuestionBank
       end
       new_answer
     end
+
     # 保存答案
     def set_answer_field_value
       return true if self.question.blank?
