@@ -10,6 +10,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
       it{
       before_add_count = @user.flaw_questions.count
       @user.add_flaw_question(@bool_question)
+      @user.add_flaw_question(@bool_question)
       after_add_count = @user.flaw_questions.count
       expect(@user.flaw_questions.first.question.content).to eq(@bool_question.content)
       expect(before_add_count+1).to eq(after_add_count)
@@ -21,6 +22,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
     describe '测试方法remove_flaw_question' do
       it{
       @user.add_flaw_question(@bool_question)
+      @user.remove_flaw_question(@bool_question)
       @user.remove_flaw_question(@bool_question)
       expect(@user.flaw_questions.count).to eq(0)
       expect(QuestionBank::QuestionFlaw.where(:user => @user,:question => @bool_question).first.present?).to eq(false)

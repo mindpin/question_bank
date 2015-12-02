@@ -9,16 +9,14 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "回答正确" do
       before :all do
         @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
-        @record_before_count = QuestionBank::QuestionRecord.count
         @record = @question.question_records.create(
           :user          => @user,
           :answer        => @choice_answer
         )
-        @record_after_count = QuestionBank::QuestionRecord.count
       end
 
       it{
-        expect(@record_before_count + 1).to eq(@record_after_count)
+        expect(@record.valid?).to eq(true)
       }
 
       it{
@@ -34,23 +32,23 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         expect(@record.essay_answer).to eq(nil)
         expect(@record.fill_answer).to eq(nil)
         expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).not_to be_nil
+        expect(@record.choice_answer).to eq(
+          [["一条", false], ["两条", false], ["三条", false], ["四条", true]]
+        )
       }
     end
 
     describe "回答错误" do
-      before :all do
+      before :context do
         @choice_answer = {"0" => ["一条", "true"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "false"]}
-        @record_before_count = QuestionBank::QuestionRecord.count
         @record = @question.question_records.create(
-          :user          => @user,
+          :user   => @user,
           :answer => @choice_answer
         )
-        @record_after_count = QuestionBank::QuestionRecord.count
       end
 
       it{
-        expect(@record_before_count + 1).to eq(@record_after_count)
+        expect(@record.valid?).to eq(true)
       }
 
       it{
@@ -66,7 +64,9 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         expect(@record.essay_answer).to eq(nil)
         expect(@record.fill_answer).to eq(nil)
         expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).not_to be_nil
+        expect(@record.choice_answer).to eq(
+          [["一条", true], ["两条", false], ["三条", false], ["四条", false]]
+        )
       }
     end
 
@@ -81,14 +81,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
         answer_fields.each do |field|
           choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
-          record_before_count = QuestionBank::QuestionRecord.count
           record = @question.question_records.create(
             :user   => @user,
             :answer => choice_answer,
             field[0] => field[1]
           )
-          record_after_count = QuestionBank::QuestionRecord.count
-          expect(record_before_count).to eq(record_after_count)
+          expect(record.valid?).to eq(false)
           expect(record.errors.messages[field[0]]).not_to be_nil
         end
       }
@@ -102,16 +100,15 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           {"0" =>["一条", "true"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
         ]
       end
+
       it{
         @choice_answers.each do |answer|
-          record_before_count = QuestionBank::QuestionRecord.count
           record = @question.question_records.create(
             :user   => @user,
             :answer => answer
           )
-          record_after_count = QuestionBank::QuestionRecord.count
-          expect(record_before_count).to eq(record_after_count)
-          expect(record.errors.messages[:answer]).to be_nil
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[:single_choice_answer]).not_to be_nil
         end
       }
     end
@@ -120,47 +117,51 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   describe "多选题" do
     before :all do
       @question = create :multi_choice_question_xiaochao
-      @user     = create(:user) 
+      @user     = create(:user)
     end
-    describe "回答正确" do 
-      before :all do 
+
+    describe "回答正确" do
+      before :all do
         @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
-        @record_before_count = QuestionBank::QuestionRecord.count
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
         )
-        @record_after_count = QuestionBank::QuestionRecord.count
-      end 
+      end
+
       it{
-        expect(@record_before_count + 1).to eq(@record_after_count)
+        expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(true)
       }
+
       it{
         expect(@record.bool_answer).to eq(nil)
         expect(@record.fill_answer).to eq(nil)
         expect(@record.mapping_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
-        expect(@record.choice_answer).not_to be_nil
+        expect(@record.choice_answer).to eq(
+          [["一条", false], ["两条", true], ["三条", true], ["四条", true], ["五条", true]]
+        )
       }
     end
+
     describe "回答错误" do
       before :all do
         @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
-        @record_before_count = QuestionBank::QuestionRecord.count
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
         )
-        @record_after_count = QuestionBank::QuestionRecord.count
       end
       it{
-        expect(@record_before_count + 1).to eq(@record_after_count)
+        expect(@record.valid?).to eq(true)
       }
       it{
         expect(@record.kind).to eq(@question.kind)
@@ -173,9 +174,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         expect(@record.bool_answer).to eq(nil)
         expect(@record.mapping_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
-        expect(@record.choice_answer).not_to be_nil
+        expect(@record.choice_answer).to eq(
+          [["一条", false], ["两条", false], ["三条", true], ["四条", true], ["五条", true]]
+        )
       }
     end
+
     describe "choice_answer 字段之外的答案字段必须为 nil" do
       it{
         answer_fields = {
@@ -186,18 +190,17 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         }
         answer_fields.each do |field|
           choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
-          record_before_count = QuestionBank::QuestionRecord.count
           record = @question.question_records.create(
             :user    => @user,
             :answer  => choice_answer,
             field[0] => field[1]
           )
-          record_after_count = QuestionBank::QuestionRecord.count
-          expect(record_before_count).to eq(record_after_count)
+          expect(record.valid?).to eq(false)
           expect(record.errors.messages[field[0]]).not_to be_nil
         end
       }
     end
+
     describe "答案格式不正确" do
       it{
         choice_answer = [
@@ -206,24 +209,23 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "false"], "4" => ["五条", "true"]}
         ]
         choice_answer.each do |answer|
-          record_before_count = QuestionBank::QuestionRecord.count
           record = @question.question_records.create(
             :user  => @user,
             :answer => answer
           )
-          record_after_count = QuestionBank::QuestionRecord.count
-          expect(record_before_count).to eq(record_after_count)
-          expect(record.errors.messages[:answer]).to be_nil
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[:multi_choice_answer]).not_to be_nil
         end
       }
     end
   end
 
-  describe "填空题" do 
+  describe "填空题" do
     before :all do
       @question = create :fill_question_say_hello
       @user     = create(:user)
     end
+
     describe "回答正确" do
       before :all do
         @fill_answer = ["北京", "伦敦"]
@@ -232,15 +234,19 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :answer => @fill_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(true)
       }
+
       it{
         expect(@record.bool_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
@@ -258,15 +264,19 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :answer => @fill_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(false)
       }
+
       it{
         expect(@record.bool_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
@@ -297,7 +307,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
     end
 
-    describe "答案格式不正确" do 
+    describe "答案格式不正确" do
       it{
         fill_answers = [
           [true,1452],
@@ -309,17 +319,18 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[:answer]).to be_nil
+          expect(record.errors.messages[:fill_answer]).not_to be_nil
         end
       }
     end
   end
 
-  describe "连线题" do 
+  describe "连线题" do
     before :all do
       @question = create :mapping_question_letter
       @user = create(:user)
     end
+
     describe "回答正确" do
       before :all do
         @mapping_answer = {"0" => ["A","a"],"1" =>["B", "b"], "2" =>["C", "c"]}
@@ -328,49 +339,61 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :answer => @mapping_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(true)
       }
+
       it{
         expect(@record.fill_answer).to eq(nil)
         expect(@record.bool_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
         expect(@record.choice_answer).to eq(nil)
-        expect(@record.mapping_answer).not_to be_nil
+        expect(@record.mapping_answer).to eq(
+          [["A","a"], ["B", "b"], ["C", "c"]]
+        )
       }
     end
 
-    describe "回答错误" do 
-      before :all do 
+    describe "回答错误" do
+      before :all do
         @mapping_answer = {"0" => ["A","b"],"1" =>["B", "c"], "2" =>["C", "a"]}
         @record = @question.question_records.create(
           :user => @user,
           :answer => @mapping_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(false)
       }
+
       it{
         expect(@record.fill_answer).to eq(nil)
         expect(@record.bool_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
         expect(@record.choice_answer).to eq(nil)
-        expect(@record.mapping_answer).not_to be_nil
+        expect(@record.mapping_answer).to eq(
+          [["A","b"], ["B", "c"], ["C", "a"]]
+        )
       }
-    end 
+    end
 
     describe "mapping_answer 字段之外的答案字段必须为 nil" do
       it{
@@ -401,14 +424,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           {"0" => [nil,nil],"1" => [nil,nil]}
         ]
         mapping_answer.each do |answer|
-          record_before_count = QuestionBank::QuestionRecord.count
           record = @question.question_records.create(
             :user => @user,
             :answer => answer
           )
-          record_after_count = QuestionBank::QuestionRecord.count
-          expect(record_before_count).to eq(record_after_count)
-          expect(record.errors.messages[:answer]).to be_nil
+          expect(record.valid?).to eq(false)
+          expect(record.errors.messages[:mapping_answer]).not_to be_nil
         end
       }
     end
@@ -421,22 +442,26 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     end
 
     describe "回答正确" do
-      before :all do 
+      before :all do
         @essay_answer = "很关键"
         @record = @question.question_records.create(
           :user => @user,
           :answer => @essay_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(true)
       }
+
       it{
         expect(@record.fill_answer).to eq(nil)
         expect(@record.bool_answer).to eq(nil)
@@ -446,7 +471,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
     end
 
-    describe "回答错误" do 
+    describe "回答错误" do
       before :all do
         @essay_answer = "I don't know"
         @record = @question.question_records.create(
@@ -454,15 +479,19 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :answer => @essay_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(false)
       }
+
       it{
         expect(@record.fill_answer).to eq(nil)
         expect(@record.bool_answer).to eq(nil)
@@ -495,34 +524,38 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   end
 
   describe "判断题" do
-    before :all do 
+    before :all do
       @question = create :bool_question_dog
       @user = create(:user)
     end
 
     describe "回答正确" do
-      before :all do 
+      before :all do
         @bool_answer = "true"
         @record = @question.question_records.create(
           :user => @user,
           :answer => @bool_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(true)
       }
+
       it{
         expect(@record.fill_answer).to eq(nil)
         expect(@record.mapping_answer).to eq(nil)
         expect(@record.choice_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
-        expect(@record.bool_answer).not_to be_nil
+        expect(@record.bool_answer).to eq(true)
       }
     end
 
@@ -534,21 +567,25 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :answer => @bool_answer
         )
       end
+
       it{
         expect(@record.valid?).to eq(true)
       }
+
       it{
         expect(@record.kind).to eq(@question.kind)
       }
+
       it{
         expect(@record.is_correct).to eq(false)
       }
+
       it{
         expect(@record.fill_answer).to eq(nil)
         expect(@record.mapping_answer).to eq(nil)
         expect(@record.choice_answer).to eq(nil)
         expect(@record.essay_answer).to eq(nil)
-        expect(@record.bool_answer).not_to be_nil
+        expect(@record.bool_answer).to eq(false)
       }
     end
 
