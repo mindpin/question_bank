@@ -610,4 +610,41 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
     end
   end
+
+  describe "测试 with_created_at 方法" do 
+    before :all do
+      @user     = create :user
+      @question = create :bool_question_dog
+      @bool_answer = "false"
+      @record = @question.question_records.create(
+        :user => @user,
+        :answer => @bool_answer
+      )
+    end
+
+    describe "成功" do
+      before :all do
+        @start_time = "2015-12-01"
+        @end_time = Time.now
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time.to_time).to_a
+      end
+
+      it{
+        expect(@batch_search).to eq(@record.to_a)
+      }
+    end
+
+    describe "失败" do 
+      before :all do
+        @start_time = "2015-12-01"
+        @end_time   = Time.now + 6
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time.to_time).to_a
+      end
+
+      it{
+        expect(@batch_search).to be_nil
+      }
+    end
+  end
+
 end
