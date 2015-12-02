@@ -13,7 +13,6 @@ module QuestionBank
     field :mapping_answer, type: Array        # 连线题
 
     enumerize :kind, in: Question::KINDS
-
     belongs_to :question
     belongs_to :user
 

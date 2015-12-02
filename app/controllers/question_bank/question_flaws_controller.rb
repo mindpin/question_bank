@@ -4,15 +4,18 @@ module QuestionBank
     def index
       @question_flaws = current_user.question_flaws
       if params[:kind] !=nil
-        @question_flaws = _kind_search_flaw(params[:kind])
+        @question_flaws = @question_flaws.where(:kind => params[:kind])
       end
 
       if params[:time] != nil
-        number = 0
-        number = 6 if params[:time] == "a_week"
-        number = 30 if params[:time] == "a_month"
-        number = 90 if params[:time] == "three_months"
-        @question_flaws = _time_search_flaw( number, @question_flaws)
+        time_query_hash = {
+          "a_week"       => {:created_at.gte => (Date.today - 6).to_time},
+          "a_month"      => {:created_at.gte => (Date.today - 30).to_time},
+          "three_months" => {:created_at.gte => (Date.today - 90).to_time}
+        }
+        time_query_hash.default = {}
+
+        @question_flaws = @question_flaws.where(time_query_hash[params[:time]])
       end
     end
 
@@ -66,37 +69,6 @@ module QuestionBank
     private
       def question_flaw_params
         params.require(:question_flaw).permit(:question_id, :user_id )
-      end
-
-      def _kind_search_flaw(kind)
-        @temp = []
-        @questions = QuestionBank::Question.where(kind: kind).to_a
-        flaw_kind_data = @questions.map do |kind_data|
-          if kind_data.question_flaws != []
-            kind_data.question_flaws
-          end
-        end
-        question_kind_flaw = flaw_kind_data.flatten.compact
-        if question_kind_flaw != []
-          question_kind_flaw.each do |value|
-            if value.user_id == current_user.id
-              @temp.push(value)
-            end
-          end
-          return @temp
-        else
-          return @temp
-        end  
-      end
-
-      def _time_search_flaw(number, question)
-        temp = []
-        question.each do |a_time|
-          if a_time.created_at >= (Time.now - (number*24*60*60))
-            temp.push(a_time)
-          end
-        end
-        return temp
       end
   end
 end

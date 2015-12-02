@@ -11,7 +11,6 @@ module QuestionBank
     include QuestionBank::EssayMethods
     include QuestionBank::FillMethods
     include QuestionBank::MappingMethods
-    include QuestionBank::QuestionFlaw::QuestionMethods
 
     # 题目类型 枚举: 单选题 多选题 判断题 填空题 论述题 连线题
     KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping]
@@ -41,6 +40,10 @@ module QuestionBank
 
     def human_kind
       I18n.t("custom.model.question.human_kind.#{self.kind}")
+    end
+
+    def is_in_flaw_list_of?(user)
+        user.question_flaws.where(:question_id => self.id.to_s).exists?
     end
   end
 end
