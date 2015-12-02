@@ -1,33 +1,33 @@
 require 'rails_helper'
 RSpec.describe QuestionBank::QuestionFlaw, type: :model do
   describe 'UserMethods' do
-    before :all do
+    before :example do
       @user = create(:user)
       @bool_question = create(:bool_question)
     end
 
-    describe '测试方法add_flaw_question' do
+    describe 'user.add_flaw_question(question)' do
       it{
-      before_add_count = @user.question_flaws.count
-      @user.add_flaw_question(@bool_question)
-      after_add_count = @user.question_flaws.count
-      expect(@user.question_flaws.first.question.content).to eq(@bool_question.content)
-      expect(before_add_count+1).to eq(after_add_count)
-      expect(@user.question_flaws.count).to eq(1)
-      expect(QuestionBank::QuestionFlaw.where(:user => @user,:question => @bool_question).first.present?).to eq(true)
+        before_add_count = @user.question_flaws.count
+        @user.add_flaw_question(@bool_question)
+        after_add_count = @user.question_flaws.count
+        expect(@user.question_flaws.first.question.content).to eq(@bool_question.content)
+        expect(before_add_count+1).to eq(after_add_count)
+        expect(@user.question_flaws.count).to eq(1)
+        expect(QuestionBank::QuestionFlaw.where(:user => @user,:question => @bool_question).first.present?).to eq(true)
       }
     end
 
-    describe '测试方法remove_flaw_question' do
+    describe 'user.remove_flaw_question(question)' do
       it{
-      @user.add_flaw_question(@bool_question)
-      @user.remove_flaw_question(@bool_question)
-      expect(@user.flaw_questions.count).to eq(0)
-      expect(QuestionBank::QuestionFlaw.where(:user => @user,:question => @bool_question).first.present?).to eq(false)
+        @user.add_flaw_question(@bool_question)
+        @user.remove_flaw_question(@bool_question)
+        expect(@user.flaw_questions.count).to eq(0)
+        expect(QuestionBank::QuestionFlaw.where(:user => @user,:question => @bool_question).first.present?).to eq(false)
       }
     end
 
-    describe 'QuestionMethods::is_in_flaw_list_of?' do
+    describe 'question.is_in_flaw_list_of?(user)' do
       it{
         QuestionBank::QuestionFlaw.create(:user => @user,:question => @bool_question)
         expect(@bool_question.is_in_flaw_list_of?(@user)).to eq(true)
@@ -42,7 +42,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
       }
     end
     # 测试方法
-    describe 'UserMethods::flaw_questions' do
+    describe 'user.flaw_questions' do
       it{
         @bool_question = create(:bool_question)
         @choice_question = create(:single_choice_question_wugui)
