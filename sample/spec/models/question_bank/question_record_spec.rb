@@ -612,7 +612,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   end
 
   describe "测试 with_created_at 方法" do 
-    before :all do
+    before :example do
       @user     = create :user
       @question = create :bool_question_dog
       @bool_answer = "false"
@@ -622,29 +622,153 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       )
     end
 
+    it{
+      expect(@record.valid?).to eq(true)
+    }
+
     describe "成功" do
-      before :all do
+      it{
         @start_time = "2015-12-01"
         @end_time = Time.now
         @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time.to_time).to_a
-      end
+        expect(@batch_search).to eq(@record.to_a)
+      }
 
       it{
+        @start_time = "2015-12-02"
+        @end_time = nil
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time).to_a
+        expect(@batch_search).to eq(@record.to_a)
+      }
+
+      it{
+        @start_time = nil
+        @end_time = "2015-12-02"
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time, @end_time).to_a
         expect(@batch_search).to eq(@record.to_a)
       }
     end
 
     describe "失败" do 
-      before :all do
-        @start_time = "2015-12-01"
-        @end_time   = Time.now + 6
-        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time.to_time).to_a
-      end
-
       it{
-        expect(@batch_search).to be_nil
+        @start_time = nil
+        @end_time   = nil
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time, @end_time)
+        expect(@batch_search.count).to eq(0)
       }
     end
   end
 
+  describe "测试 with_kind 方法" do
+    before :example do
+      @user     = create :user
+    end
+
+    describe "kind 为 bool" do
+      it{
+        @question = create :bool_question_dog
+        @bool_answer = "false"
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @bool_answer
+        )
+        expect(@record.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionRecord.with_kind("bool")
+        expect(@kind_search.first).to eq(@record)
+      }
+    end
+
+    describe "kind 为 single_choice" do
+      it{
+        @question = create :single_choice_question_wugui
+        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @choice_answer
+        ) 
+        expect(@record.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionRecord.with_kind("single_choice")
+        expect(@kind_search.first).to eq(@record)
+      }
+    end
+
+    describe "kind 为 multi_choice" do
+      it{
+        @question = create :multi_choice_question_xiaochao
+        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @choice_answer
+        ) 
+        expect(@record.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionRecord.with_kind("multi_choice")
+        expect(@kind_search.first).to eq(@record)
+      }
+    end
+
+    describe "kind 为 fill" do
+      it{
+        @question = create :fill_question_say_hello
+        @fill_answer = ["北京", "伦敦"]
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @fill_answer
+        ) 
+        expect(@record.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionRecord.with_kind("fill")
+        expect(@kind_search.first).to eq(@record)
+      }
+    end    
+
+    describe "kind 为 mapping" do
+      it{
+        @question = create :mapping_question_letter
+        @mapping_answer = {"0" => ["A","a"],"1" =>["B", "b"], "2" =>["C", "c"]}
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @mapping_answer
+        ) 
+        expect(@record.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionRecord.with_kind("mapping")
+        expect(@kind_search.first).to eq(@record)
+      }
+    end
+
+    describe "kind 为 essay" do
+      it{
+        @question = create :essay_question_relative
+        @essay_answer = "很关键"
+        @record = @question.question_records.create(
+          :user => @user,
+          :answer => @essay_answer
+        ) 
+        expect(@record.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionRecord.with_kind("essay")
+        expect(@kind_search.first).to eq(@record)
+      }
+    end
+  end
+
+  describe "测试 with_correct 方法" do
+    before :example do
+      @user     = create :user
+      @question = create :bool_question_dog 
+    end
+
+    it{
+      @bool_answers = [
+        "false",
+        "true"
+      ]
+      @bool_answers.each do |answer|
+        record      = @question.question_records.create(
+          :user   => @user,
+          :answer => answer
+        )
+        expect(record.valid?).to eq(true)
+        wheater_correct = QuestionBank::QuestionRecord.with_correct(answer)
+        expect(wheater_correct.first).to eq(record)
+      end
+    }
+  end
 end

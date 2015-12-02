@@ -36,4 +36,50 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
       }
     end
   end
+
+  describe "测试 with_created_at 方法" do 
+    before :example do
+      @user     = create :user
+      @question = create :bool_question_dog
+      @flaw = @question.question_flaws.create(
+        :user => @user
+      )
+    end
+
+    it{
+      expect(@flaw.valid?).to eq(true)
+    }
+
+    describe "成功" do
+      it{
+        @start_time = "2015-12-01"
+        @end_time = Time.now
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time.to_time).to_a
+        expect(@batch_search).to eq(@flaw.to_a)
+      }
+
+      it{
+        @start_time = "2015-12-02"
+        @end_time = nil
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time).to_a
+        expect(@batch_search).to eq(@flaw.to_a)
+      }
+
+      it{
+        @start_time = nil
+        @end_time = "2015-12-02"
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time).to_a
+        expect(@batch_search).to eq(@flaw.to_a)
+      }
+    end
+
+    describe "失败" do 
+      it{
+        @start_time = nil
+        @end_time   = nil
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time)
+        expect(@batch_search.count).to eq(0)
+      }
+    end
+  end
 end
