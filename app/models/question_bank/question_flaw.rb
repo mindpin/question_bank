@@ -2,7 +2,7 @@ module QuestionBank
   class QuestionFlaw
     include Mongoid::Document
     include Mongoid::Timestamps
-    include QuestionBank::TimeKindIscorrectScope
+    include QuestionBank::TimeKindScope
     belongs_to :question, :class_name => 'QuestionBank::Question'
     belongs_to :user, :class_name => QuestionBank.user_class
 
@@ -12,7 +12,7 @@ module QuestionBank
     def set_kind
       self.kind = self.question.kind
     end
-    
+
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions

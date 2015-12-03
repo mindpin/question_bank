@@ -628,19 +628,42 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "成功" do
       it{
-        @day_1 = Timecop.freeze(Time.local(2015, 12, 01, 10, 0, 0))
-        @day_2 = Timecop.freeze(Time.local(2015, 12, 02, 10, 0, 0))
-        @day_3 = Timecop.freeze(Time.local(2015, 12, 06, 10, 0, 0))
-        @day_4 = nil
-        times_combination = [
-          [@day_1,@day_2],
-          [@day_2,@day_4],
-          [@day_4,@day_2]
+        @user = create :user
+        QuestionBank::QuestionRecord.destroy_all
+        @essay_question = create :essay_question_relative
+        @day_1 = Time.local(2015, 12, 01, 10, 0, 0)
+        @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
+        @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
+        @day_4 = Time.local(2015, 12, 07, 10, 0, 0)
+        @day1_essay_answer = '2015-12-01-abc'
+        @day2_essay_answer = '2015-12-02-def'
+        @day3_essay_answer = '2015-12-06-ghi'
+        @day4_essay_answer = '2015-12-07-jkl'
+
+        arrays = [
+          ['day_1',@day_1,@day1_essay_answer],
+          ['day_2',@day_2,@day2_essay_answer],
+          ['day_3',@day_3,@day3_essay_answer],
+          ['day_4',@day_4,@day4_essay_answer]
         ]
-        times_combination.each do |arr|
-          @batch_search = QuestionBank::QuestionRecord.with_created_at(arr[0], arr[1]).to_a
-          expect(@batch_search).to eq(@record.to_a)
+        create_hashs = {}
+        arrays.each do |item|
+          Timecop.freeze(item[1]) do
+            @record_day = @essay_question.question_records.create(
+              :user => @user,
+              :answer => item[2]
+            )
+            create_hashs["#{item[0]}_record"] = @record_day
+          end
         end
+        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_2-1.minute)
+        expect(records.count).to eq(1)
+        expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
+        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_4-1.minute)
+        expect(records.count).to eq(3)
+        expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
+        expect(records.where(:created_at=>@day_2).first.essay_answer).to eq(create_hashs["day_2_record"].essay_answer)
+        expect(records.where(:created_at=>@day_3).first.essay_answer).to eq(create_hashs["day_3_record"].essay_answer)
       }
     end
 
