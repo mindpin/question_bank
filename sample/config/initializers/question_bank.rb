@@ -1,0 +1,1 @@
+QuestionBank.user_class = 'User'

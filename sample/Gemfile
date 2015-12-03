@@ -1,4 +1,4 @@
-source 'http://ruby.taobao.org'
+source 'https://ruby.taobao.org'
 
 gem 'rails', '4.2.3'
 gem 'sass-rails', '~> 5.0'
@@ -42,7 +42,11 @@ gem 'simple_form'
 gem 'bootstrap-sass', '~> 3.3.5'
 
 gem 'play_auth', :github => 'mindpin/play_auth',
-                 :tag => :latest
+                 :tag => "0.0.1"
 
 gem 'question_bank', path: '../'
 gem 'rails-i18n', '~> 4.0.0'
+gem 'simple-navbar', :github => 'mindpin/simple-navbar',
+                     :tag => "~> 0.0.5"
+
+gem 'timecop'

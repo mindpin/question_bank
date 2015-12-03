@@ -1,0 +1,39 @@
+- if question_flaws.blank?
+  %tr
+    %td{colspan: 6} 没有数据
+- question_flaws.each do |flaw|
+  %tr
+    %td
+      %input.flaw-checkBoxes{type: "checkbox", value: flaw.id}
+    %td
+      = flaw.created_at
+    - question = QuestionBank::Question.find(flaw.question_id)
+    %td 
+      = question.content
+    %td 
+      - case question.kind
+        - when "single_choice"
+          = question.choice_answer_indexs[0]+1
+        - when "multi_choice"
+          - choice_answer_indexs = question.choice_answer_indexs.map { |e| e=e+1  }
+          = choice_answer_indexs*","
+        - when "bool"
+          = question.bool_answer
+        - when "mapping"
+          - question.mapping_answer.each do |mapping_team|
+            %br
+            = mapping_team*","
+        - when "fill"
+          = question.fill_answer*","
+        - when "essay"
+          = question.essay_answer
+    %td 
+      =question.analysis
+    %td 
+      %a.btn.btn-default{ href: "/questions/#{question.id}/redo_question" ,class: "redo"} 
+        %i.glyphicon.glyphicon-repeat
+        %span 重做
+      %a.btn.btn-default.flaw-delete{ href: "javaScript:;", data: { :question_flaw_id => flaw.id} } 
+        %i.glyphicon.glyphicon-trash
+        %span 删除
+

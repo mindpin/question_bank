@@ -1,0 +1,67 @@
+.do-question-page
+  %h2 某学科相关练习题
+  .question-border
+    .question-type.hidden
+      %p #{@question.kind}
+    .question-id{:data=>{:id=>@question.id}}
+    .question-content
+      %span{:class=>'question-title-1'} 题目：
+      %span{:class=>'question-title-2'}
+        = @question.content
+    .do-question-msg
+      %p
+    - case @question.kind
+      - when "single_choice"
+        .question-single-choice
+          - @question.choice_answer.map{|e| e[0]}.each do |option|
+            .option
+              .option-radio{:data=>{:option_content=>option}}
+                = radio_button_tag 'choice',option
+              .option-content
+                = option
+                %span{:class=>'glyphicon glyphicon-remove hidden'}
+      - when "multi_choice"
+        .question-multi-choice
+          - @question.choice_answer.map{|e| e[0]}.each do |option|
+            .option
+              .option-checkbox
+                %input{:type=>'checkbox',:data=>{:option=>option}}
+              .option-content
+                = option
+                %span{:class=>'glyphicon glyphicon-remove hidden'}
+      - when "bool"
+        .question-bool
+          .option
+            = radio_button_tag 'choice',true
+            %span 正确
+            %span{:class=>'glyphicon glyphicon-remove hidden'}
+          .option
+            = radio_button_tag 'choice',false
+            %span 错误
+            %span{:class=>'glyphicon glyphicon-remove hidden'}
+      - when "mapping"
+        .question-mapping-list
+          - answer = @question.mapping_answer
+          - for i in 1..answer.length do
+            .mapping-pair
+              %span 连线#{i}:
+              %span{:class=>'mapping-key'} #{answer[i-1][0]}
+              %select{:class=>'form-control select'}
+                %option{:value => '空'}空
+                - answer.map{|e| e[1]}.each do |i|
+                  %option{:value => i} #{i}
+              %span{:class=>'glyphicon glyphicon-remove hidden'}
+              %br
+      - when "fill"
+        .question-fill-list
+          - for i in 1..@question.fill_answer.length do
+            .question-fill
+              %p 第#{i}个填空:
+              %input{:class=>"form-control"}
+              %span{:class=>'glyphicon glyphicon-remove hidden'}
+            %br
+      - when "essay"
+        .question-essay
+          %textarea{:class=>"form-control"}
+
+    %a{:class => "btn btn-default submit-answer" ,:href => "#"} 完成

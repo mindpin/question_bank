@@ -1,6 +1,7 @@
 module QuestionBank
   class QuestionsController < QuestionBank::ApplicationController
     include QuestionBank::ApplicationHelper
+    before_action :authorization_user
     def new_single_choice
       _new("single_choice")
     end
@@ -62,6 +63,32 @@ module QuestionBank
       @question = Question.find(params[:id])
       @question.destroy
       redirect_to "/questions"
+    end
+
+    def radom_question
+      return Question.skip(rand(0..Question.count-1)).first
+    end
+
+    def do_question
+      @question = radom_question()
+    end
+
+    def redo_question
+      @question = Question.find(params[:id])
+    end
+
+    def do_question_validation
+      @question = Question.find(params[:answer_id])
+      @record = @question.question_records.new(
+          :user          => current_user,
+          :answer        => params[:answer]
+        )
+      @record.save
+      if @record.is_correct
+        render :json => {:result => true}
+      else
+        render :json => {:result => false,:right_answer => @record.right_answer}
+      end
     end
 
     def search

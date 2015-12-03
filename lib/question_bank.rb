@@ -20,3 +20,6 @@ require 'question_bank/num_cn_conv'
 Dir.glob(File.join(File.expand_path("../../",__FILE__), "app/models/question_bank/concerns/**.rb")).each do |file|
   require file
 end
+module QuestionBank
+  mattr_accessor :user_class
+end

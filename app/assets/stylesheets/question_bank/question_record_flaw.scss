@@ -1,0 +1,114 @@
+@mixin format_td{
+  text-align: center;
+}
+
+@mixin font_format($color){
+  color: $color
+}
+
+.question-record{
+  .result-table td, .result-table th {
+    border: none;
+  }
+
+  .result-table table { border-collapse: collapse; }
+
+  .result-table tr {
+    border-bottom:1px dashed #DDDDDD;
+  }
+
+  .record-table{
+    display: block;
+    padding-top: 10px;
+    .record-thead{
+      background: #E4E4E4;
+      .th-record-check{
+        width: 5%;
+        @include format_td;
+      }
+      .th-record-one{
+        width: 12%;
+        @include format_td;
+      }
+      .th-record-two{
+        width: 47%;
+        @include format_td;
+      }
+      .th-record-three{
+        width: 6%;
+        @include format_td;
+      }
+      .th-record-four{
+        width: 7%;
+        @include format_td;
+      }
+      .th-record-five{
+        width: 23%;
+        @include format_td;
+      }
+    }
+    .record-tbody{
+      text-align: center;
+      .font-format-error{
+        @include font_format(red)
+      }
+      .font-format-right{
+        @include font_format(green)
+      }
+    }
+  }
+
+  .record-bottom{
+    padding-top: 50px;
+  }
+
+}
+
+.question-flaw{
+  .result-table td, .result-table th {
+    border: none;
+  }
+  
+  .result-table table { border-collapse: collapse; }
+
+  .result-table tr {
+    border-bottom:1px dashed #DDDDDD;
+  }
+
+  .flaw-table{
+    display: block;
+    padding-top: 10px;
+    .flaw_thead{
+      background: #E4E4E4;
+      .th_record_check{
+        width: 5%;
+        @include format_td;
+      }
+      .th_record_one{
+        width: 9%;
+        @include format_td;
+      }
+      .th_record_two{
+        width: 47%;
+        @include format_td;
+      }
+      .th_record_three{
+        width: 12%;
+        @include format_td;
+      }
+      .th_record_four{
+        width: 11%;
+        @include format_td;
+      }
+      .th_record_five{
+        width: 16%;
+        @include format_td;
+      }
+    }
+  }
+
+  .flaw-bottom{
+    display:block;
+    padding-top:50px;
+  }
+}
