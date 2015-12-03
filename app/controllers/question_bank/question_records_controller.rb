@@ -6,22 +6,21 @@ module QuestionBank
       @question_records = current_user.question_records
       
       if params[:is_correct] != nil
-        @question_records = @question_records.where(:is_correct => params[:is_correct])
+        @question_records = @question_records.with_correct(params[:is_correct])
       end
 
       if params[:kind] != nil
-        @question_records = @question_records.where(:kind => params[:kind])
+        @question_records = @question_records.with_kind(params[:kind])
       end
 
       if params[:time] != nil
         time_query_hash = {
-          "a_week"       => {:created_at.gte => (Date.today - 6).to_time},
-          "a_month"      => {:created_at.gte => (Date.today - 30).to_time},
-          "three_months" => {:created_at.gte => (Date.today - 90).to_time}
+          "a_week"       => {:start_time => (Date.today - 6).to_time,:end_time => Time.now.to_time},
+          "a_month"      => {:start_time => (Date.today - 30).to_time,:end_time => Time.now.to_time },
+          "three_months" => {:start_time => (Date.today - 90).to_time,:end_time => Time.now.to_time }
         }
-        time_query_hash.default = {}
-
-        @question_records = @question_records.where(time_query_hash[params[:time]])
+        time_query_hash.default = {:start_time => nil,:end_time => nil}
+        @question_records = @question_records.with_created_at(time_query_hash[:start_time], time_query_hash[:end_time])
       end
     end
 

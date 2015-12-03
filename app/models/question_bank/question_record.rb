@@ -2,6 +2,7 @@ module QuestionBank
   class QuestionRecord
     include Mongoid::Document
     include Mongoid::Timestamps
+    include QuestionBank::TimeKindIscorrectScope
     extend Enumerize
 
     field :is_correct, type: Boolean          # 题目是否正确
@@ -15,26 +16,6 @@ module QuestionBank
     enumerize :kind, in: Question::KINDS
     belongs_to :question
     belongs_to :user
-
-    scope :with_created_at, -> (start_time,end_time) {
-      if (!start_time.nil? && !end_time.nil?) || (start_time.nil? && end_time.nil?)
-        where(:created_at.gte => start_time, :created_at.lte => end_time)
-      end
-      if start_time.nil?
-        where(:created_at.lte => end_time)
-      end 
-      if end_time.nil?
-        where(:created_at.gte => start_time)
-      end
-    }
-
-    scope :with_kind, -> (kind) {
-      where(:kind => kind)
-    }
-
-    scope :with_correct, -> (is_correct) {
-      where(:is_correct => is_correct)
-    }
 
     def answer=(answer)
       @answer = answer
