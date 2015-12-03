@@ -15,11 +15,9 @@ module QuestionBank
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions
-
           res = QuestionBank::QuestionFlaw.collection.find(:user_id => self.id).select(:question_id => 1).to_a
           question_ids = res.map{|hash| hash["question_id"]}
           return QuestionBank::Question.where(:id.in => question_ids)
-
         end
 
         def add_flaw_question(question)
