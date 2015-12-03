@@ -56,4 +56,128 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
       }
     end
   end
+
+  describe "测试 with_created_at 方法" do 
+    before :example do
+      @user     = create :user
+      @question = create :bool_question_dog
+      @flaw = @question.question_flaws.create(
+        :user => @user
+      )
+    end
+
+    it{
+      expect(@flaw.valid?).to eq(true)
+    }
+
+    describe "成功" do
+      it{
+        @start_time = "2015-12-01"
+        @end_time = Time.now
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time.to_time).to_a
+        expect(@batch_search).to eq(@flaw.to_a)
+      }
+
+      it{
+        @start_time = "2015-12-02"
+        @end_time = nil
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time).to_a
+        expect(@batch_search).to eq(@flaw.to_a)
+      }
+
+      it{
+        @start_time = nil
+        @end_time = "2015-12-02"
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time).to_a
+        expect(@batch_search).to eq(@flaw.to_a)
+      }
+    end
+
+    describe "失败" do 
+      it{
+        @start_time = nil
+        @end_time   = nil
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time)
+        expect(@batch_search.count).to eq(0)
+      }
+    end
+  end
+
+  describe "测试 with_kind 方法" do
+    before :example do
+      @user     = create :user
+    end
+
+    describe "kind 为 bool" do
+      it{
+        @question = create :bool_question_dog
+        @flaw = @question.question_flaws.create(
+          :user => @user
+        )
+        expect(@flaw.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionFlaw.with_kind("bool")
+        expect(@kind_search.first).to eq(@flaw)
+      }
+    end
+
+    describe "kind 为 single_choice" do
+      it{
+        @question = create :single_choice_question_wugui
+        @flaw = @question.question_flaws.create(
+          :user => @user
+        ) 
+        expect(@flaw.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionFlaw.with_kind("single_choice")
+        expect(@kind_search.first).to eq(@flaw)
+      }
+    end
+
+    describe "kind 为 multi_choice" do
+      it{
+        @question = create :multi_choice_question_xiaochao
+        @flaw = @question.question_flaws.create(
+          :user => @user
+        ) 
+        expect(@flaw.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionFlaw.with_kind("multi_choice")
+        expect(@kind_search.first).to eq(@flaw)
+      }
+    end
+
+    describe "kind 为 fill" do
+      it{
+        @question = create :fill_question_say_hello
+        @flaw = @question.question_flaws.create(
+          :user => @user
+        ) 
+        expect(@flaw.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionFlaw.with_kind("fill")
+        expect(@kind_search.first).to eq(@flaw)
+      }
+    end    
+
+    describe "kind 为 mapping" do
+      it{
+        @question = create :mapping_question_letter
+        @flaw = @question.question_flaws.create(
+          :user => @user
+        ) 
+        expect(@flaw.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionFlaw.with_kind("mapping")
+        expect(@kind_search.first).to eq(@flaw)
+      }
+    end
+
+    describe "kind 为 essay" do
+      it{
+        @question = create :essay_question_relative
+        @flaw = @question.question_flaws.create(
+          :user => @user
+        ) 
+        expect(@flaw.valid?).to eq(true)
+        @kind_search = QuestionBank::QuestionFlaw.with_kind("essay")
+        expect(@kind_search.first).to eq(@flaw)
+      }
+    end
+  end
 end
