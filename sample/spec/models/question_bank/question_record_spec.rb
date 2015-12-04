@@ -613,34 +613,53 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
   describe "测试 with_created_at 方法" do 
     before :example do
-      @user     = create :user
-      @question = create :bool_question_dog
-      @bool_answer = "false"
-      @record = @question.question_records.create(
-        :user => @user,
-        :answer => @bool_answer
-      )
+      @user          = create :user
+      @question      = create :essay_question_relative
+      @essay_answer1 ="很关键"
+      @essay_answer2 ="很重要"
+      @essay_answer3 ="不能没有"
+      @day_1 = Time.local(2015, 11, 28, 10, 0, 0)
+      @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
+      @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
+      @temp  = []
+      [
+        [@day_1,@essay_answer1],
+        [@day_2,@essay_answer2],
+        [@day_3,@essay_answer3]
+      ].each do |arr|
+        Timecop.freeze(arr[0]) do
+          @record = @question.question_records.create(
+            :user => @user,
+            :answer => arr[1]
+          )
+          @temp.push(@record)
+        end
+      end
     end
-
     it{
-      expect(@record.valid?).to eq(true)
+      expect(@temp.count).to eq(3)
     }
 
     describe "成功" do
       it{
-        @day_1 = Timecop.freeze(Time.local(2015, 12, 01, 10, 0, 0))
-        @day_2 = Timecop.freeze(Time.local(2015, 12, 02, 10, 0, 0))
-        @day_3 = Timecop.freeze(Time.local(2015, 12, 06, 10, 0, 0))
-        @day_4 = nil
-        times_combination = [
-          [@day_1,@day_2],
-          [@day_2,@day_4],
-          [@day_4,@day_2]
-        ]
-        times_combination.each do |arr|
-          @batch_search = QuestionBank::QuestionRecord.with_created_at(arr[0], arr[1]).to_a
-          expect(@batch_search).to eq(@record.to_a)
-        end
+        @start_time = @day_1
+        @end_time = @day_3
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time.to_time)
+        expect(@batch_search.count).to eq(3)
+      }
+
+      it{
+        @start_time = @day_2
+        @end_time = nil
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time)
+        expect(@batch_search.count).to eq(2)
+      }
+
+      it{
+        @start_time = nil
+        @end_time = @day_2
+        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time, @end_time.to_time)
+       expect(@batch_search.count).to eq(2)
       }
     end
 

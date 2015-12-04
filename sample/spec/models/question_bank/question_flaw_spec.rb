@@ -59,32 +59,50 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
 
   describe "测试 with_created_at 方法" do 
     before :example do
-      @user     = create :user
-      @question = create :bool_question_dog
-      @flaw = @question.question_flaws.create(
-        :user => @user
-      )
+      @user           = create :user
+      @question1      = create :essay_question_relative
+      @question2      = create :single_choice_question_wugui
+      @question3      = create :fill_question_say_hello
+      @day_1 = Time.local(2015, 11, 28, 10, 0, 0)
+      @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
+      @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
+      @temp  = []
+      [
+        [@day_1, @question1],
+        [@day_2, @question2],
+        [@day_3, @question3]
+      ].each do |arr|
+        Timecop.freeze(arr[0]) do
+          @flaw = @user.add_flaw_question(arr[1])
+          @temp.push(@flaw)
+        end
+      end
     end
 
     it{
-      expect(@flaw.valid?).to eq(true)
+      expect(@temp.count).to eq(3)
     }
 
     describe "成功" do
       it{
-        @day_1 = Timecop.freeze(Time.local(2015, 12, 01, 10, 0, 0))
-        @day_2 = Timecop.freeze(Time.local(2015, 12, 02, 10, 0, 0))
-        @day_3 = Timecop.freeze(Time.local(2015, 12, 06, 10, 0, 0))
-        @day_4 = nil
-        times_combination = [
-          [@day_1,@day_2],
-          [@day_2,@day_4],
-          [@day_4,@day_2]
-        ]
-        times_combination.each do |arr|
-          @batch_search = QuestionBank::QuestionFlaw.with_created_at(arr[0], arr[1]).to_a
-          expect(@batch_search).to eq(@flaw.to_a)
-        end
+        @start_time = @day_1
+        @end_time = @day_3
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time.to_time)
+        expect(@batch_search.count).to eq(3)
+      }
+
+      it{
+        @start_time = @day_2
+        @end_time = nil
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time)
+        expect(@batch_search.count).to eq(2)
+      }
+
+      it{
+        @start_time = nil
+        @end_time = @day_2
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time.to_time)
+       expect(@batch_search.count).to eq(2)
       }
     end
 
