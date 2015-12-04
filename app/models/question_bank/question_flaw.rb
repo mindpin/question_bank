@@ -2,6 +2,7 @@ module QuestionBank
   class QuestionFlaw
     include Mongoid::Document
     include Mongoid::Timestamps
+    include QuestionBank::TimeKindScope
     belongs_to :question, :class_name => 'QuestionBank::Question'
     belongs_to :user, :class_name => QuestionBank.user_class
 
@@ -11,23 +12,7 @@ module QuestionBank
     def set_kind
       self.kind = self.question.kind
     end
-
-    scope :with_created_at, -> (start_time,end_time) {
-      if (!start_time.nil? && !end_time.nil?) || (start_time.nil? && end_time.nil?)
-        return where(:created_at.gte => start_time, :created_at.lte => end_time)
-      end
-      if start_time.nil?
-        return where(:created_at.lte => end_time)
-      end 
-      if end_time.nil?
-        return where(:created_at.gte => start_time)
-      end
-    }
-
-    scope :with_kind, -> (kind) {
-      where(:kind => kind)
-    }
-
+    
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions

@@ -58,51 +58,39 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
   end
 
   describe "测试 with_created_at 方法" do 
-    before :example do
-      @user           = create :user
-      @question1      = create :essay_question_relative
-      @question2      = create :single_choice_question_wugui
-      @question3      = create :fill_question_say_hello
-      @day_1 = Time.local(2015, 11, 28, 10, 0, 0)
-      @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
-      @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
-      @temp  = []
-      [
-        [@day_1, @question1],
-        [@day_2, @question2],
-        [@day_3, @question3]
-      ].each do |arr|
-        Timecop.freeze(arr[0]) do
-          @flaw = @user.add_flaw_question(arr[1])
-          @temp.push(@flaw)
-        end
-      end
-    end
-
-    it{
-      expect(@temp.count).to eq(3)
-    }
-
     describe "成功" do
       it{
-        @start_time = @day_1
-        @end_time = @day_3
-        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time.to_time)
-        expect(@batch_search.count).to eq(3)
-      }
+        QuestionBank::QuestionFlaw.destroy_all
+        @user = create :user
+        @question1 = create :essay_question_relative
+        @question2 = create :single_choice_question_wugui
+        @question3 = create :multi_choice_question_xiaochao
 
-      it{
-        @start_time = @day_2
-        @end_time = nil
-        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time.to_time, @end_time)
-        expect(@batch_search.count).to eq(2)
-      }
+        @day_1 = Time.local(2015, 12, 01, 10, 0, 0)
+        @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
+        @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
+        @day_4 = Time.local(2015, 12, 07, 10, 0, 0)
 
-      it{
-        @start_time = nil
-        @end_time = @day_2
-        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time.to_time)
-       expect(@batch_search.count).to eq(2)
+        arrays = [
+          [@question1,@day_1,'day_1'],
+          [@question2,@day_2,'day_2'],
+          [@question3,@day_3,'day_3']
+        ]
+        add_flaw_hashs = {}
+        arrays.each do |question|
+          Timecop.freeze(question[1]) do
+            @flaw = @user.add_flaw_question(question[0])
+            add_flaw_hashs["#{question[2]}_flaw"] = @flaw
+          end
+        end
+        flaws = QuestionBank::QuestionFlaw.with_created_at(@day_1-1.minute,@day_2-1.minute)
+        expect(flaws.count).to eq(1)
+        expect(flaws.where(:created_at=>@day_1).first).to eq(add_flaw_hashs["day_1_flaw"])
+        flaws = QuestionBank::QuestionFlaw.with_created_at(@day_1-1.minute,@day_4-1.minute)
+        expect(flaws.count).to eq(3)
+        expect(flaws.where(:created_at=>@day_1).first).to eq(add_flaw_hashs["day_1_flaw"])
+        expect(flaws.where(:created_at=>@day_2).first).to eq(add_flaw_hashs["day_2_flaw"])
+        expect(flaws.where(:created_at=>@day_3).first).to eq(add_flaw_hashs["day_3_flaw"])
       }
     end
 

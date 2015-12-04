@@ -612,54 +612,44 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   end
 
   describe "测试 with_created_at 方法" do 
-    before :example do
-      @user          = create :user
-      @question      = create :essay_question_relative
-      @essay_answer1 ="很关键"
-      @essay_answer2 ="很重要"
-      @essay_answer3 ="不能没有"
-      @day_1 = Time.local(2015, 11, 28, 10, 0, 0)
-      @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
-      @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
-      @temp  = []
-      [
-        [@day_1,@essay_answer1],
-        [@day_2,@essay_answer2],
-        [@day_3,@essay_answer3]
-      ].each do |arr|
-        Timecop.freeze(arr[0]) do
-          @record = @question.question_records.create(
-            :user => @user,
-            :answer => arr[1]
-          )
-          @temp.push(@record)
-        end
-      end
-    end
-    it{
-      expect(@temp.count).to eq(3)
-    }
-
     describe "成功" do
       it{
-        @start_time = @day_1
-        @end_time = @day_3
-        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time.to_time)
-        expect(@batch_search.count).to eq(3)
-      }
+        @user = create :user
+        QuestionBank::QuestionRecord.destroy_all
+        @essay_question = create :essay_question_relative
+        @day_1 = Time.local(2015, 12, 01, 10, 0, 0)
+        @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
+        @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
+        @day_4 = Time.local(2015, 12, 07, 10, 0, 0)
+        @day1_essay_answer = '2015-12-01-abc'
+        @day2_essay_answer = '2015-12-02-def'
+        @day3_essay_answer = '2015-12-06-ghi'
+        @day4_essay_answer = '2015-12-07-jkl'
 
-      it{
-        @start_time = @day_2
-        @end_time = nil
-        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time.to_time, @end_time)
-        expect(@batch_search.count).to eq(2)
-      }
-
-      it{
-        @start_time = nil
-        @end_time = @day_2
-        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time, @end_time.to_time)
-       expect(@batch_search.count).to eq(2)
+        arrays = [
+          ['day_1',@day_1,@day1_essay_answer],
+          ['day_2',@day_2,@day2_essay_answer],
+          ['day_3',@day_3,@day3_essay_answer],
+          ['day_4',@day_4,@day4_essay_answer]
+        ]
+        create_hashs = {}
+        arrays.each do |item|
+          Timecop.freeze(item[1]) do
+            @record_day = @essay_question.question_records.create(
+              :user => @user,
+              :answer => item[2]
+            )
+            create_hashs["#{item[0]}_record"] = @record_day
+          end
+        end
+        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_2-1.minute)
+        expect(records.count).to eq(1)
+        expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
+        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_4-1.minute)
+        expect(records.count).to eq(3)
+        expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
+        expect(records.where(:created_at=>@day_2).first.essay_answer).to eq(create_hashs["day_2_record"].essay_answer)
+        expect(records.where(:created_at=>@day_3).first.essay_answer).to eq(create_hashs["day_3_record"].essay_answer)
       }
     end
 
