@@ -8,8 +8,7 @@
 - case @question.kind
   - when "single_choice"
     .question-single-choice
-      %form{:action => "/questions/do_question_validation", :method => :post}
-        %input{:type => "hidden", :name => "question_id", :value => @question.id}
+      %form{:action => "/questions/#{@question.id}/do_question_validation", :method => :post}
         - @question.choice_answer.each_with_index do |option_text, index|
           .div
             %input{:type => "hidden", :name => "answer[#{index}]", :value => "false"}
@@ -19,8 +18,7 @@
       
   - when "multi_choice"
     .question-multi-choice  
-      %form{:action => "/questions/do_question_validation", :method => :post}
-        %input{:type => "hidden", :name => "question_id", :value => @question.id}
+      %form{:action => "/questions/#{@question.id}/do_question_validation", :method => :post}
         - @question.choice_answer.each_with_index do |option_text, index|
           .div
             %input{:type => "hidden", :name => "answer[#{index}]", :value => "false"}
@@ -30,8 +28,7 @@
 
   - when "mapping"
     .question-mapping
-      %form{:action => "/questions/do_question_validation", :method => :post}
-        %input{:type => "hidden", :name => "question_id", :value => @question.id}
+      %form{:action => "/questions/#{@question.id}/do_question_validation", :method => :post}
         - left_mapping_options  = @question.left_mapping_options
         - right_mapping_options = @question.right_mapping_options
         - left_mapping_options.each_with_index do |left_option, index|
@@ -46,8 +43,7 @@
 
   - when "bool"
     .question-bool
-      %form{:action => "/questions/do_question_validation", :method => :post}
-        %input{:type => "hidden", :name => "question_id", :value => @question.id}
+      %form{:action => "/questions/#{@question.id}/do_question_validation", :method => :post}
         .div
           %input{:type => "radio", :name => "answer", :value => "true"}
           正确
@@ -58,8 +54,7 @@
 
   - when "fill"
     .question-fill-list
-      %form{:action => "/questions/do_question_validation", :method => :post}
-        %input{:type => "hidden", :name => "question_id", :value => @question.id}
+      %form{:action => "/questions/#{@question.id}/do_question_validation", :method => :post}
         - @question.fill_count.times do |index|
           .div
             = "填空#{index+1}"
@@ -68,7 +63,6 @@
 
   - when "essay"
     .question-essay
-    %form{:action => "/questions/do_question_validation", :method => :post}
-      %input{:type => "hidden", :name => "question_id", :value => @question.id}
+    %form{:action => "/questions/#{@question.id}/do_question_validation", :method => :post}
       %textarea{:name => "answer"}
       %input{:type => "submit"}

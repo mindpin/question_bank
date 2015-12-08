@@ -78,7 +78,7 @@ module QuestionBank
     end
 
     def do_question_validation
-      @question = Question.find(params[:question_id])
+      @question = Question.find(params[:id])
       @record = @question.question_records.new(
           :user          => current_user,
           :answer        => params[:answer]
