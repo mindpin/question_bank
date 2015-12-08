@@ -20,6 +20,16 @@ module QuestionBank
       validate :check_mapping_answer_of_mapping
     end
 
+    def left_mapping_options
+      return [] if self.kind != 'mapping'
+      return self.mapping_answer.map{|item| item[0]}.sort_by{rand}
+    end
+
+    def right_mapping_options
+      return [] if self.kind != 'mapping'
+      return self.mapping_answer.map{|item| item[1]}.sort_by{rand}
+    end
+
     def check_mapping_answer_of_mapping
       return true if self.kind.blank?
       return true if !self.kind.mapping?

@@ -8,7 +8,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     end
     describe "回答正确" do
       before :all do
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+        @choice_answer = {"0" => "false", "1" => "false", "2" => "false", "3" => "true"}
         @record = @question.question_records.create(
           :user          => @user,
           :answer        => @choice_answer
@@ -40,7 +40,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答错误" do
       before :context do
-        @choice_answer = {"0" => ["一条", "true"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "false"]}
+        @choice_answer = {"0" => "true", "1" =>"false", "2" => "false", "3" => "false"}
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -80,7 +80,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         }
 
         answer_fields.each do |field|
-          choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+          choice_answer = {"0" =>"false", "1" =>"false", "2" =>"false", "3" =>"true"}
           record = @question.question_records.create(
             :user   => @user,
             :answer => choice_answer,
@@ -122,7 +122,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答正确" do
       before :all do
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @choice_answer = {"0" => "false", "1" =>"true", "2" =>"true", "3" => "true", "4" =>"true"}
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -154,7 +154,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答错误" do
       before :all do
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @choice_answer = {"0" => "false", "1" =>"false", "2" =>"true", "3" => "true", "4" =>"true"}
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -189,7 +189,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :mapping_answer => [["a","leg"],["two","legs"]]
         }
         answer_fields.each do |field|
-          choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+          choice_answer = {"0" =>"false", "1" =>"true", "2" =>"true", "3" =>"true", "4" => "true"}
           record = @question.question_records.create(
             :user    => @user,
             :answer  => choice_answer,
@@ -699,7 +699,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "kind 为 single_choice" do
       it{
         @question = create :single_choice_question_wugui
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+        @choice_answer = {"0" => "false", "1" => "false", "2" =>"false", "3" =>"true"}
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
@@ -713,7 +713,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "kind 为 multi_choice" do
       it{
         @question = create :multi_choice_question_xiaochao
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @choice_answer = {"0" => "false", "1" =>"true", "2" =>"true", "3" =>"true", "4" =>"true"}
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
