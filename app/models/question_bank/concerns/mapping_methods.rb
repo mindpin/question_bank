@@ -20,6 +20,28 @@ module QuestionBank
       validate :check_mapping_answer_of_mapping
     end
 
+    def mapping_answer_split(direction)
+      if self.kind == 'mapping'
+        split_hash = {:left_options => [],:right_options => []}
+        self.mapping_answer.map do |item|
+          split_hash[:left_options].push(item[0])
+          split_hash[:right_options].push(item[1])
+        end
+        return split_hash[:left_options].sort_by{rand} if direction == 'left'
+        return split_hash[:right_options].sort_by{rand} if direction == 'right'
+      else
+        return []
+      end
+    end
+
+    def left_mapping_options
+      return self.mapping_answer_split('left')
+    end
+
+    def right_mapping_options
+      return self.mapping_answer_split('right')
+    end
+
     def check_mapping_answer_of_mapping
       return true if self.kind.blank?
       return true if !self.kind.mapping?

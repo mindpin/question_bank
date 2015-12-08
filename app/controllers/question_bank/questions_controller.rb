@@ -78,16 +78,16 @@ module QuestionBank
     end
 
     def do_question_validation
-      @question = Question.find(params[:answer_id])
+      @question = Question.find(params[:question_id])
       @record = @question.question_records.new(
           :user          => current_user,
           :answer        => params[:answer]
         )
       @record.save
       if @record.is_correct
-        render :json => {:result => true}
+        redirect_to '/questions/do_question',:notice => '回答正确'
       else
-        render :json => {:result => false,:right_answer => @record.right_answer}
+        redirect_to '/questions/do_question',:notice => '回答错误'
       end
     end
 
