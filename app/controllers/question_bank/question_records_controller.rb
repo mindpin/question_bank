@@ -19,9 +19,11 @@ module QuestionBank
           "a_month"      => {:start_time => (Date.today - 30).to_time,:end_time => Time.now.to_time },
           "three_months" => {:start_time => (Date.today - 90).to_time,:end_time => Time.now.to_time }
         }
-        time_query_hash.default = {:start_time => nil,:end_time => nil}
-        @question_records = @question_records.with_created_at(time_query_hash[:start_time], time_query_hash[:end_time])
+        query_str = time_query_hash[:params[:time]]
+      else
+        query_str = {:start_time => nil,:end_time => nil}
       end
+        @question_records = @question_records.with_created_at(query_str[:start_time], query_str[:end_time])
     end
 
     def destroy
