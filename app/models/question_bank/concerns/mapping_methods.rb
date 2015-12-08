@@ -21,12 +21,12 @@ module QuestionBank
     end
 
     def left_mapping_options
-      return [] if !self.kind == 'mapping'
+      return [] if self.kind != 'mapping'
       return self.mapping_answer.map{|item| item[0]}.sort_by{rand}
     end
 
     def right_mapping_options
-      return [] if !self.kind == 'mapping'
+      return [] if self.kind != 'mapping'
       return self.mapping_answer.map{|item| item[1]}.sort_by{rand}
     end
 
