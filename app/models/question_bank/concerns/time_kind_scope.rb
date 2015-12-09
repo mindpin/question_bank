@@ -2,8 +2,9 @@ module QuestionBank
   module TimeKindScope
     extend ActiveSupport::Concern
     included do
-      # todo 接受一个hash
-      scope :with_created_at, -> (start_time,end_time) {
+      scope :with_created_at, -> (time_limit_hash) {
+         start_time = time_limit_hash[:start_time]
+         end_time = time_limit_hash[:end_time]
         if (!start_time.nil? && !end_time.nil?) || (start_time.nil? && end_time.nil?)
           return where(:created_at.gte => start_time, :created_at.lte => end_time)
         end

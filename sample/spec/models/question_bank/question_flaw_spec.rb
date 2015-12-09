@@ -95,10 +95,12 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
             add_flaw_hashs["#{question[2]}_flaw"] = @flaw
           end
         end
-        flaws = QuestionBank::QuestionFlaw.with_created_at(@day_1-1.minute,@day_2-1.minute)
+        query_hash = {:start_time => @day_1-1.minute,:end_time =>@day_2-1.minute}
+        flaws = QuestionBank::QuestionFlaw.with_created_at(query_hash)
         expect(flaws.count).to eq(1)
-        expect(flaws.where(:created_at=>@day_1).first).to eq(add_flaw_hashs["day_1_flaw"])
-        flaws = QuestionBank::QuestionFlaw.with_created_at(@day_1-1.minute,@day_4-1.minute)
+        expect(flaws.where(:created_at => @day_1).first).to eq(add_flaw_hashs["day_1_flaw"])
+        query_hash = {:start_time => @day_1-1.minute,:end_time =>@day_4-1.minute}
+        flaws = QuestionBank::QuestionFlaw.with_created_at(query_hash)
         expect(flaws.count).to eq(3)
         expect(flaws.where(:created_at=>@day_1).first).to eq(add_flaw_hashs["day_1_flaw"])
         expect(flaws.where(:created_at=>@day_2).first).to eq(add_flaw_hashs["day_2_flaw"])
@@ -110,7 +112,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
       it{
         @start_time = nil
         @end_time   = nil
-        @batch_search = QuestionBank::QuestionFlaw.with_created_at(@start_time, @end_time)
+        @batch_search = QuestionBank::QuestionFlaw.with_created_at({:start_time => @start_time, :end_time => @end_time})
         expect(@batch_search.count).to eq(0)
       }
     end

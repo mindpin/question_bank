@@ -7,17 +7,15 @@ module QuestionBank
         @question_flaws = @question_flaws.with_kind(params[:kind])
       end
 
-       if params[:time] != nil
+      if params[:time] != nil
         time_query_hash = {
           "a_week"       => {:start_time => (Date.today - 6).to_time,:end_time => Time.now.to_time},
           "a_month"      => {:start_time => (Date.today - 30).to_time,:end_time => Time.now.to_time },
           "three_months" => {:start_time => (Date.today - 90).to_time,:end_time => Time.now.to_time }
         }
         query_str = time_query_hash[:params[:time]]
-      else
-        query_str = {:start_time => nil,:end_time => nil}
-      end
         @question_flaws = @question_flaws.with_created_at(query_str)
+      end
     end
 
     def create
