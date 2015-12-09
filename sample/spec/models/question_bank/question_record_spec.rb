@@ -656,10 +656,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             create_hashs["#{item[0]}_record"] = @record_day
           end
         end
-        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_2-1.minute)
+        query_hash = {:start_time => @day_1-1.minute,:end_time => @day_2-1.minute}
+        records = QuestionBank::QuestionRecord.with_created_at(query_hash)
         expect(records.count).to eq(1)
         expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
-        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_4-1.minute)
+        query_hash = {:start_time => @day_1-1.minute,:end_time => @day_4-1.minute}
+        records = QuestionBank::QuestionRecord.with_created_at(query_hash)
         expect(records.count).to eq(3)
         expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
         expect(records.where(:created_at=>@day_2).first.essay_answer).to eq(create_hashs["day_2_record"].essay_answer)
@@ -671,7 +673,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       it{
         @start_time = nil
         @end_time   = nil
-        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time, @end_time)
+        @batch_search = QuestionBank::QuestionRecord.with_created_at({:start_time => @start_time, :end_time => @end_time})
         expect(@batch_search.count).to eq(0)
       }
     end
