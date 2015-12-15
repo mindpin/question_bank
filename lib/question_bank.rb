@@ -22,4 +22,20 @@ Dir.glob(File.join(File.expand_path("../../",__FILE__), "app/models/question_ban
 end
 module QuestionBank
   mattr_accessor :user_class
+  class << self
+    def question_bank_config
+      self.instance_variable_get(:@question_bank_config) || {}
+    end
+
+    def set_mount_prefix(mount_prefix)
+      config = QuestionBank.question_bank_config
+      config[:mount_prefix] = mount_prefix
+      QuestionBank.instance_variable_set(:@question_bank_config, config)
+    end
+    
+    def get_mount_prefix
+      question_bank_config[:mount_prefix]
+    end
+  end
 end
+require 'question_bank/rails_routes'
