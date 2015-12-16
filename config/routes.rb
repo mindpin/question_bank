@@ -13,8 +13,10 @@ QuestionBank::Engine.routes.draw do
       get :new_fill
       get :search
       get :do_question
-      post :do_question_validation     
     end
+    member do
+      post :do_question_validation
+    end     
   end
 
   resources :test_papers do

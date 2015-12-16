@@ -8,7 +8,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     end
     describe "回答正确" do
       before :all do
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+        @choice_answer = {"0" => "false", "1" => "false", "2" => "false", "3" => "true"}
         @record = @question.question_records.create(
           :user          => @user,
           :answer        => @choice_answer
@@ -40,7 +40,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答错误" do
       before :context do
-        @choice_answer = {"0" => ["一条", "true"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "false"]}
+        @choice_answer = {"0" => "true", "1" =>"false", "2" => "false", "3" => "false"}
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -80,7 +80,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         }
 
         answer_fields.each do |field|
-          choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+          choice_answer = {"0" =>"false", "1" =>"false", "2" =>"false", "3" =>"true"}
           record = @question.question_records.create(
             :user   => @user,
             :answer => choice_answer,
@@ -122,7 +122,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答正确" do
       before :all do
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @choice_answer = {"0" => "false", "1" =>"true", "2" =>"true", "3" => "true", "4" =>"true"}
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -154,7 +154,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答错误" do
       before :all do
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @choice_answer = {"0" => "false", "1" =>"false", "2" =>"true", "3" => "true", "4" =>"true"}
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -189,7 +189,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
           :mapping_answer => [["a","leg"],["two","legs"]]
         }
         answer_fields.each do |field|
-          choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+          choice_answer = {"0" =>"false", "1" =>"true", "2" =>"true", "3" =>"true", "4" => "true"}
           record = @question.question_records.create(
             :user    => @user,
             :answer  => choice_answer,
@@ -642,10 +642,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             create_hashs["#{item[0]}_record"] = @record_day
           end
         end
-        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_2-1.minute)
+        query_hash = {:start_time => @day_1-1.minute,:end_time => @day_2-1.minute}
+        records = QuestionBank::QuestionRecord.with_created_at(query_hash)
         expect(records.count).to eq(1)
         expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
-        records = QuestionBank::QuestionRecord.with_created_at(@day_1-1.minute,@day_4-1.minute)
+        query_hash = {:start_time => @day_1-1.minute,:end_time => @day_4-1.minute}
+        records = QuestionBank::QuestionRecord.with_created_at(query_hash)
         expect(records.count).to eq(3)
         expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
         expect(records.where(:created_at=>@day_2).first.essay_answer).to eq(create_hashs["day_2_record"].essay_answer)
@@ -657,7 +659,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       it{
         @start_time = nil
         @end_time   = nil
-        @batch_search = QuestionBank::QuestionRecord.with_created_at(@start_time, @end_time)
+        @batch_search = QuestionBank::QuestionRecord.with_created_at({:start_time => @start_time, :end_time => @end_time})
         expect(@batch_search.count).to eq(0)
       }
     end
@@ -685,7 +687,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "kind 为 single_choice" do
       it{
         @question = create :single_choice_question_wugui
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+        @choice_answer = {"0" => "false", "1" => "false", "2" =>"false", "3" =>"true"}
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
@@ -699,7 +701,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "kind 为 multi_choice" do
       it{
         @question = create :multi_choice_question_xiaochao
-        @choice_answer = {"0" => ["一条", "false"], "1" => ["两条", "true"], "2" => ["三条", "true"], "3" => ["四条", "true"], "4" => ["五条", "true"]}
+        @choice_answer = {"0" => "false", "1" =>"true", "2" =>"true", "3" =>"true", "4" =>"true"}
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer

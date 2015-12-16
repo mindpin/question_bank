@@ -48,8 +48,9 @@ module QuestionBank
       case self.kind
         when "single_choice","multi_choice" then
           new_answer = answer.map do |key,value|
-            value[1] = string_to_bool(value[1])
-            [value[0],value[1]]
+            context_by_index = self.question.choice_answer[key.to_i][0]
+            value = string_to_bool(value)
+            [context_by_index,value]
           end
         when "mapping"
           new_answer = answer.map do |a|

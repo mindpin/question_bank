@@ -4,8 +4,8 @@ module QuestionBank
     config.to_prepare do
       ApplicationController.helper ::ApplicationHelper
       User.class_eval do
-        has_many :question_flaws, class_name:'QuestionBank::QuestionFlaw'
-        has_many :question_records, class_name:'QuestionBank::QuestionRecord'
+        has_many :question_flaws, class_name:'QuestionBank::QuestionFlaw',:order => :created_at.desc
+        has_many :question_records, class_name:'QuestionBank::QuestionRecord',:order => :created_at.desc
         include QuestionBank::QuestionFlaw::UserMethods
       end
     end
