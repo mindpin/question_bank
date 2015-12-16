@@ -29,7 +29,7 @@ module QuestionBank
     end
 
     def batch_create
-      params[:questions_id].each do |qid|
+      params[:question_ids].each do |qid|
         if qid != "on"
           question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
           if question_record.is_correct == false
@@ -56,7 +56,7 @@ module QuestionBank
     end
 
     def batch_destroy
-      params[:checked_ids].each do |flawid|
+      params[:ids].each do |flawid|
         if flawid != "on"
           @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
           @question_flaw_single.destroy

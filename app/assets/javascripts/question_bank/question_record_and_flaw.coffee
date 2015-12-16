@@ -71,7 +71,8 @@ class QuestionRecord
     # 批量加入错题本
     @$elm.on "click", ".record-bottom .batch-into-flaw", ->
       checkedValues = $('input:checkbox:checked').map( ->
-        this.value
+        if this.value != "on"
+          this.value
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
@@ -79,7 +80,7 @@ class QuestionRecord
         $.ajax
           url: "/question_flaws/batch_create",
           method: "POST",
-          data: {questions_id:  checkedValues},
+          data: {question_ids: checkedValues},
         .success (msg) ->
           window.location.reload()
         .error (msg) ->
@@ -88,7 +89,8 @@ class QuestionRecord
     # 批量删除
     @$elm.on "click", ".record-bottom .batch-delete-record", ->
       checkedValues = $('input:checkbox:checked').map( ->
-        this.value
+        if this.value != "on"
+          this.value
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
@@ -97,7 +99,7 @@ class QuestionRecord
           $.ajax
             url: "/question_records/batch_destroy",
             method: "delete",
-            data: {checked_ids: checkedValues}
+            data: {ids: checkedValues}
             dataType: "json"
           .success (msg) =>
             that.set_body(msg.body)
@@ -167,7 +169,8 @@ class QuestionFlaw
     # 批量删除
     @$elm.on "click", ".flaw-bottom .batch-delete-flaw", ->
       checkedValues = jQuery('input:checkbox:checked').map( ->
-        this.value
+        if this.value != "on"
+          this.value
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
@@ -176,7 +179,7 @@ class QuestionFlaw
           jQuery.ajax
             url: "/question_flaws/batch_destroy"
             method: "DELETE"
-            data: {checked_ids: checkedValues}
+            data: {ids: checkedValues}
             dataType: "json"
           .success (msg) =>
             that.set_body(msg.body)
