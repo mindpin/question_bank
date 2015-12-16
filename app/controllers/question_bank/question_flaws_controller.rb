@@ -30,15 +30,13 @@ module QuestionBank
 
     def batch_create
       params[:question_ids].each do |qid|
-        if qid != "on"
-          question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
-          if question_record.is_correct == false
-            @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
-            if @search_flaw.length == 0
-              @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
-            end
+        question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
+        if question_record.is_correct == false
+          @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
+          if @search_flaw.length == 0
+            @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
           end
-        end 
+        end
       end
       render :json => {:message => "success"}
     end
@@ -57,10 +55,8 @@ module QuestionBank
 
     def batch_destroy
       params[:ids].each do |flawid|
-        if flawid != "on"
-          @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
-          @question_flaw_single.destroy
-        end
+        @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
+        @question_flaw_single.destroy
       end
       @question_flaws = current_user.question_flaws
       form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}

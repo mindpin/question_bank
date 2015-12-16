@@ -38,10 +38,8 @@ module QuestionBank
 
     def batch_destroy
       params[:ids].each do |qid|
-        if qid != "on"
-          @question_record_single = QuestionBank::QuestionRecord.where(question_id: qid)
-          @question_record_single.destroy
-        end
+        @question_record_single = QuestionBank::QuestionRecord.where(question_id: qid)
+        @question_record_single.destroy
       end
       @question_records = current_user.question_records
       form_html = render_to_string :partial => 'record_index_tr',locals: { question_records: @question_records }
