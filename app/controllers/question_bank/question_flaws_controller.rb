@@ -19,49 +19,55 @@ module QuestionBank
     end
 
     def create
-      if params[:whether_batch] != "batch_operation"
-        question_record = QuestionBank::QuestionRecord.where(question_id: params[:question_id]).first
-        @question_flaw = QuestionBank::QuestionFlaw.new(question_id: params[:question_id], user_id: question_record.user_id)
-        if @question_flaw.save
-          render :json => {:message => "success"}
-        else
-          render "index"
-        end
-      end
-      if params[:whether_batch] == "batch_operation"
-        params[:questions_id].each do |qid|
-          if qid != "on"
-            question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
-            if question_record.is_correct == false
-              @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
-              if @search_flaw.length == 0
-                @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
-              end
-            end
-          end 
-        end
+      question_record = QuestionBank::QuestionRecord.where(question_id: params[:question_id]).first
+      @question_flaw = QuestionBank::QuestionFlaw.new(question_id: params[:question_id], user_id: question_record.user_id)
+      if @question_flaw.save
         render :json => {:message => "success"}
+      else
+        render "index"
       end
     end
 
-    def destroy
-      checked_flaw_ids = params[:checked_ids]
-      if checked_flaw_ids == nil
-        @question_flaw_single = QuestionBank::QuestionFlaw.find(params[:id])
-        @question_flaw_single.destroy
-      else
-        checked_flaw_ids.each do |flawid|
-          if flawid != "on"
-            @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
-            @question_flaw_single.destroy
+    def batch_create
+      params[:questions_id].each do |qid|
+        if qid != "on"
+          question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
+          if question_record.is_correct == false
+            @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
+            if @search_flaw.length == 0
+              @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
+            end
           end
+        end 
+      end
+      render :json => {:message => "success"}
+    end
+
+    def destroy
+      @question_flaw_single = QuestionBank::QuestionFlaw.find(params[:id])
+      @question_flaw_single.destroy
+      @question_flaws = current_user.question_flaws
+      form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
+      render json: {
+        status: 200,
+        body: form_html,
+        message: "success"
+      }
+    end
+
+    def batch_destroy
+      params[:checked_ids].each do |flawid|
+        if flawid != "on"
+          @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
+          @question_flaw_single.destroy
         end
       end
       @question_flaws = current_user.question_flaws
       form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
       render json: {
         status: 200,
-        body: form_html
+        body: form_html,
+        message: "success"
       }
     end
 
