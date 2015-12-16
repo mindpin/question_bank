@@ -3,7 +3,7 @@ module QuestionBank
     before_action :authorization_user
 
     def index
-      @question_records = current_user.question_records
+      @question_records = current_user.question_records.all.sort(created_at:-1)
       
       if params[:is_correct] != nil
         @question_records = @question_records.with_correct(params[:is_correct])
