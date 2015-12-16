@@ -612,20 +612,6 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   end
 
   describe "测试 with_created_at 方法" do 
-    before :example do
-      @user     = create :user
-      @question = create :bool_question_dog
-      @bool_answer = "false"
-      @record = @question.question_records.create(
-        :user => @user,
-        :answer => @bool_answer
-      )
-    end
-
-    it{
-      expect(@record.valid?).to eq(true)
-    }
-
     describe "成功" do
       it{
         @user = create :user

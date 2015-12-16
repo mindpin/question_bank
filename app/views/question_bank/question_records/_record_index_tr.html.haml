@@ -4,7 +4,7 @@
 - question_records.each do |record|
   %tr
     %td
-      %input{type: "checkbox", value: record.id}
+      %input{type: "checkbox", value: record.question_id}
     %td
       = record.created_at
     %td
@@ -20,7 +20,7 @@
       - if record.is_correct == false
         - is_in_flaw_list = record.question.is_in_flaw_list_of?(current_user)
         - if !is_in_flaw_list
-          %a.btn.btn-default.insert-flaw{ href: "javaScript:;", :data =>{:question_record_id => "#{record.id}"}}
+          %a.btn.btn-default.insert-flaw{ href: "javaScript:;", :data =>{:question_id => "#{record.question_id}"}}
             %i.glyphicon.glyphicon-plus
             %span 加入错题本
         - else

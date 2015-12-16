@@ -25,23 +25,28 @@ module QuestionBank
     end
 
     def destroy
-      checked_ids = params[:checked_ids]
-      if checked_ids == nil
-        @question_record_single = QuestionBank::QuestionRecord.find(params[:id])
+      @question_record_single = QuestionBank::QuestionRecord.find(params[:id])
+      @question_record_single.destroy
+      @question_records = current_user.question_records
+      form_html = render_to_string :partial => 'record_index_tr',locals: { question_records: @question_records }
+      render :json => {
+        :status => 200,
+        :body => form_html,
+        :message => "success"
+      }
+    end
+
+    def batch_destroy
+      params[:ids].each do |qid|
+        @question_record_single = QuestionBank::QuestionRecord.where(question_id: qid)
         @question_record_single.destroy
-      else
-        checked_ids.each do |recordid|
-          if recordid != "on"
-            @question_record_single = QuestionBank::QuestionRecord.find(recordid)
-            @question_record_single.destroy
-          end
-        end
       end
       @question_records = current_user.question_records
       form_html = render_to_string :partial => 'record_index_tr',locals: { question_records: @question_records }
       render :json => {
         :status => 200,
-        :body => form_html
+        :body => form_html,
+        :message => "success"
       }
     end
 

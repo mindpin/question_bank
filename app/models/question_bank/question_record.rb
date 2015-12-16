@@ -16,7 +16,7 @@ module QuestionBank
     enumerize :kind, in: Question::KINDS
     belongs_to :question
     belongs_to :user
-
+    
     scope :with_correct, -> (is_correct) {
         where(:is_correct => is_correct)
       }

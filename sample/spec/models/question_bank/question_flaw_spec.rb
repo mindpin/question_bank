@@ -58,18 +58,6 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
   end
 
   describe "测试 with_created_at 方法" do 
-    before :example do
-      @user     = create :user
-      @question = create :bool_question_dog
-      @flaw = @question.question_flaws.create(
-        :user => @user
-      )
-    end
-
-    it{
-      expect(@flaw.valid?).to eq(true)
-    }
-
     describe "成功" do
       it{
         QuestionBank::QuestionFlaw.destroy_all

@@ -23,6 +23,12 @@ QuestionBank::Engine.routes.draw do
     post :preview, on: :collection
   end
 
-  resources :question_records
-  resources :question_flaws
+  resources :question_records do 
+    delete :batch_destroy, on: :collection
+  end
+
+  resources :question_flaws do
+    post :batch_create, on: :collection
+    delete :batch_destroy, on: :collection
+  end
 end

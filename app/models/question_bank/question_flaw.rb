@@ -12,7 +12,7 @@ module QuestionBank
     def set_kind
       self.kind = self.question.kind
     end
-
+    
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions

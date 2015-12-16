@@ -22,39 +22,15 @@ class QuestionRecord
     .error (msg) =>
       console.log( msg )
 
-  set_delete_ajax: (id)->
-    if confirm("确认删除吗？")
-      if id.length == 24
-        $.ajax
-          url: "/question_records/#{id}",
-          method: "DELETE",
-          dataType: "json"
-        .success (msg) =>
-          @set_body(msg.body)
-        .error (msg) =>
-          console.log(msg)
-      else
-        $.ajax
-          url: "/question_records/#{id}",
-          method: "DELETE",
-          data: {checked_ids: id}
-          dataType: "json"
-        .success (msg) =>
-          @set_body(msg.body)
-        .error (msg) =>
-          console.log(msg)
-    else
-      console.log("已取消删除")
-
   bind_events: ->
     that = this
     # 加入错题本
     @$elm.on "click", ".record-table .insert-flaw", ->
-      question_record_id = jQuery(this).closest(".insert-flaw").attr("data-question-record-id")
+      question_id = jQuery(this).closest(".insert-flaw").attr("data-question-id")
       jQuery.ajax
         url: "/question_flaws",
         method: "post",
-        data: {question_records_id: question_record_id }
+        data: {question_id: question_id }
       .success (msg) ->
         window.location.reload()
       .error (msg) ->
@@ -63,7 +39,17 @@ class QuestionRecord
     # 删除做题记录
     @$elm.on "click", ".record-table .record-tbody .delete-record", ->
       record_id = $(this).closest(".delete-record").attr("data-question-record-id")
-      that.set_delete_ajax(record_id)
+      if confirm("确认删除吗？")
+        $.ajax
+          url: "/question_records/#{record_id}",
+          method: "DELETE",
+          dataType: "json"
+        .success (msg) =>
+          that.set_body(msg.body)
+        .error (msg) =>
+          console.log(msg)
+      else
+        console.log("已取消删除")
 
     # 条件查询（时间: 某一时段内）
     @$elm.on "click", ".result-table .question-time-fragment", ->
@@ -85,15 +71,16 @@ class QuestionRecord
     # 批量加入错题本
     @$elm.on "click", ".record-bottom .batch-into-flaw", ->
       checkedValues = $('input:checkbox:checked').map( ->
-        this.value
+        if this.value != "on"
+          this.value
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
       else
         $.ajax
-          url: "/question_flaws",
+          url: "/question_flaws/batch_create",
           method: "POST",
-          data: {question_records_id:  checkedValues, whether_batch:"batch_operation"},
+          data: {question_ids: checkedValues},
         .success (msg) ->
           window.location.reload()
         .error (msg) ->
@@ -102,12 +89,24 @@ class QuestionRecord
     # 批量删除
     @$elm.on "click", ".record-bottom .batch-delete-record", ->
       checkedValues = $('input:checkbox:checked').map( ->
-        this.value
+        if this.value != "on"
+          this.value
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
       else
-        that.set_delete_ajax(checkedValues)
+        if confirm("确认删除吗？")
+          $.ajax
+            url: "/question_records/batch_destroy",
+            method: "delete",
+            data: {ids: checkedValues}
+            dataType: "json"
+          .success (msg) =>
+            that.set_body(msg.body)
+          .error (msg) =>
+            console.log(msg)
+        else
+          console.log("已取消删除")
 
 # 错题本
 class QuestionFlaw
@@ -133,37 +132,22 @@ class QuestionFlaw
     .error (msg) =>
       console.log(msg)
 
-  set_delete_ajax: (id)->
-    if confirm("确认删除吗？")
-      if id.length == 24
-        jQuery.ajax
-          url: "/question_flaws/#{id}"
-          method: "DELETE"
-          dataType: "json"
-        .success (msg) =>
-          @set_body(msg.body)
-        .error (msg) =>
-          console.log(msg)
-      else
-        jQuery.ajax
-          url: "/question_flaws/#{id}"
-          method: "DELETE"
-          data: {checked_ids: id}
-          dataType: "json"
-        .success (msg) =>
-          @set_body(msg.body)
-        .error (msg) =>
-          console.log(msg)
-    else
-      console.log("已取消删除")
-
-
   bind_events: ->
     that = this
     # 删除记录
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = jQuery(this).closest(".flaw-delete").attr("data-question-flaw-id")
-      that.set_delete_ajax(flaw_id)
+      if confirm("确认删除吗？")
+        jQuery.ajax
+          url: "/question_flaws/#{flaw_id}"
+          method: "DELETE"
+          dataType: "json"
+        .success (msg) =>
+          that.set_body(msg.body)
+        .error (msg) =>
+          console.log(msg)
+      else
+        console.log("已取消删除")
 
     # 条件查询（时间: 某一时段内）
     @$elm.on "click", ".result-table .flaw-time-fragment", ->
@@ -185,12 +169,24 @@ class QuestionFlaw
     # 批量删除
     @$elm.on "click", ".flaw-bottom .batch-delete-flaw", ->
       checkedValues = jQuery('input:checkbox:checked').map( ->
-        this.value
+        if this.value != "on"
+          this.value
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
       else
-        that.set_delete_ajax(checkedValues)
+        if confirm("确认删除吗？")
+          jQuery.ajax
+            url: "/question_flaws/batch_destroy"
+            method: "DELETE"
+            data: {ids: checkedValues}
+            dataType: "json"
+          .success (msg) =>
+            that.set_body(msg.body)
+          .error (msg) =>
+            console.log(msg)
+        else
+          console.log("已取消删除")
 
 jQuery(document).on 'ready page:load', ->
   if jQuery('.question-record').length > 0
