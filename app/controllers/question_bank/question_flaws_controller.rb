@@ -20,27 +20,27 @@ module QuestionBank
 
     def create
       if params[:whether_batch] != "batch_operation"
-        question_record = QuestionBank::QuestionRecord.find(params[:question_records_id])
-        @question_flaw = QuestionBank::QuestionFlaw.new(question_id: question_record.question_id, user_id: question_record.user_id)
+        question_record = QuestionBank::QuestionRecord.where(question_id: params[:question_id]).first
+        @question_flaw = QuestionBank::QuestionFlaw.new(question_id: params[:question_id], user_id: question_record.user_id)
         if @question_flaw.save
-          redirect_to "/question_records"
+          render :json => {:message => "success"}
         else
           render "index"
         end
       end
       if params[:whether_batch] == "batch_operation"
-        params[:question_records_id].each do |recordid|
-          if recordid != "on"
-            question_record = QuestionBank::QuestionRecord.find(recordid)
+        params[:questions_id].each do |qid|
+          if qid != "on"
+            question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
             if question_record.is_correct == false
-              @search_flaw = QuestionBank::QuestionFlaw.where(question_id: question_record.question_id).to_a
+              @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
               if @search_flaw.length == 0
-                @question_flaw = QuestionBank::QuestionFlaw.create(question_id: question_record.question_id, user_id: question_record.user_id)
+                @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
               end
             end
           end 
         end
-        redirect_to "/question_records"
+        render :json => {:message => "success"}
       end
     end
 

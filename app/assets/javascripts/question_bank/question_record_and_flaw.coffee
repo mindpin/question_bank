@@ -50,11 +50,11 @@ class QuestionRecord
     that = this
     # 加入错题本
     @$elm.on "click", ".record-table .insert-flaw", ->
-      question_record_id = jQuery(this).closest(".insert-flaw").attr("data-question-record-id")
+      question_id = jQuery(this).closest(".insert-flaw").attr("data-question-id")
       jQuery.ajax
         url: "/question_flaws",
         method: "post",
-        data: {question_records_id: question_record_id }
+        data: {question_id: question_id }
       .success (msg) ->
         window.location.reload()
       .error (msg) ->
@@ -93,7 +93,7 @@ class QuestionRecord
         $.ajax
           url: "/question_flaws",
           method: "POST",
-          data: {question_records_id:  checkedValues, whether_batch:"batch_operation"},
+          data: {questions_id:  checkedValues, whether_batch:"batch_operation"},
         .success (msg) ->
           window.location.reload()
         .error (msg) ->
