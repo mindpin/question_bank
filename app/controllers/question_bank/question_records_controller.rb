@@ -25,23 +25,26 @@ module QuestionBank
     end
 
     def destroy
-      @question_record_single = QuestionBank::QuestionRecord.find(params[:id])
-      @question_record_single.destroy
-      @question_records = current_user.question_records
-      form_html = render_to_string :partial => 'record_index_tr',locals: { question_records: @question_records }
-      render :json => {
-        :status => 200,
-        :body => form_html,
-        :message => "success"
-      }
+      @question_record_single = current_user.question_records.find(params[:id])
+      if @question_record_single.destroy
+        @question_records = current_user.question_records.to_a - [@question_record_single]
+        form_html = render_to_string :partial => 'record_index_tr',locals: { question_records: @question_records }
+        render :json => {
+          :status => 200,
+          :body => form_html,
+          :message => "success"
+        }
+      end
     end
 
     def batch_destroy
-      params[:question_ids].each do |qid|
-        @question_record_single = QuestionBank::QuestionRecord.where(question_id: qid)
+      temp = []
+      params[:question_record_ids].each do |rid|
+        @question_record_single = current_user.question_records.find(rid)
+        temp.push(@question_record_single)
         @question_record_single.destroy
       end
-      @question_records = current_user.question_records
+      @question_records = current_user.question_records - temp
       form_html = render_to_string :partial => 'record_index_tr',locals: { question_records: @question_records }
       render :json => {
         :status => 200,

@@ -4,7 +4,7 @@
 - question_records.each do |record|
   %tr
     %td
-      %input{type: "checkbox", value: record.question_id}
+      %input{type: "checkbox", value: record.question_id, id: record.id}
     %td
       = record.created_at
     %td

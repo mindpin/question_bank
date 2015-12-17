@@ -21,15 +21,15 @@
       - group.add "three_months", :text => "三个月内"
 
   %table.table.table-hover.flaw-table
-    %thead.flaw_thead
-      %td.th_record_check
+    %thead.flaw-thead
+      %td.th-record-check
         %input.flaw-checked-all{ type: "checkbox" } 全选
-      %th.th_record_one 时间
-      %th.th_record_two 题目
-      %th.th_record_three 正确答案
-      %th.th_record_four 答案解析
-      %th.th_record_five 操作
-    %tbody.flaw_tbody
+      %th.th-record-one 时间
+      %th.th-record-two 题目
+      %th.th-record-three 正确答案
+      %th.th-record-four 答案解析
+      %th.th-record-five 操作
+    %tbody.flaw-tbody
       = render partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
   .flaw-bottom
     %a.btn.btn-default.batch-delete-flaw{:role=>"button"}
