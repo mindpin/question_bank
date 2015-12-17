@@ -99,7 +99,7 @@ class QuestionRecord
           $.ajax
             url: "/question_records/batch_destroy",
             method: "delete",
-            data: {ids: checkedValues}
+            data: {question_ids: checkedValues}
             dataType: "json"
           .success (msg) =>
             that.set_body(msg.body)
@@ -179,7 +179,7 @@ class QuestionFlaw
           jQuery.ajax
             url: "/question_flaws/batch_destroy"
             method: "DELETE"
-            data: {ids: checkedValues}
+            data: {question_flaw_ids: checkedValues}
             dataType: "json"
           .success (msg) =>
             that.set_body(msg.body)

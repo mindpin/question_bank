@@ -37,7 +37,7 @@ module QuestionBank
     end
 
     def batch_destroy
-      params[:ids].each do |qid|
+      params[:question_ids].each do |qid|
         @question_record_single = QuestionBank::QuestionRecord.where(question_id: qid)
         @question_record_single.destroy
       end

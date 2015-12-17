@@ -19,8 +19,7 @@ module QuestionBank
     end
 
     def create
-      question_record = QuestionBank::QuestionRecord.where(question_id: params[:question_id]).first
-      @question_flaw = QuestionBank::QuestionFlaw.new(question_id: params[:question_id], user_id: question_record.user_id)
+      @question_flaw = current_user.question_flaws.new(question_id: params[:question_id])
       if @question_flaw.save
         render :json => {:message => "success"}
       else
@@ -30,13 +29,11 @@ module QuestionBank
 
     def batch_create
       params[:question_ids].each do |qid|
-        question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
-        if question_record.is_correct == false
-          @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
-          if @search_flaw.length == 0
-            @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
-          end
-        end
+        question_record = QuestionBank::QuestionRecord.where(question_id: qid, user_id: current_user.id).first
+        next if question_record.is_correct == true
+        @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid, user_id: current_user.id).to_a
+        next if @search_flaw.length != 0
+        @question_flaw = current_user.question_flaws.create(question_id: qid, user_id: current_user.id)
       end
       render :json => {:message => "success"}
     end
@@ -54,8 +51,8 @@ module QuestionBank
     end
 
     def batch_destroy
-      params[:ids].each do |flawid|
-        @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
+      params[:question_flaw_ids].each do |fid|
+        @question_flaw_single = QuestionBank::QuestionFlaw.find(fid)
         @question_flaw_single.destroy
       end
       @question_flaws = current_user.question_flaws
@@ -69,7 +66,7 @@ module QuestionBank
 
     private
       def question_flaw_params
-        params.require(:question_flaw).permit(:question_id, :user_id )
+        params.require(:question_flaws).permit(:question_id)
       end
   end
 end
