@@ -143,7 +143,6 @@ class QuestionFlaw
           method: "DELETE"
           dataType: "json"
         .success (msg) =>
-          console.log msg
           that.set_body(msg.body)
         .error (msg) =>
           console.log(msg)
