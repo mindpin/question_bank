@@ -134,7 +134,7 @@ class QuestionFlaw
 
   bind_events: ->
     that = this
-    # 删除记录
+    # 删除
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = jQuery(this).closest(".flaw-delete").attr("data-question-flaw-id")
       if confirm("确认删除吗？")
@@ -143,6 +143,7 @@ class QuestionFlaw
           method: "DELETE"
           dataType: "json"
         .success (msg) =>
+          console.log msg
           that.set_body(msg.body)
         .error (msg) =>
           console.log(msg)

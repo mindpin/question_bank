@@ -33,7 +33,7 @@ module QuestionBank
         next if question_record.is_correct == true
         @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid, user_id: current_user.id).to_a
         next if @search_flaw.length != 0
-        @question_flaw = current_user.question_flaws.create(question_id: qid, user_id: current_user.id)
+        @question_flaw = current_user.question_flaws.create(question_id: qid)
       end
       render :json => {:message => "success"}
     end
