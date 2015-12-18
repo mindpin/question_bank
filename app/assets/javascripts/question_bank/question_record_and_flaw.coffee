@@ -89,8 +89,8 @@ class QuestionRecord
     # 批量删除
     @$elm.on "click", ".record-bottom .batch-delete-record", ->
       checkedValues = $('input:checkbox:checked').map( ->
-        if this.value != "on"
-          this.value
+        if this.id != ""
+          this.id
       ).get()
       if checkedValues.length == 0
         alert("请选择条目")
@@ -99,7 +99,7 @@ class QuestionRecord
           $.ajax
             url: "/question_records/batch_destroy",
             method: "delete",
-            data: {ids: checkedValues}
+            data: {question_record_ids: checkedValues}
             dataType: "json"
           .success (msg) =>
             that.set_body(msg.body)
@@ -112,7 +112,7 @@ class QuestionRecord
 class QuestionFlaw
   constructor: (@$elm)->
     @bind_events()
-    @$body_ele = @$elm.find(".flaw_tbody")
+    @$body_ele = @$elm.find(".flaw-tbody")
 
   set_body: (body)->
     @$body_ele.html(body)
@@ -134,7 +134,7 @@ class QuestionFlaw
 
   bind_events: ->
     that = this
-    # 删除记录
+    # 删除
     @$elm.on "click", ".flaw-table .flaw-delete", ->
       flaw_id = jQuery(this).closest(".flaw-delete").attr("data-question-flaw-id")
       if confirm("确认删除吗？")
@@ -157,7 +157,7 @@ class QuestionFlaw
       that.set_ajax(flaw_kind,time_first,time_second)
 
     # 全选
-    @$elm.on "click", ".flaw-table .flaw_thead .th_record_check .flaw-checked-all", ->
+    @$elm.on "click", ".flaw-table .flaw-thead .th-record-check .flaw-checked-all", ->
       jQuery('.flaw-checked-all').change( ->
         checkboxes = jQuery(this).closest('.flaw-table').find(':checkbox')
         if jQuery(this).is(':checked')
@@ -179,7 +179,7 @@ class QuestionFlaw
           jQuery.ajax
             url: "/question_flaws/batch_destroy"
             method: "DELETE"
-            data: {ids: checkedValues}
+            data: {question_flaw_ids: checkedValues}
             dataType: "json"
           .success (msg) =>
             that.set_body(msg.body)

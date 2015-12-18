@@ -19,8 +19,7 @@ module QuestionBank
     end
 
     def create
-      question_record = QuestionBank::QuestionRecord.where(question_id: params[:question_id]).first
-      @question_flaw = QuestionBank::QuestionFlaw.new(question_id: params[:question_id], user_id: question_record.user_id)
+      @question_flaw = current_user.question_flaws.new(question_id: params[:question_id])
       if @question_flaw.save
         render :json => {:message => "success"}
       else
@@ -30,35 +29,36 @@ module QuestionBank
 
     def batch_create
       params[:question_ids].each do |qid|
-        question_record = QuestionBank::QuestionRecord.where(question_id: qid).first
-        if question_record.is_correct == false
-          @search_flaw = QuestionBank::QuestionFlaw.where(question_id: qid).to_a
-          if @search_flaw.length == 0
-            @question_flaw = QuestionBank::QuestionFlaw.create(question_id: qid, user_id: question_record.user_id)
-          end
-        end
+        question_record = current_user.question_records.where(question_id: qid).first
+        next if question_record.is_correct == true
+        @search_flaw = current_user.question_flaws.where(question_id: qid).to_a
+        next if @search_flaw.length != 0
+        @question_flaw = current_user.question_flaws.create(question_id: qid)
       end
       render :json => {:message => "success"}
     end
 
     def destroy
-      @question_flaw_single = QuestionBank::QuestionFlaw.find(params[:id])
-      @question_flaw_single.destroy
-      @question_flaws = current_user.question_flaws
-      form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
-      render json: {
-        status: 200,
-        body: form_html,
-        message: "success"
-      }
+      @question_flaw_single = current_user.question_flaws.find(params[:id])
+      if @question_flaw_single.destroy
+        @question_flaws = current_user.question_flaws.to_a - [@question_flaw_single]
+        form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
+        render json: {
+          status: 200,
+          body: form_html,
+          message: "success"
+        }
+      end
     end
 
     def batch_destroy
-      params[:ids].each do |flawid|
-        @question_flaw_single = QuestionBank::QuestionFlaw.find(flawid)
+      temp = []
+      params[:question_flaw_ids].each do |fid|
+        @question_flaw_single = current_user.question_flaws.find(fid)
+        temp.push(@question_flaw_single)
         @question_flaw_single.destroy
       end
-      @question_flaws = current_user.question_flaws
+      @question_flaws = current_user.question_flaws.to_a - temp
       form_html = render_to_string partial: "flaw_index_tr", locals: {question_flaws: @question_flaws}
       render json: {
         status: 200,
@@ -69,7 +69,7 @@ module QuestionBank
 
     private
       def question_flaw_params
-        params.require(:question_flaw).permit(:question_id, :user_id )
+        params.require(:question_flaws).permit(:question_id)
       end
   end
 end

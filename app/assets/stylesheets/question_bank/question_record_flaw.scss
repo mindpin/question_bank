@@ -78,29 +78,29 @@
   .flaw-table{
     display: block;
     padding-top: 10px;
-    .flaw_thead{
+    .flaw-thead{
       background: #E4E4E4;
-      .th_record_check{
+      .th-record-check{
         width: 5%;
         @include format_td;
       }
-      .th_record_one{
+      .th-record-one{
         width: 9%;
         @include format_td;
       }
-      .th_record_two{
+      .th-record-two{
         width: 47%;
         @include format_td;
       }
-      .th_record_three{
+      .th-record-three{
         width: 12%;
         @include format_td;
       }
-      .th_record_four{
+      .th-record-four{
         width: 11%;
         @include format_td;
       }
-      .th_record_five{
+      .th-record-five{
         width: 16%;
         @include format_td;
       }
