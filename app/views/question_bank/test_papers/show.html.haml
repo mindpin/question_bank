@@ -13,11 +13,11 @@
           = num_cn_conv.num2cn section_index + 1
           、
           = section.kind.text
-          = " (共#{section.section_questions.count}题，每题#{section.score}分)"
+          = " (共#{section.questions.count}题，每题#{section.score}分)"
 
         %ol.section_questions
-          - section.section_questions.each_with_index do |sq, sq_index|
-            - question = sq.question
+          - section.questions.each_with_index do |sq, sq_index|
+            - question = sq
             %li
               .question_content= question.content
               .answers
