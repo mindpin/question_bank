@@ -1,12 +1,13 @@
 .template.section
   .section.clearfix.hidden
     %h3 第{{section_index_plus}}大题
-    .col-xs-11
+    .row
+    .col-md-11
       .form-group.select.required.test_paper_sections_kind
-        %label.select.required.col-sm-3.control-label{for: "test_paper_sections_attributes_{{section_index}}_kind"}
+        %label.select.required.col-md-2.control-label{for: "test_paper_sections_attributes_{{section_index}}_kind"}
           %abbr{title: "required"} *
           题型
-        .col-sm-9
+        .col-md-10
           %select.select.required.form-control.kind{name: 'test_paper[sections_attributes][{{section_index}}][kind]', id: 'test_paper_sections_attributes_{{section_index}}_kind'}
             %option{:selected => "selected", :value => "single_choice"} 单选题
             %option{:value => "multi_choice"} 多选题
@@ -16,17 +17,17 @@
             %option{:value => "mapping"} 连线题
 
       .form-group.string.required.test_paper_sections_score
-        %label.string.required.col-sm-3.control-label{:for => "test_paper_sections_attributes_{{section_index}}_score"}
+        %label.string.required.col-md-2.control-label{:for => "test_paper_sections_attributes_{{section_index}}_score"}
           %abbr{:title => "required"} *
           每题分值
-        .col-sm-9
+        .col-md-10
           %input.string.required.form-control.section_score{:name => "test_paper[sections_attributes][{{section_index}}][score]", :type => "text", :value => "" , :id => 'test_paper_sections_attributes_{{section_index}}_score'}/
 
       .form-group.select.required.test_paper_sections_min_level
-        %label.select.required.col-sm-3.control-label{:for => "test_paper_sections_attributes_{{section_index}}_min_level"}
+        %label.select.required.col-md-2.control-label{:for => "test_paper_sections_attributes_{{section_index}}_min_level"}
           %abbr{:title => "required"} *
           难度系数下限
-        .col-sm-9
+        .col-md-10
           %select.select.required.min_level.form-control{:name => "test_paper[sections_attributes][{{section_index}}][min_level]", id: "test_paper_sections_attributes_{{section_index}}_min_level"}
             %option{:selected => "selected", :value => "1"} 1
             %option{:value => "2"} 2
@@ -38,11 +39,12 @@
             %option{:value => "8"} 8
             %option{:value => "9"} 9
             %option{:value => "10"} 10
+
       .form-group.select.required.test_paper_sections_max_level
-        %label.select.required.col-sm-3.control-label{:for => "test_paper_sections_attributes_{{section_index}}_max_level"}
+        %label.select.required.col-md-2.control-label{:for => "test_paper_sections_attributes_{{section_index}}_max_level"}
           %abbr{:title => "required"} *
           难度系数上限
-        .col-sm-9
+        .col-md-9
           %select.select.required.max_level.form-control{:name => "test_paper[sections_attributes][{{section_index}}][max_level]", id: "test_paper_sections_attributes_{{section_index}}_max_level"}
             %option{:selected => "selected", :value => "1"} 1
             %option{:value => "2"} 2
@@ -58,16 +60,23 @@
       %input.hidden.section_position.form-control{type:"hidden", name:"test_paper[sections_attributes][{{section_index}}][position]",  id:"test_paper_sections_attributes_{{section_index}}_position", value:"{{section_index}}"}
 
       .form-group.opts
-        %label.col-sm-3.controller-label{for: "test_paper_sections_attributes_{{section_index}}_min_level"} 选择考题
-        .col-sm-3
+        %label.col-md-2.control-label{for: "test_paper_sections_attributes_{{section_index}}_min_level"} 选择考题
+        .col-md-10
           %a.btn.btn-default.btn-random{href: 'javascript:;'} 系统随机
-        .col-sm-3
           %a.btn.btn-default.btn-choose{href: 'javascript:;'} 手动选题
 
-      .clearfix
-      %ol.section_questions
 
-    .col-xs-1
+      .form-group.hidden.test_paper_sections_question_ids_str
+        .col-sm-10
+          %input.hidden.form-control{type: "hidden", name: "test_paper[sections_attributes][{{section_index}}][question_ids_str]", id: "test_paper_sections_attributes_{{section_index}}_question_ids_str"}
+
+      .clearfix
+      .row
+        .col-md-2
+        .col-md-10
+          %ul.section_questions
+
+    .col-md-1
       %p.text-center
         %a.section_move_up{href: 'javascript:;'}
           %i.glyphicon.glyphicon-arrow-up
@@ -83,5 +92,3 @@
           %i.glyphicon.glyphicon-remove.red
           %br
           删除
-
-

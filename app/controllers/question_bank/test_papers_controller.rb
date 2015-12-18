@@ -6,15 +6,9 @@ module QuestionBank
 
     def new
       @test_paper = QuestionBank::TestPaper.new
-      #@test_paper.sections.new
-      #@section = @test_paper.sections.new
-      #@section.section_questions.new question_id: QuestionBank::Question.first.id
-      #@section.section_questions.new question_id: QuestionBank::Question.last.id
     end
 
     def create
-      p '>>>>>>>>>>>'
-      p test_paper_params
       @test_paper = QuestionBank::TestPaper.new test_paper_params
       if @test_paper.save
         redirect_to @test_paper
@@ -30,10 +24,10 @@ module QuestionBank
     def edit
       @test_paper = QuestionBank::TestPaper.find params[:id]
     end
-    
+
     def update
       @test_paper = QuestionBank::TestPaper.find params[:id]
-      if @test_paper.update_attributes update_test_paper_params
+      if @test_paper.update_attributes test_paper_params
         redirect_to @test_paper
       else
         render :edit
@@ -53,10 +47,7 @@ module QuestionBank
 
     private
       def test_paper_params
-        params.require(:test_paper).permit(:title, :score, :minutes, :sections_attributes => [:kind, :score, :min_level, :max_level, :position, :id, :_destroy, :section_questions_attributes => [:question_id]])
-      end
-      def update_test_paper_params
-        params.require(:test_paper).permit(:title, :score, :minutes, :sections_attributes => [:kind, :score, :min_level, :max_level, :position, :id, :_destroy, :question_ids_str => [:question_id]])
+        params.require(:test_paper).permit(:title, :score, :minutes, :sections_attributes => [:kind, :score, :min_level, :max_level, :position, :id, :_destroy, :question_ids_str])
       end
   end
 end

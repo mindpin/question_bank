@@ -31,23 +31,18 @@ module QuestionBank
     validates :score, :presence => true
     validates :min_level, :presence => true
     validates :max_level, :presence => true
-#
-    def section_questions_attributes=(ids)
-        p '+++++++++++++++++++++ids'
-        ids = ids.map do |key,value|
-            value['question_id']
-        end
-        self.question_ids = ids
-        p 'ok'
-    end
 
-    has_and_belongs_to_many :questions,class_name:'QuestionBank::Question'
+    has_and_belongs_to_many :questions, class_name:'QuestionBank::Question'
 
     def question_ids_str
       question_ids.map(&:to_s).join(",")
     end
 
     def question_ids_str=(str)
+      p "question_ids_str="
+      p self.question_ids
+      self.question_ids = str.split(",")
+      p self.question_ids
     end
   end
 end

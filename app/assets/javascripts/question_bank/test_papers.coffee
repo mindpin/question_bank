@@ -1,19 +1,100 @@
 class NewTestPaper
-  constructor: (@$el, params) ->
-    @_init()
-  
-  _init: ->
-    @is_edit = @$el.hasClass('page-edit-test_paper')
-    @$modal_random_questions = @$el.find('#modal-random-questions')
-    @$modal_questions_selector = @$el.find('#modal-questions-selector')
-    @$template_question = @$el.find('.template.question')
-    @$template_section = @$el.find('.template.section')
-    @$template_selector_question = @$el.find('.template.selector_question')
+  constructor: (@$el) ->
+    @is_edit = @$el.hasClass 'page-edit-test_paper'
 
-    @$new_test_paper = @$el.find('#new_test_paper')
+    @$modal_random_questions   = @$el.find '#modal-random-questions'
+    @$modal_questions_selector = @$el.find '#modal-questions-selector'
+
+    @$template_question          = @$el.find '.template.question'
+    @$template_section           = @$el.find '.template.section'
+    @$template_selector_question = @$el.find '.template.selector_question'
+
+    @$new_test_paper = @$el.find '#new_test_paper'
 
     @set_scores()
+    @bind_section_event()
     @_bind()
+
+  bind_section_event: ->
+    @bind_add_section_event()
+    @bind_section_up_event()
+    @bind_section_down_event()
+    @bind_section_destroy_event()
+
+  bind_add_section_event: ->
+    @$el.on 'click', '.btn-new-section', =>
+      section_count = @$el.find('.sections .section').length
+
+      section_html  = @$template_section.clone().html()
+      section_html  = section_html.replace /{{section_index_plus}}/g , section_count + 1
+      section_html  = section_html.replace /{{section_index}}/g , section_count
+
+      $template = jQuery(section_html).removeClass 'hidden'
+      @$el.find('.sections').append($template)
+
+  bind_section_up_event: ->
+    @$el.on 'click', '.section_move_up', (evt)=>
+      $target   = jQuery evt.target
+      $section  = $target.closest '.section'
+      $sections = $section.closest('.sections').find('.section:not(.hidden)')
+      index = $sections.index $section
+      $prev = jQuery($sections.get(index - 1))
+
+      if $prev.length == 1
+
+        # 移动前保存数据
+        @save_section_data($section)
+        @save_section_data($prev)
+
+        $section.insertBefore $prev
+        # position 需要做调整
+        @reset_section_positions()
+        @reset_section_title()
+
+        # 移动后恢复数据
+        @load_section_data($section)
+        @load_section_data($prev)
+
+
+  bind_section_down_event: ->
+    @$el.on 'click', '.section_move_down', (evt)=>
+      $target   = jQuery evt.target
+      $section  = $target.closest '.section'
+      $sections = $section.closest('.sections').find('.section:not(.hidden)')
+      index = $sections.index $section
+      $next = jQuery($sections.get(index + 1))
+
+      if $next.length == 1
+
+        # 移动前保存数据
+        @save_section_data($section)
+        @save_section_data($prev)
+
+        $section.insertAfter $next
+        # position 需要做调整
+        @reset_section_positions()
+        @reset_section_title()
+
+        # 移动后恢复数据
+        @load_section_data($section)
+        @load_section_data($prev)
+
+  bind_section_destroy_event: ->
+    @$el.on 'click', '.section_destroy', (evt)=>
+      $target  = jQuery evt.target
+      $section = $target.closest '.section'
+
+      if @is_edit
+        # 修改时， 设置_destroy 而非单纯移除
+        $section.addClass 'hidden'
+        $section.find("input.section_destroy[type='hidden']").val('true')
+      else
+        # 新建时，直接删除
+        $section.remove()
+
+      # 删除后，还要重新计算大题数
+      @reset_section_title()
+      @set_scores()
 
   _bind: ->
     that = this
@@ -21,7 +102,7 @@ class NewTestPaper
     # section 大题操作
     @$el.on 'click', '.btn-random', ->
       $this = jQuery(this)
-      that.$control_section = $this.parent().parent().parent().parent()
+      that.$control_section = $this.closest(".section")
 
       # init
       that.$modal_random_questions.find('#input_random_count').val(5)
@@ -36,68 +117,6 @@ class NewTestPaper
 
       that.$modal_questions_selector.modal('show')
 
-    @$el.on 'click', '.section_move_up', ->
-      $this = jQuery(this)
-      $section = $this.closest('.section')
-
-      $sections = $section.parent().find('.section:not(.hidden)')
-      index = $sections.index($section)
-      if index > 0 
-        $prev = jQuery($sections.get(index - 1))
-        if $prev and !$prev.hasClass('empty')
-          # 移动前保存数据
-          that.save_section_data($section)
-          that.save_section_data($prev)
-
-          $section.insertBefore($prev)
-
-          # position 需要做调整
-          that.reset_section_positions()
-          that.reset_section_title()
-
-          # 移动后恢复数据
-          that.load_section_data($section)
-          that.load_section_data($prev)
-
-    @$el.on 'click', '.section_move_down', ->
-      $this = jQuery(this)
-      $section = $this.closest('.section')
-
-      #$section.insertAfter($section.next()) if $section.next().length > 0 and !$section.next().hasClass('empty')
-
-      $sections = $section.parent().find('.section:not(.hidden)')
-      index = $sections.index($section)
-      $next = jQuery($sections.get(index + 1))
-      if $next
-        # 移动前保存数据
-        that.save_section_data($section)
-        that.save_section_data($next)
-
-        $section.insertAfter($next)
-
-        # position 需要做调整
-        that.reset_section_positions()
-        that.reset_section_title()
-
-        # 移动后读取数据
-        that.load_section_data($section)
-        that.load_section_data($next)
-
-    @$el.on 'click', '.section_destroy', ->
-      $this = jQuery(this)
-      $section = $this.parent().parent().parent()
-
-      if that.is_edit
-        # 修改时， 设置_destroy 而非单纯移除  ????
-        $section.addClass('hidden')
-        $section.find('.section_destroy').val('true')
-      else
-        # 新建时，直接删除
-        $section.remove()
-
-      # 删除后，还要重新计算大题数
-      that.reset_section_title()
-      that.set_scores()
 
     @$el.on 'change', '.min_level', ->
       $this = jQuery(this)
@@ -109,7 +128,7 @@ class NewTestPaper
           jQuery(this).addClass('disabled').prop('disabled', true)
         else
           jQuery(this).removeClass('disabled').prop('disabled', false)
-      
+
       $max.find(':not(.disabled)').first().prop('selected', true) if $max.find(':selected').hasClass('disabled')
 
     @$el.on 'change', '.max_level', ->
@@ -127,8 +146,8 @@ class NewTestPaper
     # question 选题操作
     @$el.on 'click', '.question_move_up', ->
       $this = jQuery(this)
-      $question = $this.parent().parent()
-      $questions = $question.parent().find('li')
+      $question_li = $this.closest("li")
+      $questions = $question_li.parent().find('li')
       index = $questions.index($question)
 
       if that.is_edit
@@ -144,7 +163,7 @@ class NewTestPaper
           console.log(question_ids_array.join(","))
           $ids_in_value.attr("value",question_ids_array.join(","))
 
-      if index > 0 
+      if index > 0
         $prev = jQuery($questions.get(index - 1))
         $question.insertBefore($prev) if $prev and !$prev.hasClass('empty')
         that.reset_question_positions($question)
@@ -172,7 +191,7 @@ class NewTestPaper
           $ids_in_value.attr("value",question_ids_array.join(","))
 
       if $next and !$next.hasClass('empty')
-        $question.insertAfter($next) 
+        $question.insertAfter($next)
         that.reset_question_positions($question)
 
     @$el.on 'click', '.question_destroy', ->
@@ -215,7 +234,7 @@ class NewTestPaper
         $this = jQuery(this)
         $label_question = $this.parent()
         question = $label_question.find('span').html()
-        
+
         # haml 不知道为什么会转为-
         #question_id = $label_question.data('question_id')
         question_id = $label_question.data('question-id')
@@ -235,19 +254,6 @@ class NewTestPaper
       @$modal_questions_selector.modal('hide')
 
 
-    # 增加一个大题
-    @$el.on 'click', '.btn-new-section', =>
-      $section = @$template_section.clone()
-
-      section_index = @$el.find('.sections .section').length
-
-      str_template = $section.html().replace /{{section_index_plus}}/g , section_index + 1
-
-      str_template = str_template.replace /{{section_index}}/g , section_index
-
-      $template = jQuery(str_template).removeClass('hidden')
-      @$el.find('.sections').append($template)
-    
     @$el.on 'blur', '#test_paper_score, .section_score', =>
       @set_scores()
 
@@ -282,7 +288,7 @@ class NewTestPaper
       $section = jQuery(this)
       score = Number $section.find('.section_score').val()
       if score != NaN and score > 0
-        total += score * $section.find('ol li:not(.hidden)').length
+        total += score * $section.find('ul li:not(.hidden)').length
     total
 
   get_questions: (params) ->
@@ -330,17 +336,19 @@ class NewTestPaper
       success: (res) =>
         section_index = @$el.find('.sections .section').index($section)
         $section_questions = $section.find('.section_questions')
-        question_index_prefix = $section_questions.find('li').length
+
+        $input = $section.find("input[name='test_paper[sections_attributes][#{section_index}][question_ids_str]']")
+        question_ids = jQuery.map res, (question, index)->
+          question.id
+        question_ids_str = question_ids.join ","
+        $input.val question_ids_str
+
         for question, index in res
           str_template = @$template_question.html()
 
           str_template = str_template.replace /{{content}}/g , question.content
 
-          str_template = str_template.replace /{{section_index}}/g , section_index
           str_template = str_template.replace /{{question_id}}/g , question.id
-
-          str_template = str_template.replace /{{question_index}}/g , index + question_index_prefix
-          # str_template = str_template.replace /{{position}}/g , index + question_index_prefix
 
           $template = jQuery(str_template).removeClass('hidden')
           $section_questions.append($template)
@@ -349,10 +357,9 @@ class NewTestPaper
 
 
   reset_section_title: ->
-    @$el.find('.sections .section:not(.hidden)').each (index)->
-      $this1 = jQuery(this)
-      $this1.find('h3').html("第#{index+1}大题")
-      
+    @$el.find('.sections .section:not(.hidden)').each (index, $section)->
+      jQuery($section).find('h3').html("第#{index+1}大题")
+
   reset_question_positions: ($question)->
       $question.parent().find('li').each (index)->
         $this1 = jQuery(this)
@@ -361,8 +368,8 @@ class NewTestPaper
 
   reset_section_positions: ()->
     that = this
-    @$el.find('.sections .section').each (index)->
-      $section = jQuery(this)
+    @$el.find('.sections .section').each (index, $section)->
+      $section = jQuery($section)
       # 替换地下所有的[x]
       $section.html $section.html().replace(/(sections_attributes\]\[)\d+\]/g, "$1#{index}]")
       $section.find('.section_position').val(index)
@@ -387,4 +394,5 @@ class NewTestPaper
       $section.find('.section_score.form-control').val $section.data('section-score')
 
 jQuery(document).on 'ready page:load', ->
-  new NewTestPaper(jQuery('.form-test_paper'), {}) if jQuery('.form-test_paper').length > 0
+  if jQuery('.form-test_paper').length > 0
+    new NewTestPaper jQuery('.form-test_paper')
