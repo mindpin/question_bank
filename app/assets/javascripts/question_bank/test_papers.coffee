@@ -128,21 +128,49 @@ class NewTestPaper
     @$el.on 'click', '.question_move_up', ->
       $this = jQuery(this)
       $question = $this.parent().parent()
-
       $questions = $question.parent().find('li')
       index = $questions.index($question)
+
+      if that.is_edit
+        $ids_in_value = $this.parent().parent().parent().find(".test_paper_sections_question_ids_str input")
+        questions_atr = $ids_in_value.attr("value")
+        console.log(questions_atr)
+        if index > 0
+          question_ids_array = questions_atr.split(',')
+          this_ele = question_ids_array[index]
+          pre_ele = question_ids_array[index-1]
+          question_ids_array[index] = pre_ele
+          question_ids_array[index-1] = this_ele
+          console.log(question_ids_array.join(","))
+          $ids_in_value.attr("value",question_ids_array.join(","))
+
       if index > 0 
         $prev = jQuery($questions.get(index - 1))
         $question.insertBefore($prev) if $prev and !$prev.hasClass('empty')
         that.reset_question_positions($question)
 
+
     @$el.on 'click', '.question_move_down', ->
       $this = jQuery(this)
       $question = $this.parent().parent()
-
       $questions = $question.parent().find('li')
       index = $questions.index($question)
+      questions_length_in_section = $questions.length
       $next = jQuery($questions.get(index + 1))
+
+      if that.is_edit
+        $ids_in_value = $this.parent().parent().parent().find(".test_paper_sections_question_ids_str input")
+        questions_atr = $ids_in_value.attr("value")
+        console.log(questions_atr)
+        if index < questions_length_in_section-1
+          question_ids_array = questions_atr.split(',')
+          this_ele = question_ids_array[index]
+          next_ele = question_ids_array[index+1]
+          question_ids_array[index] = next_ele
+          question_ids_array[index+1] = this_ele
+          console.log(question_ids_array.join(","))
+          $ids_in_value.attr("value",question_ids_array.join(","))
+
       if $next and !$next.hasClass('empty')
         $question.insertAfter($next) 
         that.reset_question_positions($question)
@@ -150,10 +178,17 @@ class NewTestPaper
     @$el.on 'click', '.question_destroy', ->
       $this = jQuery(this)
       $question = $this.parent().parent()
+      $questions = $question.parent().find('li')
+      index = $questions.index($question)
       if that.is_edit
-        # 修改时， 设置_destroy 而非单纯移除  ????
-        $question.addClass('hidden')
-        $question.find('.destroy').val('true')
+        $ids_in_value = $this.parent().parent().parent().find(".test_paper_sections_question_ids_str input")
+        questions_atr = $ids_in_value.attr("value")
+        console.log(questions_atr)
+        question_ids_array = questions_atr.split(',')
+        question_ids_array.splice(index,1)
+        console.log(question_ids_array)
+        $ids_in_value.attr("value",question_ids_array.join(","))
+        $question.remove()
       else
         # 新建时，直接删除
         $question.remove()
@@ -305,7 +340,7 @@ class NewTestPaper
           str_template = str_template.replace /{{question_id}}/g , question.id
 
           str_template = str_template.replace /{{question_index}}/g , index + question_index_prefix
-          str_template = str_template.replace /{{position}}/g , index + question_index_prefix
+          # str_template = str_template.replace /{{position}}/g , index + question_index_prefix
 
           $template = jQuery(str_template).removeClass('hidden')
           $section_questions.append($template)

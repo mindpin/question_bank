@@ -4,7 +4,6 @@
     = f.input :title
     = f.input :score
     = f.input :minutes
-
   - index = 0
   .sections
     = f.simple_fields_for :sections do |section_form|
@@ -29,19 +28,19 @@
 
           .clearfix
           %ol.section_questions
-            = section_form.simple_fields_for :section_questions do |sq_form|
+            = section_form.input :question_ids_str, as: :hidden
+            = section.questions.each do |question|
               %li
-                .clearfix
-                  = sq_form.object.question.content
+                .clearfix.id{data:{question_id:question.id}}
+                  = question.content
                   %a.question_move_up{href: 'javascript:;'}
                     %i.glyphicon.glyphicon-arrow-up
                   %a.question_move_down{href: 'javascript:;'}
                     %i.glyphicon.glyphicon-arrow-down
                   %a.question_destroy{href: 'javascript:;'}
                     %i.glyphicon.glyphicon-remove.red
-                = sq_form.input :question_id, as: :hidden
-                = sq_form.input :position, as: :hidden, input_html: {class: 'question_position'}
-                = sq_form.input :_destroy, as: :hidden, input_html: {class: 'destroy'}
+                
+
 
         .col-xs-1
           %p.text-center
@@ -59,7 +58,7 @@
               %i.glyphicon.glyphicon-remove.red
               %br
               删除
-          
+
         - index += 1
 
   .section-actions
@@ -75,7 +74,7 @@
   .col-md-2
     %span 未分配分数:
     %span.surplus 100
-  
+
   .clearfix
 
   %p
