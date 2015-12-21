@@ -19,9 +19,6 @@ module QuestionBank
     field :max_level, :type => Integer
 
     belongs_to :test_paper, class_name: 'QuestionBank::TestPaper', inverse_of: :sections
-    def questions
-      section_questions.map(&:question).compact
-    end
 
     def parent
       test_paper
@@ -34,15 +31,16 @@ module QuestionBank
 
     has_and_belongs_to_many :questions, class_name:'QuestionBank::Question'
 
+    def questions
+      question_ids.map{|id|QuestionBank::Question.find id}
+    end
+
     def question_ids_str
       question_ids.map(&:to_s).join(",")
     end
 
     def question_ids_str=(str)
-      p "question_ids_str="
-      p self.question_ids
       self.question_ids = str.split(",")
-      p self.question_ids
     end
   end
 end

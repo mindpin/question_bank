@@ -9,7 +9,6 @@ RSpec.describe QuestionBank::Section, type: :model do
       expect(@section.min_level).to eq(1)
       expect(@section.max_level).to eq(10)
       expect(@section.respond_to?(:test_paper)).to eq(true)
-      expect(@section.respond_to?(:section_questions)).to eq(true)
       expect(@section.respond_to?(:questions)).to eq(true)
     }
 
@@ -23,5 +22,3 @@ RSpec.describe QuestionBank::Section, type: :model do
     }
   end
 end
-
-

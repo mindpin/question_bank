@@ -32,7 +32,7 @@
               .col-md-10
                 %ul.section_questions
                   - section.questions.each do |question|
-                    %li{data:{question_id:question.id}}
+                    %li{data:{id:question.id}}
                       .row
                         .col-md-10
                           .content= question.content

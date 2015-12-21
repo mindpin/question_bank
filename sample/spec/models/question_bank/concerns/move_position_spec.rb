@@ -66,40 +66,4 @@ RSpec.describe QuestionBank::Concerns::MovePosition, type: :module do
     }
   end
 
-  describe QuestionBank::SectionQuestion, type: :model do
-    before{
-      @section = create(:section)
-      @question1 = create(:question)
-      @question2 = create(:question)
-      @section_question1 = create(:section_question, section: @section, question: @question1 , position: 1)
-      @section_question2 = create(:section_question, section: @section, question: @question2 , position: 2)
-      @section_question = create(:section_question)
-    }
-
-    it{
-      expect(@section_question1.prev).to eq(nil)
-      expect(@section_question1.next).to eq(@section_question2)
-      expect(@section_question2.prev).to eq(@section_question1)
-      expect(@section_question2.next).to eq(nil)
-    }
-
-    it{
-      expect(@section_question1.move_up).to be_nil
-      expect(@section_question1.prev).to eq(nil)
-      expect(@section_question1.next).to eq(@section_question2)
-      expect(@section_question2.prev).to eq(@section_question1)
-      expect(@section_question2.next).to eq(nil)
-    }
-
-    it{
-      expect(@section_question1.move_down).not_to be_nil
-      @section_question1.reload
-      @section_question2.reload
-
-      expect(@section_question1.prev).to eq(@section_question2)
-      expect(@section_question1.next).to eq(nil)
-      expect(@section_question2.prev).to eq(nil)
-      expect(@section_question2.next).to eq(@section_question1)
-    }
-  end
 end
