@@ -12,7 +12,8 @@ module QuestionBank
 
     # 是否启用
     field :enabled, :type => Boolean, :default => false
-
+    
+    has_many :test_paper_results, class_name: 'QuestionBank::TestPaperResult' 
     has_many :sections, class_name: 'QuestionBank::Section', inverse_of: :test_paper
 
     validates :title, :presence => true
