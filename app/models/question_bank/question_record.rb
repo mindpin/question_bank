@@ -16,7 +16,7 @@ module QuestionBank
     enumerize :kind, in: Question::KINDS
     belongs_to :question
     belongs_to :user
-    
+
     scope :with_correct, -> (is_correct) {
         where(:is_correct => is_correct)
       }
@@ -46,7 +46,13 @@ module QuestionBank
 
     def answer_to_format(answer)
       case self.kind
-        when "single_choice","multi_choice" then
+        when "single_choice"
+          new_answer = Marshal.load( Marshal.dump(self.question.choice_answer) )
+          new_answer.each{|option| option[1] = false }
+          if answer.to_i + 1 <= new_answer.count
+            new_answer[answer.to_i][1] = true
+          end
+        when "multi_choice" then
           new_answer = answer.map do |key,value|
             context_by_index = self.question.choice_answer[key.to_i][0]
             value = string_to_bool(value)
@@ -67,9 +73,13 @@ module QuestionBank
     # 保存答案
     def set_answer_field_value
       return true if self.question.blank?
-      if self.kind == "single_choice" || self.kind == "multi_choice"
-        format_answer = answer_to_format(@answer)
-        self.choice_answer = format_answer
+      if self.kind == "single_choice"
+        self.choice_answer = answer_to_format(@answer)
+        return true
+      end
+
+      if self.kind == "multi_choice"
+        self.choice_answer = answer_to_format(@answer)
         return true
       end
 
@@ -83,7 +93,12 @@ module QuestionBank
 
     def set_is_correct
       return true if self.question.blank?
-      if self.kind == "single_choice" || self.kind == "multi_choice"
+      if self.kind == "single_choice"
+        self.is_correct = (self.question.choice_answer == self.choice_answer)
+        return true
+      end
+
+      if self.kind == "multi_choice"
         self.is_correct = (self.question.choice_answer == self.choice_answer)
         return true
       end
@@ -94,8 +109,9 @@ module QuestionBank
         return true
       end
     end
+
     # 取得正确答案的方法
-    def right_answer
+    def correct_answer
       if self.kind == "single_choice" || self.kind == "multi_choice"
         return self.question.choice_answer
       end

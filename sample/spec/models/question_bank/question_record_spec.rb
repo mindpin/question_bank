@@ -8,7 +8,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     end
     describe "回答正确" do
       before :all do
-        @choice_answer = {"0" => "false", "1" => "false", "2" => "false", "3" => "true"}
+        @choice_answer = "3"
         @record = @question.question_records.create(
           :user          => @user,
           :answer        => @choice_answer
@@ -40,7 +40,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "回答错误" do
       before :context do
-        @choice_answer = {"0" => "true", "1" =>"false", "2" => "false", "3" => "false"}
+        @choice_answer = "0"
         @record = @question.question_records.create(
           :user   => @user,
           :answer => @choice_answer
@@ -80,7 +80,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         }
 
         answer_fields.each do |field|
-          choice_answer = {"0" =>"false", "1" =>"false", "2" =>"false", "3" =>"true"}
+          choice_answer = "3"
           record = @question.question_records.create(
             :user   => @user,
             :answer => choice_answer,
@@ -95,9 +95,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "答案格式不正确" do
       before :all do
         @choice_answers = [
-          {"0" => ["1"]},
-          {"0" => [true,"true"]},
-          {"0" =>["一条", "true"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "true"]}
+          "5"
         ]
       end
 
@@ -611,7 +609,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     end
   end
 
-  describe "测试 with_created_at 方法" do 
+  describe "测试 with_created_at 方法" do
     describe "成功" do
       it{
         @user = create :user
@@ -655,7 +653,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
     end
 
-    describe "失败" do 
+    describe "失败" do
       it{
         @start_time = nil
         @end_time   = nil
@@ -687,11 +685,11 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "kind 为 single_choice" do
       it{
         @question = create :single_choice_question_wugui
-        @choice_answer = {"0" => "false", "1" => "false", "2" =>"false", "3" =>"true"}
+        @choice_answer = "3"
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
-        ) 
+        )
         expect(@record.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionRecord.with_kind("single_choice")
         expect(@kind_search.first).to eq(@record)
@@ -705,7 +703,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
-        ) 
+        )
         expect(@record.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionRecord.with_kind("multi_choice")
         expect(@kind_search.first).to eq(@record)
@@ -719,12 +717,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @record = @question.question_records.create(
           :user => @user,
           :answer => @fill_answer
-        ) 
+        )
         expect(@record.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionRecord.with_kind("fill")
         expect(@kind_search.first).to eq(@record)
       }
-    end    
+    end
 
     describe "kind 为 mapping" do
       it{
@@ -733,7 +731,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @record = @question.question_records.create(
           :user => @user,
           :answer => @mapping_answer
-        ) 
+        )
         expect(@record.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionRecord.with_kind("mapping")
         expect(@kind_search.first).to eq(@record)
@@ -747,7 +745,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         @record = @question.question_records.create(
           :user => @user,
           :answer => @essay_answer
-        ) 
+        )
         expect(@record.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionRecord.with_kind("essay")
         expect(@kind_search.first).to eq(@record)
@@ -758,7 +756,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   describe "测试 with_correct 方法" do
     before :example do
       @user     = create :user
-      @question = create :bool_question_dog 
+      @question = create :bool_question_dog
     end
 
     it{

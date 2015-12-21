@@ -85,9 +85,14 @@ module QuestionBank
         )
       @record.save
       if @record.is_correct
-        redirect_to '/questions/do_question',:notice => '回答正确'
+        render :json => {
+          :is_correct => true
+        }
       else
-        redirect_to '/questions/do_question',:notice => '回答错误'
+        render :json => {
+          :is_correct     => false,
+          :correct_answer => @record.correct_answer
+        }
       end
     end
 
