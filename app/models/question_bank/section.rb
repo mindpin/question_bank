@@ -20,12 +20,6 @@ module QuestionBank
 
     belongs_to :test_paper, class_name: 'QuestionBank::TestPaper', inverse_of: :sections
 
-    has_many :section_questions, class_name: 'QuestionBank::SectionQuestion', inverse_of: :section
-
-    def questions
-      section_questions.map(&:question).compact
-    end
-
     def parent
       test_paper
     end
@@ -35,6 +29,18 @@ module QuestionBank
     validates :min_level, :presence => true
     validates :max_level, :presence => true
 
-    accepts_nested_attributes_for :section_questions, allow_destroy: true
+    has_and_belongs_to_many :questions, class_name:'QuestionBank::Question'
+
+    def questions
+      question_ids.map{|id|QuestionBank::Question.find id}
+    end
+
+    def question_ids_str
+      question_ids.map(&:to_s).join(",")
+    end
+
+    def question_ids_str=(str)
+      self.question_ids = str.split(",")
+    end
   end
 end

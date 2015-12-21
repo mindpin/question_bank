@@ -10,8 +10,6 @@ module QuestionBank
     # 考试时间
     field :minutes, :type => Integer
 
-    # 涉及知识点KnowledgePoint, 具体名称待定
-
     # 是否启用
     field :enabled, :type => Boolean, :default => false
 
@@ -22,7 +20,7 @@ module QuestionBank
     validates :minutes, :presence => true
 
     accepts_nested_attributes_for :sections, allow_destroy: true
-
-    scope :recent, -> {order(id: :desc)}
+    scope :recent,  -> {order(id: :desc)}
+    scope :enabled, -> {where(enabled: true)}
   end
 end

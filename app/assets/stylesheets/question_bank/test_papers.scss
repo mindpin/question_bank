@@ -1,3 +1,41 @@
 .red{
   color: #FF0000;
 }
+
+.form-test_paper{
+  margin: 50px 0;
+
+  h3{
+    font-weight: bold;
+    font-size: 24px;
+    margin: 30px 0;
+  }
+
+  .base{
+    @include clearfix;
+  }
+  .sections{
+    margin: 35px 0;
+  }
+
+  ul.section_questions{
+    list-style: none;
+    margin: 5px 0;
+    padding: 0;
+    li{
+      padding: 10px 0;
+      .ops-group{
+        @include clearfix;
+        .ops{
+          float: right;
+        }
+      }
+    }
+  }
+
+  .form-horizontal{
+    .control-label {
+      text-align: left;
+    }
+  }
+}
