@@ -3,7 +3,6 @@
   %span{:class=>'question-title-2'}
     = @question.content
 .do-question-msg
-  = notice
   %p
 - case @question.kind
   - when "single_choice"
@@ -11,20 +10,19 @@
       %form{:action => do_question_validation_question_path(@question), :method => :post}
         - @question.choice_answer.each_with_index do |option_text, index|
           .div
-            %input{:type => "hidden", :name => "answer[#{index}]", :value => "false"}
-            %input{:type => "radio", :name => "answer[#{index}]", :value => "true"}
+            %input{:type => "radio", :name => "answer", :value => index}
             = option_text[0]
-        %input{:type => "submit"} 
-      
+        %input{:type => "submit"}
+
   - when "multi_choice"
-    .question-multi-choice  
+    .question-multi-choice
       %form{:action => do_question_validation_question_path(@question), :method => :post}
         - @question.choice_answer.each_with_index do |option_text, index|
           .div
             %input{:type => "hidden", :name => "answer[#{index}]", :value => "false"}
             %input{:type => "checkbox", :name => "answer[#{index}]", :value => "true"}
             = option_text[0]
-        %input{:type => "submit"} 
+        %input{:type => "submit"}
 
   - when "mapping"
     .question-mapping
@@ -39,7 +37,7 @@
               %option{:value => '空'} 空
               - right_mapping_options.each do |right_option|
                 %option{:value => right_option}= right_option
-        %input{:type => "submit"} 
+        %input{:type => "submit"}
 
   - when "bool"
     .question-bool
