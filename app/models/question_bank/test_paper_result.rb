@@ -19,5 +19,6 @@ module QuestionBank
       end
       hash
     end
+    # 验证
   end
 end
