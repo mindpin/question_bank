@@ -9,6 +9,7 @@ module QuestionBank
       end
 
       User.class_eval do
+        has_many :test_paper_results, class_name: 'QuestionBank::TestPaperResult'
         has_many :question_flaws, class_name:'QuestionBank::QuestionFlaw',:order => :created_at.desc
         has_many :question_records, class_name:'QuestionBank::QuestionRecord',:order => :created_at.desc
         include QuestionBank::QuestionFlaw::UserMethods

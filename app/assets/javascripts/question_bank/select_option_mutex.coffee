@@ -28,3 +28,5 @@ $(document).on 'ready page:load', ->
     new SelectOptionMutex $('.do-question-page')
   if $('.redo-question-page').length > 0
     new SelectOptionMutex $('.redo-question-page')
+  if jQuery('.page-test-paper-result-new').length > 0
+    new SelectOptionMutex jQuery('.page-test-paper-result-new')

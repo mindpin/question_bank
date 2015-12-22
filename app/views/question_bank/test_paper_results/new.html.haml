@@ -1,0 +1,85 @@
+:ruby
+  num_cn_conv = QuestionBank::NumCnConv.new
+.page-test-paper-result-new
+  %h1.text-center= @test_paper.title
+  .text-center
+    = "试卷满分 #{@test_paper.score} 分"
+    = "考试时间 #{@test_paper.minutes} 分钟"
+  
+  .sections
+    %form{:action => "/test_papers/#{@test_paper.id}/test_paper_results", :method => "POST"}
+      - question_index = 0
+      - @test_paper.sections.each_with_index do |section, section_index|
+        .section.clearfix{data: {section_id: section.id}}
+          %h3
+            = num_cn_conv.num2cn section_index + 1
+            、
+            = section.kind.text
+            = " (共#{section.questions.count}题，每题#{section.score}分)"
+
+          %ol.section_questions
+            - section.questions.each_with_index do |sq, sq_index|
+              - question = sq
+              - current_question_index = question_index
+              %li
+                .question_content= question.content
+                .answers
+                  %input{type:"hidden", name: "test_paper_result[question_records_attributes][#{question_index}][question_id]", value:question.id.to_s}
+                  %input{type:"hidden", name: "test_paper_result[question_records_attributes][#{question_index}][user_id]", value: current_user.id.to_s}
+                  - case question.kind 
+                  - when "single_choice"
+                    - question.choices.each_with_index do |choice_code, choice_index|
+                      .answer.radio
+                        %label
+                          %input{type:"radio", name: "test_paper_result[question_records_attributes][#{question_index}][answer]", value: choice_index}
+                            = english_choices[choice_index]
+                            、
+                            = choice_code
+                  - when "multi_choice"
+                    - question.choices.each_with_index do |choice_code, choice_index|
+                      .answer.checkbox
+                        %label
+                          %input{type:"checkbox", name: "test_paper_result[question_records_attributes][#{question_index}][answer][#{choice_index}]", value:'false'}
+                          %input{type:"checkbox", name: "test_paper_result[question_records_attributes][#{question_index}][answer][#{choice_index}]", value:'true'}
+                            = english_choices[choice_index]
+                            、
+                            = choice_code
+                  - when "bool"
+                    .answer
+                      %label
+                        %input{type:"radio", name: "test_paper_result[question_records_attributes][#{question_index}][answer]", value: 'true'}
+                        对
+                      %label
+                        %input{type:"radio", name: "test_paper_result[question_records_attributes][#{question_index}][answer]", value: 'false'}
+                        错
+                  - when "mapping"
+                    .question-mapping
+                      - left_mapping_options  = question.left_mapping_options
+                      - right_mapping_options = question.right_mapping_options
+                      - left_mapping_options.each_with_index do |left_option, mop_index|
+                        .select-pair
+                          %input{:type => "hidden", :name => "test_paper_result[question_records_attributes][#{question_index}][answer][#{mop_index}][]", :value => left_option}
+                          = left_option
+                          %select{:name => "test_paper_result[question_records_attributes][#{question_index}][answer][#{mop_index}][]",:class=>'select form-control'}
+                            %option{:value => '空'} 空
+                            - right_mapping_options.each do |right_option|
+                              %option{:value => right_option}= right_option
+
+                  - when "essay"
+                    .answer
+                      %textarea.form-control{name: "test_paper_result[question_records_attributes][#{question_index}][answer]"}
+
+                  - when "fill"
+                    .answer
+                      - question.fill_answer.length.times do |fill_index|
+                        %label
+                          = english_choices[fill_index]
+                          %input{type: 'text', name: "test_paper_result[question_records_attributes][#{question_index}][answer][]"}
+                        %br
+                %p
+                .question_result_msg{:data => question.id}
+              - question_index += 1
+      %input{:type => 'submit'}
+
+
+

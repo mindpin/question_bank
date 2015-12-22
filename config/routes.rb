@@ -19,8 +19,9 @@ QuestionBank::Engine.routes.draw do
     end     
   end
 
-  resources :test_papers do
+  resources :test_papers, shallow: true do
     post :preview, on: :collection
+    resources :test_paper_results
   end
 
   resources :question_records do 
@@ -31,4 +32,6 @@ QuestionBank::Engine.routes.draw do
     post :batch_create, on: :collection
     delete :batch_destroy, on: :collection
   end
+
+
 end
