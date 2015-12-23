@@ -22,38 +22,27 @@ body {
   }
 }
 
+// 做题页
 .page-new-question-single-choice{
-  .radio{
-    margin-left: 20px;
-  }
-}
-.page-new-question-multi-choice{
-  .checkbox{
-    margin-left: 20px;
-  }
-}
-.question-single-choice{
-  .option{
-    .option-radio{
-      display: inline
-    }
-    .option-content{
-      display:inline
+  label[for='question_choices']{
+    input[type='radio']{
+      line-height: 34px;
+      height: 34px;
+      margin-top: 0px;
     }
   }
 }
 
-// 做题页
-.page-new-question-single-choice{
-  .radio{
-    margin-left: 20px;
-  }
-}
 .page-new-question-multi-choice{
-  .checkbox{
-    margin-left: 20px;
+  label[for='question_choices']{
+    input[type='checkbox']{
+      line-height: 34px;
+      height: 34px;
+      margin-top: 0px;
+    }
   }
 }
+
 .question-single-choice{
   .option{
     .option-radio{
