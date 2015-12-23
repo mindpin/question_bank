@@ -27,7 +27,7 @@ class QuestionMappingAnswerInput < SimpleForm::Inputs::Base
       <div class="item ">
         <input name="question[mapping_answer][#{index}][]" class="string optional" type="text" value="#{mapping_answer_item[0]}" id="question_mapping_answer">
         <input name="question[mapping_answer][#{index}][]" class="string optional" type="text" value="#{mapping_answer_item[1]}" id="question_mapping_answer">
-        <a class="btn btn-success delete" href="javascript:;" role="button" ">删除连线</a>
+        <a class="btn btn-default delete" href="javascript:;" role="button" ">删除连线</a>
       </div>
     EOF
   end
@@ -35,7 +35,7 @@ class QuestionMappingAnswerInput < SimpleForm::Inputs::Base
   def _build_add_button
     <<-EOF
       <div class="add-items">
-        <a class="btn btn-success append" href="javascript:;" role="button">添加一组选项</a>
+        <a class="btn btn-default append" href="javascript:;" role="button">添加一组选项</a>
         <span>请将正确答案连接</span>
       </div>
     EOF

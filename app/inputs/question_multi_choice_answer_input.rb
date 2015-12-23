@@ -20,9 +20,11 @@ class QuestionMultiChoiceAnswerInput < SimpleForm::Inputs::Base
   def _build_checkbox_hidden
     <<-EOF
       <div class="checkbox hidden">
-        <input type="checkbox" value=""  name="question[choice_answer_indexs][]" id="question_choice_answer_indexs_0" />
-        <input name="question[choices][]" type="text" value="" id="question_choices" />
-        <a class='btn btn-default delete-choice'>删除选项</a>
+        <label for='question_choices'>
+          <input type="checkbox" value=""  name="question[choice_answer_indexs][]" id="question_choice_answer_indexs_0" />
+          <input name="question[choices][]" type="text" value="" id="question_choices" />
+          <a class='btn btn-default delete-choice'>删除选项</a>
+        </label>
       </div>
     EOF
   end
@@ -32,9 +34,11 @@ class QuestionMultiChoiceAnswerInput < SimpleForm::Inputs::Base
     checked = 'checked="checked"' if @choice_answer_indexs.include?(i)
     <<-EOF
       <div class="checkbox">
-        <input type="checkbox" value="#{i}" #{checked} name="question[choice_answer_indexs][]" id="question_choice_answer_indexs_#{i+1}" />
-        <input name="question[choices][]" type="text" value="#{choice}" id="question_choices" />
-        <a class='btn btn-default delete-choice'>删除选项</a>
+        <label for='question_choices'>
+          <input type="checkbox" value="#{i}" #{checked} name="question[choice_answer_indexs][]" id="question_choice_answer_indexs_#{i+1}" />
+          <input name="question[choices][]" type="text" value="#{choice}" id="question_choices" />
+          <a class='btn btn-default delete-choice'>删除选项</a>
+        </label>
       </div>
     EOF
   end

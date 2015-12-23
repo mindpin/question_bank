@@ -27,9 +27,9 @@ class QuestionFillAnswerInput < SimpleForm::Inputs::Base
     <<-EOF
       <div class="answer hidden">
         <input name="question[fill_answer][]" class="string optional" type="text" id="question_fill_answer">
-        <a class="btn btn-success delete " href="javascript:;" role="button">删除</a>
+        <a class="btn btn-default delete " href="javascript:;" role="button">删除</a>
       </div>
-      <a class="btn btn-success append " href="javascript:;" role="button">添加</a>
+      <a class="btn btn-default append " href="javascript:;" role="button">添加</a>
     EOF
   end
 
@@ -37,14 +37,14 @@ class QuestionFillAnswerInput < SimpleForm::Inputs::Base
     <<-EOF
       <div class="answer">
         <input name="question[fill_answer][]" value="#{fill_answer_item}" class="string optional" type="text" id="question_fill_answer">
-        <a class="btn btn-success delete " href="javascript:;" role="button">删除</a>
+        <a class="btn btn-default delete " href="javascript:;" role="button">删除</a>
       </div>
     EOF
   end
 
   def _build_add_button
     <<-EOF
-      <a class="btn btn-success append " href="javascript:;" role="button">添加</a>
+      <a class="btn btn-default append " href="javascript:;" role="button">添加</a>
     EOF
   end
 end
