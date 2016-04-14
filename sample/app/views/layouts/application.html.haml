@@ -6,17 +6,17 @@
 
     %title rails engine: question_bank
     = csrf_meta_tags
-    = stylesheet_link_tag 'question_bank/application', :media => 'screen'
-    = javascript_include_tag 'question_bank/application'
+    = stylesheet_link_tag 'application', :media => 'screen'
+    = javascript_include_tag 'application'
 
   %body
     %nav.navbar.navbar-inverse
       .container
         .navbar-header
-          %a.navbar-brand 题库
+          %a.navbar-brand{href: "/"} 题库
         %ul.nav.navbar-nav
-          %li= link_to "题库管理",questions_path
-          %li= link_to "组卷", test_papers_path
+          %li= link_to "题库管理", questions_path
+          %li= link_to "组卷",  test_papers_path
           %li= link_to "做题记录", question_records_path
         %ul.nav.navbar-nav.navbar-right
           %li
