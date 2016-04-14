@@ -1,0 +1,11 @@
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require bootstrap-sprockets
+//= require question_bank/do_question
+//= require question_bank/questions
+//= require question_bank/test_paper_result
+//= require question_bank/question_record_and_flaw
+//= require question_bank/select_option_mutex
+//= require question_bank/test_papers
+//= require_tree .
