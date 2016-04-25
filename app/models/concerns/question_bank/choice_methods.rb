@@ -12,7 +12,7 @@ module QuestionBank
       #   [ "XXXXX", false ]
       # ]
       #
-      field :choice_answer, :type => Array
+      field :choice_answer, type: Array
       before_validation :set_choice_answer_by_choices_and_choice_answer_indexs
       validate :check_choice_answer_of_choice
     end

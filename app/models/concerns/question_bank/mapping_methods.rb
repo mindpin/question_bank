@@ -13,7 +13,7 @@ module QuestionBank
       #   [ "选项4", "对应选项4" ]
       # ]
       #
-      field :mapping_answer, :type => Array
+      field :mapping_answer, type: Array
 
       scope :mapping, -> { where(kind: "mapping") }
       validate :check_mapping_answer_of_mapping

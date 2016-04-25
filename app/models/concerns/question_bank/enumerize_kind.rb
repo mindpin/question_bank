@@ -9,6 +9,7 @@ module QuestionBank
 
     included do
       enumerize :kind, in: KINDS
+      validates :kind, presence: true
     end
   end
 end

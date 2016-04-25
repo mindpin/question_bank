@@ -5,7 +5,7 @@ module QuestionBank
     included do
       ## 填空题
       # ["",""]
-      field :fill_answer, :type => Array
+      field :fill_answer, type: Array
       ##
 
       scope :fill, -> { where(kind: "fill") }

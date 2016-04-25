@@ -4,7 +4,7 @@ module QuestionBank
 
     included do
       ## 论述题答案
-      field :essay_answer, :type => String
+      field :essay_answer, type: String
       ##
 
       scope :essay, -> { where(kind: "essay") }
