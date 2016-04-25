@@ -5,8 +5,8 @@ module QuestionBank
     include QuestionBank::TimeKindScope
     include QuestionBank::EnumerizeKind
 
-    belongs_to :question, :class_name => 'QuestionBank::Question'
-    belongs_to :user, :class_name => QuestionBank.user_class
+    belongs_to :question, class_name: 'QuestionBank::Question'
+    belongs_to :user,     class_name: QuestionBank.user_class
 
     before_validation :set_kind
     def set_kind

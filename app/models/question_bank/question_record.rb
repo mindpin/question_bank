@@ -5,20 +5,19 @@ module QuestionBank
     include QuestionBank::TimeKindScope
     include QuestionBank::EnumerizeKind
 
-    field :is_correct, type: Boolean          # 题目是否正确
-
-    field :bool_answer, type: Boolean         # 判断题
-    field :choice_answer , type: Array        # 选择题
-    field :essay_answer, type: String         # 论述题
-    field :fill_answer, type: Array           # 填空题
+    field :is_correct,     type: Boolean          # 题目是否正确
+    field :bool_answer,    type: Boolean         # 判断题
+    field :choice_answer,  type: Array        # 选择题
+    field :essay_answer,   type: String         # 论述题
+    field :fill_answer,    type: Array           # 填空题
     field :mapping_answer, type: Array        # 连线题
 
     belongs_to :question
     belongs_to :user
 
     scope :with_correct, -> (is_correct) {
-        where(:is_correct => is_correct)
-      }
+      where(:is_correct => is_correct)
+    }
 
     def answer=(answer)
       @answer = answer

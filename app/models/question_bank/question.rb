@@ -14,21 +14,19 @@ module QuestionBank
     include QuestionBank::TimeKindScope
 
     # 题目正文
-    field :content, :type => String
-
+    field :content,  type: String
     # 答案解析
-    field :analysis, :type => String
-
+    field :analysis, type: String
     # 难度系数(1 2 3 4 5 6 7 8 9 10)
-    field :level, :type => Integer
-
+    field :level,    type: Integer
     # 是否启用
-    field :enabled, :type => Boolean, :default => false
+    field :enabled,  type: Boolean, default: false
 
-    validates :content, :presence => true
-    validates :level, :presence => true
-    has_many :question_flaws,class_name:'QuestionBank::QuestionFlaw'
-    has_many :question_records ,class_name:'QuestionBank::QuestionRecord'
+    validates :content, presence: true
+    validates :level,   presence: true
+
+    has_many :question_flaws,   class_name: 'QuestionBank::QuestionFlaw'
+    has_many :question_records, class_name: 'QuestionBank::QuestionRecord'
 
     def human_kind
       I18n.t("custom.model.question.human_kind.#{self.kind}")
