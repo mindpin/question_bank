@@ -2,13 +2,9 @@ module QuestionBank
   class Section
     include Mongoid::Document
     include Mongoid::Timestamps
-    extend Enumerize
+    include QuestionBank::EnumerizeKind
     # 引用排序模块
-    include QuestionBank::Concerns::MovePosition
-
-    # 题目类型 枚举: 单选题 多选题 判断题 填空题 论述题 连线题
-    KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping]
-    enumerize :kind, in: KINDS
+    include QuestionBank::MovePosition
 
     # 每题分值
     field :score, :type => Integer

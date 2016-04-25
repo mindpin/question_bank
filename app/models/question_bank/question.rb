@@ -2,8 +2,8 @@ module QuestionBank
   class Question
     include Mongoid::Document
     include Mongoid::Timestamps
-    extend Enumerize
     include Kaminari::MongoidExtension::Document
+    include QuestionBank::EnumerizeKind
     include QuestionBank::ChoiceMethods
     include QuestionBank::SingleChoiceMethods
     include QuestionBank::MultiChoiceMethods
@@ -12,19 +12,9 @@ module QuestionBank
     include QuestionBank::FillMethods
     include QuestionBank::MappingMethods
     include QuestionBank::TimeKindScope
-    # include QuestionBank::Concerns::MovePosition
-
-    # 题目类型 枚举: 单选题 多选题 判断题 填空题 论述题 连线题
-    KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping]
-
-    enumerize :kind, in: KINDS
 
     # 题目正文
     field :content, :type => String
-
-    # 附件
-    # TODO
-    # has_and_belongs_to_many :file_entities, :class_name => "FilePartUpload::FileEntity"
 
     # 答案解析
     field :analysis, :type => String
@@ -39,8 +29,7 @@ module QuestionBank
     validates :level, :presence => true
     has_many :question_flaws,class_name:'QuestionBank::QuestionFlaw'
     has_many :question_records ,class_name:'QuestionBank::QuestionRecord'
-    #
-    has_and_belongs_to_many :sections,class_name:'QuestionBank::Section'
+
     def human_kind
       I18n.t("custom.model.question.human_kind.#{self.kind}")
     end

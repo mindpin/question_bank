@@ -7,7 +7,7 @@ end
 
 class MovePositionTest
   include Mongoid::Document
-  include QuestionBank::Concerns::MovePosition
+  include QuestionBank::MovePosition
   belongs_to :father, class_name: 'MovePositionTestParent'
 
   def parent
@@ -15,7 +15,7 @@ class MovePositionTest
   end
 end
 
-RSpec.describe QuestionBank::Concerns::MovePosition, type: :module do
+RSpec.describe QuestionBank::MovePosition, type: :module do
   describe "基础字段" do
     it{
       @test = MovePositionTest.create

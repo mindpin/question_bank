@@ -3,7 +3,7 @@ module QuestionBank
     include Mongoid::Document
     include Mongoid::Timestamps
     include QuestionBank::TimeKindScope
-    extend Enumerize
+    include QuestionBank::EnumerizeKind
 
     field :is_correct, type: Boolean          # 题目是否正确
 
@@ -13,7 +13,6 @@ module QuestionBank
     field :fill_answer, type: Array           # 填空题
     field :mapping_answer, type: Array        # 连线题
 
-    enumerize :kind, in: Question::KINDS
     belongs_to :question
     belongs_to :user
 
