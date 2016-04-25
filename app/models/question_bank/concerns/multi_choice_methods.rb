@@ -1,4 +1,3 @@
-p "reload MultiChoiceMethods"
 module QuestionBank
   module MultiChoiceMethods
     extend ActiveSupport::Concern

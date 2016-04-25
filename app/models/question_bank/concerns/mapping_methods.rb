@@ -1,4 +1,3 @@
-p "reload MappingMethods"
 module QuestionBank
   module MappingMethods
     extend ActiveSupport::Concern

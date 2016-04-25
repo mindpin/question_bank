@@ -1,4 +1,3 @@
-p "reload BoolMethods"
 module QuestionBank
   module BoolMethods
     extend ActiveSupport::Concern

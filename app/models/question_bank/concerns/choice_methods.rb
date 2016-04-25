@@ -1,4 +1,3 @@
-p "reload ChoiceMethods"
 module QuestionBank
   module ChoiceMethods
     extend ActiveSupport::Concern

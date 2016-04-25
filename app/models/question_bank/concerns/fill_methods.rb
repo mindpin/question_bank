@@ -1,4 +1,3 @@
-p "reload FillMethods"
 module QuestionBank
   module FillMethods
     extend ActiveSupport::Concern
@@ -37,7 +36,7 @@ module QuestionBank
             break
           end
         end
-        
+
       end
 
 

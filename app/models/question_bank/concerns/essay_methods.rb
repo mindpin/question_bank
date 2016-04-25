@@ -1,4 +1,3 @@
-p "reload EssayMethods"
 module QuestionBank
   module EssayMethods
     extend ActiveSupport::Concern

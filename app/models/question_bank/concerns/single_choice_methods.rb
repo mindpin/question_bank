@@ -1,4 +1,3 @@
-p "reload SingleChoiceMethods"
 module QuestionBank
   module SingleChoiceMethods
     extend ActiveSupport::Concern
