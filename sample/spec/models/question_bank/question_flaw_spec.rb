@@ -45,7 +45,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
     describe 'user.flaw_questions' do
       it{
         @bool_question = create(:bool_question)
-        @choice_question = create(:single_choice_question_wugui)
+        @choice_question = create(:single_choice_question)
         before_add_2_question_count = @user.flaw_questions.count
         @user.add_flaw_question(@bool_question)
         @user.add_flaw_question(@choice_question)
@@ -57,14 +57,14 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
     end
   end
 
-  describe "测试 with_created_at 方法" do 
+  describe "测试 with_created_at 方法" do
     describe "成功" do
       it{
         QuestionBank::QuestionFlaw.destroy_all
         @user = create :user
-        @question1 = create :essay_question_relative
-        @question2 = create :single_choice_question_wugui
-        @question3 = create :multi_choice_question_xiaochao
+        @question1 = create :essay_question
+        @question2 = create :single_choice_question
+        @question3 = create :multi_choice_question
 
         @day_1 = Time.local(2015, 12, 01, 10, 0, 0)
         @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
@@ -96,7 +96,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
       }
     end
 
-    describe "失败" do 
+    describe "失败" do
       it{
         @start_time = nil
         @end_time   = nil
@@ -113,7 +113,7 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
 
     describe "kind 为 bool" do
       it{
-        @question = create :bool_question_dog
+        @question = create :bool_question
         @flaw = @question.question_flaws.create(
           :user => @user
         )
@@ -125,10 +125,10 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
 
     describe "kind 为 single_choice" do
       it{
-        @question = create :single_choice_question_wugui
+        @question = create :single_choice_question
         @flaw = @question.question_flaws.create(
           :user => @user
-        ) 
+        )
         expect(@flaw.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionFlaw.with_kind("single_choice")
         expect(@kind_search.first).to eq(@flaw)
@@ -137,10 +137,10 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
 
     describe "kind 为 multi_choice" do
       it{
-        @question = create :multi_choice_question_xiaochao
+        @question = create :multi_choice_question
         @flaw = @question.question_flaws.create(
           :user => @user
-        ) 
+        )
         expect(@flaw.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionFlaw.with_kind("multi_choice")
         expect(@kind_search.first).to eq(@flaw)
@@ -149,22 +149,22 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
 
     describe "kind 为 fill" do
       it{
-        @question = create :fill_question_say_hello
+        @question = create :fill_question
         @flaw = @question.question_flaws.create(
           :user => @user
-        ) 
+        )
         expect(@flaw.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionFlaw.with_kind("fill")
         expect(@kind_search.first).to eq(@flaw)
       }
-    end    
+    end
 
     describe "kind 为 mapping" do
       it{
-        @question = create :mapping_question_letter
+        @question = create :mapping_question
         @flaw = @question.question_flaws.create(
           :user => @user
-        ) 
+        )
         expect(@flaw.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionFlaw.with_kind("mapping")
         expect(@kind_search.first).to eq(@flaw)
@@ -173,10 +173,10 @@ RSpec.describe QuestionBank::QuestionFlaw, type: :model do
 
     describe "kind 为 essay" do
       it{
-        @question = create :essay_question_relative
+        @question = create :essay_question
         @flaw = @question.question_flaws.create(
           :user => @user
-        ) 
+        )
         expect(@flaw.valid?).to eq(true)
         @kind_search = QuestionBank::QuestionFlaw.with_kind("essay")
         expect(@kind_search.first).to eq(@flaw)

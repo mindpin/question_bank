@@ -3,15 +3,15 @@ require 'rails_helper'
 RSpec.describe QuestionBank::QuestionRecord, type: :model do
   describe "单选题" do
     before :all do
-      @question = create :single_choice_question_wugui
+      @question = create :single_choice_question
       @user     = create(:user)
     end
+
     describe "回答正确" do
       before :all do
-        @choice_answer = "3"
         @record = @question.question_records.create(
           :user          => @user,
-          :answer        => @choice_answer
+          :answer        => "ddd"
         )
       end
 
@@ -28,22 +28,15 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(
-          [["一条", false], ["两条", false], ["三条", false], ["四条", true]]
-        )
+        expect(@record.answer).to eq("ddd")
       }
     end
 
     describe "回答错误" do
       before :context do
-        @choice_answer = "0"
         @record = @question.question_records.create(
           :user   => @user,
-          :answer => @choice_answer
+          :answer => "aaa"
         )
       end
 
@@ -60,42 +53,17 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(
-          [["一条", true], ["两条", false], ["三条", false], ["四条", false]]
-        )
-      }
-    end
-
-    describe "choice_answer 字段之外的答案字段必须为 nil" do
-      it{
-        answer_fields = {
-          :essay_answer => "abc",
-          :fill_answer => ["bcd"],
-          :mapping_answer => [["狐狸", "犬科"], ["老虎", "猫科"]],
-          :bool_answer => "true"
-        }
-
-        answer_fields.each do |field|
-          choice_answer = "3"
-          record = @question.question_records.create(
-            :user   => @user,
-            :answer => choice_answer,
-            field[0] => field[1]
-          )
-          expect(record.valid?).to eq(false)
-          expect(record.errors.messages[field[0]]).not_to be_nil
-        end
+        expect(@record.answer).to eq("aaa")
       }
     end
 
     describe "答案格式不正确" do
       before :all do
         @choice_answers = [
-          "5"
+          "5",
+          true,
+          ["5"],
+          {"5" => true}
         ]
       end
 
@@ -106,7 +74,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[:single_choice_answer]).not_to be_nil
+          expect(record.errors.messages[:answer]).not_to be_nil
         end
       }
     end
@@ -114,16 +82,15 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
   describe "多选题" do
     before :all do
-      @question = create :multi_choice_question_xiaochao
+      @question = create :multi_choice_question
       @user     = create(:user)
     end
 
     describe "回答正确" do
       before :all do
-        @choice_answer = {"0" => "false", "1" =>"true", "2" =>"true", "3" => "true", "4" =>"true"}
         @record = @question.question_records.create(
           :user   => @user,
-          :answer => @choice_answer
+          :answer => ["bbb","ccc","ddd","eee"]
         )
       end
 
@@ -140,22 +107,15 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(
-          [["一条", false], ["两条", true], ["三条", true], ["四条", true], ["五条", true]]
-        )
+        expect(@record.answer).to eq(["bbb","ccc","ddd","eee"])
       }
     end
 
     describe "回答错误" do
       before :all do
-        @choice_answer = {"0" => "false", "1" =>"false", "2" =>"true", "3" => "true", "4" =>"true"}
         @record = @question.question_records.create(
           :user   => @user,
-          :answer => @choice_answer
+          :answer => ["bbb","ccc"]
         )
       end
       it{
@@ -168,43 +128,17 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         expect(@record.is_correct).to eq(false)
       }
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(
-          [["一条", false], ["两条", false], ["三条", true], ["四条", true], ["五条", true]]
-        )
-      }
-    end
-
-    describe "choice_answer 字段之外的答案字段必须为 nil" do
-      it{
-        answer_fields = {
-          :essay_answer   => "Yes,he has two legs",
-          :fill_answer    => ["a leg"],
-          :bool_answer    => true,
-          :mapping_answer => [["a","leg"],["two","legs"]]
-        }
-        answer_fields.each do |field|
-          choice_answer = {"0" =>"false", "1" =>"true", "2" =>"true", "3" =>"true", "4" => "true"}
-          record = @question.question_records.create(
-            :user    => @user,
-            :answer  => choice_answer,
-            field[0] => field[1]
-          )
-          expect(record.valid?).to eq(false)
-          expect(record.errors.messages[field[0]]).not_to be_nil
-        end
+        expect(@record.answer).to eq(["bbb","ccc"])
       }
     end
 
     describe "答案格式不正确" do
       it{
         choice_answer = [
-          {"0" => ["leg"]},
-          {"0" =>[true,"two legs"]},
-          {"0" => ["一条", "false"], "1" => ["两条", "false"], "2" => ["三条", "false"], "3" => ["四条", "false"], "4" => ["五条", "true"]}
+          "adfsdf",
+          ["asdfsf"],
+          ["bbb"],
+          {"0" => ["leg"]}
         ]
         choice_answer.each do |answer|
           record = @question.question_records.create(
@@ -212,7 +146,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[:multi_choice_answer]).not_to be_nil
+          expect(record.errors.messages[:answer]).not_to be_nil
         end
       }
     end
@@ -220,7 +154,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
   describe "填空题" do
     before :all do
-      @question = create :fill_question_say_hello
+      @question = create :fill_question
       @user     = create(:user)
     end
 
@@ -246,11 +180,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.fill_answer).to eq(@fill_answer)
+        expect(@record.answer).to eq(@fill_answer)
       }
     end
 
@@ -276,38 +206,15 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.fill_answer).to eq(@fill_answer)
-      }
-    end
-
-    describe "fill_answer 字段之外的答案字段必须为 nil" do
-      it{
-        answer_fields = {
-          :choice_answer => [["hello",true],["nihao",false]],
-          :mapping_answer => [["hony","baby"],["coat","shirt"]],
-          :bool_answer => true,
-          :essay_answer => "Alan is a good man"
-        }
-        answer_fields.each do |field|
-          fill_answer = ["北京", "伦敦"]
-          record = @question.question_records.create(
-            :user => @user,
-            :answer =>fill_answer,
-            field[0] => field[1]
-          )
-          expect(record.valid?).to eq(false)
-          expect(record.errors.messages[field[0]]).not_to be_nil
-        end
+        expect(@record.answer).to eq(@fill_answer)
       }
     end
 
     describe "答案格式不正确" do
       it{
         fill_answers = [
+          "123",
+          ["1"],
           [true,1452],
           [["北京"],["伦敦"]]
         ]
@@ -317,7 +224,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[:fill_answer]).not_to be_nil
+          expect(record.errors.messages[:answer]).not_to be_nil
         end
       }
     end
@@ -325,13 +232,26 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
   describe "连线题" do
     before :all do
-      @question = create :mapping_question_letter
+      @question = create :mapping_question
       @user = create(:user)
     end
 
     describe "回答正确" do
       before :all do
-        @mapping_answer = {"0" => ["A","a"],"1" =>["B", "b"], "2" =>["C", "c"]}
+        @mapping_answer = [
+          {
+            "left"  => "aaa",
+            "right" => "eee"
+          },
+          {
+            "left"  => "bbb",
+            "right" => "fff"
+          },
+          {
+            "left"  => "ccc",
+            "right" => "ddd"
+          }
+        ]
         @record = @question.question_records.create(
           :user => @user,
           :answer => @mapping_answer
@@ -351,19 +271,26 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(
-          [["A","a"], ["B", "b"], ["C", "c"]]
-        )
+        expect(@record.answer).to eq(@mapping_answer)
       }
     end
 
     describe "回答错误" do
       before :all do
-        @mapping_answer = {"0" => ["A","b"],"1" =>["B", "c"], "2" =>["C", "a"]}
+        @mapping_answer = [
+          {
+            "left"  => "aaa",
+            "right" => "fff"
+          },
+          {
+            "left"  => "bbb",
+            "right" => "eee"
+          },
+          {
+            "left"  => "ccc",
+            "right" => "ddd"
+          }
+        ]
         @record = @question.question_records.create(
           :user => @user,
           :answer => @mapping_answer
@@ -383,43 +310,29 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(
-          [["A","b"], ["B", "c"], ["C", "a"]]
-        )
-      }
-    end
-
-    describe "mapping_answer 字段之外的答案字段必须为 nil" do
-      it{
-        answer_fields = {
-          :fill_answer => ["peking"],
-          :bool_answer => true,
-          :essay_answer => "I love you sweet",
-          :choice_answer => [["一条", false], ["两条", false], ["三条", false], ["四条", true]],
-        }
-        @mapping_answer = {"0" => ["A","a"],"1" =>["B", "b"], "2" =>["C", "c"]}
-        answer_fields.each do |field|
-          record = @question.question_records.create(
-            :user => @user,
-            :answer => @mapping_answer,
-            field[0] => field[1]
-          )
-          expect(record.valid?).to eq(false)
-          expect(record.errors.messages[field[0]]).not_to be_nil
-        end
+        expect(@record.answer).to eq(@mapping_answer)
       }
     end
 
     describe "答案格式不正确" do
       it{
         mapping_answer = [
+          "123",
           {"0" => ["hello"]},
-          {"0" => ["hei",true],"1" => [345,true]},
-          {"0" => [nil,nil],"1" => [nil,nil]}
+          [
+            {
+              "left"  => "aaa",
+              "right" => "eee"
+            },
+            {
+              "left"  => "bbb",
+              "right" => "eee"
+            },
+            {
+              "left"  => "ccc",
+              "right" => "ddd"
+            }
+          ]
         ]
         mapping_answer.each do |answer|
           record = @question.question_records.create(
@@ -427,7 +340,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
             :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[:mapping_answer]).not_to be_nil
+          expect(record.errors.messages[:answer]).not_to be_nil
         end
       }
     end
@@ -435,7 +348,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
   describe "论述题" do
     before :all do
-      @question = create :essay_question_relative
+      @question = create :essay_question
       @user = create(:user)
     end
 
@@ -461,11 +374,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(@essay_answer)
+        expect(@record.answer).to eq(@essay_answer)
       }
     end
 
@@ -491,39 +400,32 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(@essay_answer)
+        expect(@record.answer).to eq(@essay_answer)
       }
     end
 
-    describe "essay_answer 字段之外的答案字段必须为 nil" do
+    describe "答案格式不正确" do
       it{
-        answer_fields = {
-          :bool_answer => true,
-          :fill_answer => ["right"],
-          :mapping_answer => [["A","a"],["B","b"]],
-          :choice_answer => [["two",false],["four",false],["three",true],["one",false]]
-        }
-        @essay_answer = "很关键"
-        answer_fields.each do |field|
+        answers = [
+          ["123"],
+          {"0" => ["hello"]}
+        ]
+        answers.each do |answer|
           record = @question.question_records.create(
             :user => @user,
-            :answer => @essay_answer,
-            field[0] => field[1]
+            :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[field[0]]).not_to be_nil
+          expect(record.errors.messages[:answer]).not_to be_nil
         end
       }
     end
+
   end
 
   describe "判断题" do
     before :all do
-      @question = create :bool_question_dog
+      @question = create :bool_question
       @user = create(:user)
     end
 
@@ -549,11 +451,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(true)
+        expect(@record.answer).to eq(true)
       }
     end
 
@@ -579,34 +477,27 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.fill_answer).to eq(nil)
-        expect(@record.mapping_answer).to eq(nil)
-        expect(@record.choice_answer).to eq(nil)
-        expect(@record.essay_answer).to eq(nil)
-        expect(@record.bool_answer).to eq(false)
+        expect(@record.answer).to eq(false)
       }
     end
 
-    describe "bool_answer 字段之外的答案字段必须为 nil" do
+    describe "答案格式不正确" do
       it{
-        answer_fields = {
-          :fill_answer => ["abc"],
-          :mapping_answer => [["A","a"],["B","b"],["C","c"]],
-          :choice_answer => [["jkl",true],["ghi",false],["def",false],["abc",false]],
-          :essay_answer => "Hello world"
-        }
-        @bool_answer = true
-        answer_fields.each do |field|
+        answers = [
+          ["123"],
+          {"0" => ["hello"]}
+        ]
+        answers.each do |answer|
           record = @question.question_records.create(
             :user => @user,
-            :answer => @bool_answer,
-            field[0] => field[1]
+            :answer => answer
           )
           expect(record.valid?).to eq(false)
-          expect(record.errors.messages[field[0]]).not_to be_nil
+          expect(record.errors.messages[:answer]).not_to be_nil
         end
       }
     end
+
   end
 
   describe "测试 with_created_at 方法" do
@@ -614,7 +505,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       it{
         @user = create :user
         QuestionBank::QuestionRecord.destroy_all
-        @essay_question = create :essay_question_relative
+        @essay_question = create :essay_question
         @day_1 = Time.local(2015, 12, 01, 10, 0, 0)
         @day_2 = Time.local(2015, 12, 02, 10, 0, 0)
         @day_3 = Time.local(2015, 12, 06, 10, 0, 0)
@@ -670,7 +561,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "kind 为 bool" do
       it{
-        @question = create :bool_question_dog
+        @question = create :bool_question
         @bool_answer = "false"
         @record = @question.question_records.create(
           :user => @user,
@@ -684,7 +575,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "kind 为 single_choice" do
       it{
-        @question = create :single_choice_question_wugui
+        @question = create :single_choice_question
         @choice_answer = "3"
         @record = @question.question_records.create(
           :user => @user,
@@ -698,8 +589,8 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "kind 为 multi_choice" do
       it{
-        @question = create :multi_choice_question_xiaochao
-        @choice_answer = {"0" => "false", "1" =>"true", "2" =>"true", "3" =>"true", "4" =>"true"}
+        @question = create :multi_choice_question
+        @choice_answer = ["aaa","bbb"]
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
@@ -712,7 +603,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "kind 为 fill" do
       it{
-        @question = create :fill_question_say_hello
+        @question = create :fill_question
         @fill_answer = ["北京", "伦敦"]
         @record = @question.question_records.create(
           :user => @user,
@@ -726,8 +617,21 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "kind 为 mapping" do
       it{
-        @question = create :mapping_question_letter
-        @mapping_answer = {"0" => ["A","a"],"1" =>["B", "b"], "2" =>["C", "c"]}
+        @question = create :mapping_question
+        @mapping_answer = [
+          {
+            "left"  => "aaa",
+             "right" => "eee"
+          },
+          {
+            "left"  => "bbb",
+            "right" => "fff"
+          },
+          {
+            "left"  => "ccc",
+            "right" => "ddd"
+          }
+        ]
         @record = @question.question_records.create(
           :user => @user,
           :answer => @mapping_answer
@@ -740,7 +644,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
 
     describe "kind 为 essay" do
       it{
-        @question = create :essay_question_relative
+        @question = create :essay_question
         @essay_answer = "很关键"
         @record = @question.question_records.create(
           :user => @user,
@@ -756,7 +660,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
   describe "测试 with_correct 方法" do
     before :example do
       @user     = create :user
-      @question = create :bool_question_dog
+      @question = create :bool_question
     end
 
     it{
