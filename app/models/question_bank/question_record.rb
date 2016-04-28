@@ -10,6 +10,7 @@ module QuestionBank
 
     belongs_to :question
     belongs_to :user
+    belongs_to :test_paper_result
 
     validates :question_id, presence: true
     validates :user_id,     presence: true
@@ -19,12 +20,29 @@ module QuestionBank
     }
 
     before_validation :_set_kind
-    def set_kind
+    def _set_kind
       self.kind = self.question.kind if !self.question.blank?
     end
 
-    before_validation :_set_correct
+    after_validation :_set_correct
     def _set_correct
+      return if self.errors[:answer].count != 0
+      return if self.question.blank?
+
+      case self.question.kind.to_sym
+      when :single_choice
+        _set_correct_of_single_choice
+      when :multi_choice
+        _set_correct_of_multi_choice
+      when :bool
+        _set_correct_of_bool
+      when :fill
+        _set_correct_of_fill
+      when :essay
+        _set_correct_of_essay
+      when :mapping
+        _set_correct_of_mapping
+      end
     end
 
     validate :_check_answer_format
@@ -45,6 +63,42 @@ module QuestionBank
       when :mapping
         _check_answer_format_of_mapping
       end
+    end
+
+    def _set_correct_of_mapping
+      correct_answer = self.question.answer["mappings"].sort_by(&:hash)
+      input_answer = self.answer.sort_by(&:hash)
+      self.is_correct = (correct_answer == input_answer)
+    end
+
+    def _set_correct_of_single_choice
+      correct_answer = self.question.answer["correct"]
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
+    end
+
+    def _set_correct_of_multi_choice
+      correct_answer = self.question.answer["corrects"].sort
+      input_answer   = self.answer.sort
+      self.is_correct = (correct_answer == input_answer)
+    end
+
+    def _set_correct_of_bool
+      correct_answer = self.question.answer
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
+    end
+
+    def _set_correct_of_fill
+      correct_answer = self.question.answer
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
+    end
+
+    def _set_correct_of_essay
+      correct_answer = self.question.answer
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
     end
 
     def _check_answer_format_of_single_choice

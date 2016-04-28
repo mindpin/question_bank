@@ -90,7 +90,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       before :all do
         @record = @question.question_records.create(
           :user   => @user,
-          :answer => ["bbb","ccc","ddd","eee"]
+          :answer => ["ccc", "bbb","ddd","eee"]
         )
       end
 
@@ -107,7 +107,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
 
       it{
-        expect(@record.answer).to eq(["bbb","ccc","ddd","eee"])
+        expect(@record.answer).to match_array(["bbb","ccc","ddd","eee"])
       }
     end
 
@@ -137,7 +137,6 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         choice_answer = [
           "adfsdf",
           ["asdfsf"],
-          ["bbb"],
           {"0" => ["leg"]}
         ]
         choice_answer.each do |answer|
@@ -240,12 +239,12 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       before :all do
         @mapping_answer = [
           {
-            "left"  => "aaa",
-            "right" => "eee"
-          },
-          {
             "left"  => "bbb",
             "right" => "fff"
+          },
+          {
+            "right" => "eee",
+            "left"  => "aaa"
           },
           {
             "left"  => "ccc",
@@ -534,13 +533,13 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
         query_hash = {:start_time => @day_1-1.minute,:end_time => @day_2-1.minute}
         records = QuestionBank::QuestionRecord.with_created_at(query_hash)
         expect(records.count).to eq(1)
-        expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
+        expect(records.where(:created_at=>@day_1).first.answer).to eq(create_hashs["day_1_record"].answer)
         query_hash = {:start_time => @day_1-1.minute,:end_time => @day_4-1.minute}
         records = QuestionBank::QuestionRecord.with_created_at(query_hash)
         expect(records.count).to eq(3)
-        expect(records.where(:created_at=>@day_1).first.essay_answer).to eq(create_hashs["day_1_record"].essay_answer)
-        expect(records.where(:created_at=>@day_2).first.essay_answer).to eq(create_hashs["day_2_record"].essay_answer)
-        expect(records.where(:created_at=>@day_3).first.essay_answer).to eq(create_hashs["day_3_record"].essay_answer)
+        expect(records.where(:created_at=>@day_1).first.answer).to eq(create_hashs["day_1_record"].answer)
+        expect(records.where(:created_at=>@day_2).first.answer).to eq(create_hashs["day_2_record"].answer)
+        expect(records.where(:created_at=>@day_3).first.answer).to eq(create_hashs["day_3_record"].answer)
       }
     end
 
@@ -576,7 +575,7 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
     describe "kind 为 single_choice" do
       it{
         @question = create :single_choice_question
-        @choice_answer = "3"
+        @choice_answer ="ddd"
         @record = @question.question_records.create(
           :user => @user,
           :answer => @choice_answer
