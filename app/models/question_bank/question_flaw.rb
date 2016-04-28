@@ -3,16 +3,16 @@ module QuestionBank
     include Mongoid::Document
     include Mongoid::Timestamps
     include QuestionBank::TimeKindScope
-    belongs_to :question, :class_name => 'QuestionBank::Question'
-    belongs_to :user, :class_name => QuestionBank.user_class
+    include QuestionBank::EnumerizeKind
 
-    extend Enumerize
-    enumerize :kind, in: Question::KINDS
+    belongs_to :question, class_name: 'QuestionBank::Question'
+    belongs_to :user,     class_name: QuestionBank.user_class
+
     before_validation :set_kind
     def set_kind
       self.kind = self.question.kind
     end
-    
+
     module UserMethods
       extend ActiveSupport::Concern
         def flaw_questions

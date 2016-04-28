@@ -3,195 +3,166 @@ module QuestionBank
     include Mongoid::Document
     include Mongoid::Timestamps
     include QuestionBank::TimeKindScope
-    extend Enumerize
+    include QuestionBank::EnumerizeKind
 
-    field :is_correct, type: Boolean          # 题目是否正确
+    field :is_correct,     type: Boolean
+    field :answer
 
-    field :bool_answer, type: Boolean         # 判断题
-    field :choice_answer , type: Array        # 选择题
-    field :essay_answer, type: String         # 论述题
-    field :fill_answer, type: Array           # 填空题
-    field :mapping_answer, type: Array        # 连线题
-
-    enumerize :kind, in: Question::KINDS
     belongs_to :question
     belongs_to :user
+    belongs_to :test_paper_result
+
+    validates :question_id, presence: true
+    validates :user_id,     presence: true
 
     scope :with_correct, -> (is_correct) {
-        where(:is_correct => is_correct)
-      }
+      where(:is_correct => is_correct)
+    }
 
-    def answer=(answer)
-      @answer = answer
+    before_validation :_set_kind
+    def _set_kind
+      self.kind = self.question.kind if !self.question.blank?
     end
 
-    before_validation :process_custom_logic
-    def process_custom_logic
-      set_kind
-      set_answer_field_value
-      set_is_correct
-    end
+    after_validation :_set_correct
+    def _set_correct
+      return if self.errors[:answer].count != 0
+      return if self.question.blank?
 
-    def set_kind
-      if !self.question.blank?
-        self.kind = self.question.kind
-      end
-    end
-
-    # 一些答案的格式转换
-    def string_to_bool(str)
-      return true if str == "true" || str == true
-      return false if str == "false" || str == false
-    end
-
-    def answer_to_format(answer)
-      case self.kind
-        when "single_choice"
-          new_answer = Marshal.load( Marshal.dump(self.question.choice_answer) )
-          new_answer.each{|option| option[1] = false }
-          if answer.to_i + 1 <= new_answer.count
-            new_answer[answer.to_i][1] = true
-          end
-        when "multi_choice" then
-          new_answer = answer.map do |key,value|
-            context_by_index = self.question.choice_answer[key.to_i][0]
-            value = string_to_bool(value)
-            [context_by_index,value]
-          end
-        when "mapping"
-          new_answer = answer.map do |a|
-            a[1]
-          end
-        when 'fill','essay'
-          new_answer = answer
-        when 'bool'
-          new_answer = string_to_bool(answer)
-      end
-      new_answer
-    end
-
-    # 保存答案
-    def set_answer_field_value
-      return true if self.question.blank?
-      if self.kind == "single_choice"
-        self.choice_answer = answer_to_format(@answer)
-        return true
-      end
-
-      if self.kind == "multi_choice"
-        self.choice_answer = answer_to_format(@answer)
-        return true
-      end
-
-      if Question::KINDS.include?(self.kind.to_sym)
-        format_answer = answer_to_format(@answer)
-        field = "#{self.kind}_answer"
-        self.send("#{field}=", format_answer)
-        return true
+      case self.question.kind.to_sym
+      when :single_choice
+        _set_correct_of_single_choice
+      when :multi_choice
+        _set_correct_of_multi_choice
+      when :bool
+        _set_correct_of_bool
+      when :fill
+        _set_correct_of_fill
+      when :essay
+        _set_correct_of_essay
+      when :mapping
+        _set_correct_of_mapping
       end
     end
 
-    def set_is_correct
-      return true if self.question.blank?
-      if self.kind == "single_choice"
-        self.is_correct = (self.question.choice_answer == self.choice_answer)
-        return true
-      end
+    validate :_check_answer_format
 
-      if self.kind == "multi_choice"
-        self.is_correct = (self.question.choice_answer == self.choice_answer)
-        return true
-      end
-
-      if Question::KINDS.include?(self.kind.to_sym)
-        field = "#{self.kind}_answer"
-        self.is_correct = (self.question.send(field) == self.send(field))
-        return true
-      end
-    end
-
-    # 取得正确答案的方法
-    def correct_answer
-      if self.kind == "single_choice" || self.kind == "multi_choice"
-        return self.question.choice_answer
-      end
-
-      if Question::KINDS.include?(self.kind.to_sym)
-        return self.question.send("#{self.kind}_answer")
+    def _check_answer_format
+      return if self.question.blank?
+      case self.question.kind.to_sym
+      when :single_choice
+        _check_answer_format_of_single_choice
+      when :multi_choice
+        _check_answer_format_of_multi_choice
+      when :bool
+        _check_answer_format_of_bool
+      when :fill
+        _check_answer_format_of_fill
+      when :essay
+        _check_answer_format_of_essay
+      when :mapping
+        _check_answer_format_of_mapping
       end
     end
 
-    validate :validate_kind_and_format
-    def validate_kind_and_format
-      self.validates_answer_kind
-      self.validates_answer_format
+    def _set_correct_of_mapping
+      correct_answer = self.question.answer["mappings"].sort_by(&:hash)
+      input_answer = self.answer.sort_by(&:hash)
+      self.is_correct = (correct_answer == input_answer)
     end
 
-    # 校验类型
-    def validates_answer_kind
-      must_nil_fields = %w(choice_answer bool_answer fill_answer essay_answer mapping_answer)
-      if self.kind == "single_choice" || self.kind == "multi_choice"
-        has_value_field = "choice_answer"
-        must_nil_fields.delete "choice_answer"
-      elsif Question::KINDS.include?(self.kind.to_sym)
-        has_value_field = "#{self.kind}_answer"
-        must_nil_fields.delete "#{self.kind}_answer"
-      end
-
-      if self.send(has_value_field).nil?
-        i18n_key = I18n.t("mongoid.errors.models.question_bank/question.attributes.#{has_value_field}.blank")
-        errors.add(has_value_field, i18n_key)
-      end
-
-      must_nil_fields.each do |field|
-        if !self.send(field).nil?
-          i18n_key = I18n.t("mongoid.errors.models.question_bank/question.attributes.#{has_value_field}.must_nil")
-          errors.add(field, i18n_key)
-        end
-      end
+    def _set_correct_of_single_choice
+      correct_answer = self.question.answer["correct"]
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
     end
 
-    # 校验格式
-    def validates_answer_format
-      if self.kind == "single_choice"
-        if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count != 1
-          errors.add(:single_choice_answer, "单选题答案格式不正确")
-        end
-      end
+    def _set_correct_of_multi_choice
+      correct_answer = self.question.answer["corrects"].sort
+      input_answer   = self.answer.sort
+      self.is_correct = (correct_answer == input_answer)
+    end
 
-      if self.kind == "multi_choice"
-        if self.choice_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(Boolean) }.include?(false) || self.choice_answer_indexs.count < 2
-          errors.add(:multi_choice_answer, "多选题答案格式不正确")
-        end
-      end
+    def _set_correct_of_bool
+      correct_answer = self.question.answer
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
+    end
 
-      if self.kind == "fill"
-        if self.fill_answer.map{|item| item.is_a?(String) }.include?(false)
-          errors.add(:fill_answer, "填空题答案格式不正确")
-        end
-      end
+    def _set_correct_of_fill
+      correct_answer = self.question.answer
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
+    end
 
-      if self.kind == "mapping"
-        if self.mapping_answer.map { |item| item.is_a?(Array) && item.count == 2 && item[0].is_a?(String) && item[1].is_a?(String) }.include?(false) && self.question.mapping_answer.count != self.mapping_answer.count
-          errors.add(:mapping_answer, "连线题答案格式不正确")
-        end
+    def _set_correct_of_essay
+      correct_answer = self.question.answer
+      input_answer   = self.answer
+      self.is_correct = (correct_answer == input_answer)
+    end
+
+    def _check_answer_format_of_single_choice
+      return _add_answer_format_error if !self.answer.is_a?(String)
+
+      ids = self.question.answer["choices"].map{|choice|choice["id"]}
+      return _add_answer_format_error if !ids.include?(self.answer)
+    end
+
+    def _check_answer_format_of_multi_choice
+      return _add_answer_format_error if !self.answer.is_a?(Array)
+
+      ids = self.question.answer["choices"].map{|choice|choice["id"]}
+      self.answer.each do |item|
+        return _add_answer_format_error if !ids.include?(item)
       end
     end
 
-    def choice_answer_indexs
-      return @choice_answer_indexs if !@choice_answer_indexs.blank?
-
-      return [] if self.choice_answer.blank?
-
-      indexs = []
-      self.choice_answer.map {|item| item[1]}.flatten.each_with_index do |val, index|
-        indexs << index if val
-      end
-      indexs
+    def _check_answer_format_of_bool
+      self.answer = true if self.answer  == "true"
+      self.answer = false if self.answer == "false"
+      return _add_answer_format_error if !self.answer.is_a?(Boolean)
     end
 
-    def choice_answer_indexs=(choice_answer_indexs)
-      @choice_answer_indexs = choice_answer_indexs.map{|index|index.to_i}.uniq
+    def _check_answer_format_of_fill
+      return _add_answer_format_error if !self.answer.is_a?(Array)
+      return _add_answer_format_error if self.answer.size != self.question.fill_count
+      self.answer.each do |item|
+        return _add_answer_format_error if !item.is_a?(String)
+      end
+    end
+
+    def _check_answer_format_of_essay
+      return _add_answer_format_error if !self.answer.is_a?(String)
+    end
+
+    def _check_answer_format_of_mapping
+      return _add_answer_format_error if !self.answer.is_a?(Array)
+
+      if self.answer.count != self.question.answer["mappings"].count
+        return _add_answer_format_error
+      end
+
+      left_ids  = self.question.answer["left"].map{|item|item["id"]}
+      right_ids = self.question.answer["right"].map{|item|item["id"]}
+      self.answer.each do |item|
+        return _add_answer_format_error if !item.is_a?(Hash)
+        return _add_answer_format_error if item.keys.sort != ["left","right"].sort
+
+        return _add_answer_format_error if !left_ids.include?(item["left"])
+        return _add_answer_format_error if !right_ids.include?(item["right"])
+      end
+
+      answer_left_ids  = self.answer.map{|item|item["left"]}
+      answer_right_ids = self.answer.map{|item|item["right"]}
+
+      return _add_answer_format_error if answer_left_ids.uniq.count  != answer_left_ids.count
+      return _add_answer_format_error if answer_right_ids.uniq.count != answer_right_ids.count
+    end
+
+    def _add_answer_format_error
+      errors.add(
+        :answer,
+        I18n.t("mongoid.errors.models.question_bank/question_record.attributes.answer.format_error"))
     end
 
   end
