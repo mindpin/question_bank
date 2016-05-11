@@ -1,11 +1,4 @@
 .ui.segment
-  .desc
-    %span rails engine
-    %strong question_bank
-    %span 已成功创建
-  .desc 你可以继续进行组件开发了
-
-.ui.segment
   - if user_signed_in?
     .desc.current-user
       %span 当前用户：
@@ -31,3 +24,22 @@
     %span 点击
     %a{:href => '/auth/logout', :data => {:method => :delete}} DELETE /auth/logout
     %span 登出
+
+.ui.segment
+  %table.ui.padded.table
+    %thead
+      %tr
+        %th 序号
+        %th 科目名称
+        %th 操作
+    %tbody
+      - types = %w[中文录入 数字录入 客户地址录入 交易码速记 翻打传票 票面计算 多行计算 会计分录 Excel Word 理论知识 业务仿真-单交易 业务仿真-按流程]
+      - types.each_with_index do |type, index|
+        %tr
+          %td= index+1
+          %td= type
+          %td
+            %a.ui.button.mini.blue{href: 'javascript:;'} 练习
+            %a.ui.button.mini.green{href: 'javascript:;'} 考试
+            %a.ui.button.mini.pink{href: 'javascript:;'} 循环训练
+            %a.ui.button.mini.orange{href: 'javascript:;'} 自助训练
