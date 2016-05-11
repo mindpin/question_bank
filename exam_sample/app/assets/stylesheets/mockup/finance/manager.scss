@@ -1,0 +1,44 @@
+.teller-ware-card {
+  $iw: 40px;
+  .ic {
+    width: $iw;
+    height: $iw;
+    border:solid 3px #DDDDDD;
+    border-radius: 100%;
+    padding: 3px;
+    .icon.rmb {
+      border-radius: 100%;
+      background-color: #45BCD8;
+      // color: #C1E3F7;
+      color: white;
+      $w: $iw - 12px;
+      width: $w; height: $w;
+      line-height: $w;
+      margin: 0;
+      font-size: $w / 2;
+    }
+  }
+
+  .header.number {
+    font-size: 14px !important;
+    color: #666 !important;
+  }
+  .meta.name {
+    margin-top: 0.5rem;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .extra.content {
+    background-color: #fafafa;
+    // padding-left: 3rem;
+    // padding-right: 3rem;
+    .ui.button {
+      background-color: #FFF !important;
+      &:hover {
+        // background-color: #D6E3E7 !important;
+        background-color: lighten(#45BCD8, 40%) !important;
+      }
+    }
+  }      
+}

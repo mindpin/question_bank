@@ -1,0 +1,24 @@
+.page-test_papers
+  %a.btn.btn-primary{href: (new_test_paper_path)} 创建
+
+  %p
+
+  %table.table.table-bordered.table-striped
+    %thead
+      %tr
+        %th 标题
+        %th 分数
+        %th 考试时间
+        %th 修改
+        %th 删除
+    %tbody
+      - @test_papers.each do |test_paper|
+        %tr
+          %td
+            %a{href: (test_paper_path(test_paper))}= test_paper.title
+          %td= test_paper.score
+          %td= test_paper.minutes
+          %td
+            %a{href: (edit_test_paper_path(test_paper))} 修改
+          %td
+            %a{href: (test_paper_path(test_paper)), data: {method: :delete, confirm: '你确定？'}} 删除

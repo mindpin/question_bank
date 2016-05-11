@@ -1,0 +1,45 @@
+-if notice.present?
+  = notice
+.question-record
+  %ul.nav.nav-tabs
+    %li.active{role: "presentation"}
+      %a{href: '/question_records'} 做题记录
+    %li{role: "presentation"}
+      %a{href: "/question_flaws"} 错题本
+    %li{role: "presentation"}
+      %a 题目收藏
+  = quick_filter_bar do |builder|
+    - builder.group :is_correct, :text => "结果" do |group|
+      - group.add "true",   :text => "正确"
+      - group.add "false", :text => "错误"
+    - builder.group :kind, :text => "类型" do |group|
+      - group.add "single_choice",   :text => "单选题"
+      - group.add "multi_choice", :text => "多选题"
+      - group.add "fill", :text => "填空题"
+      - group.add "mapping", :text => "连线题"
+      - group.add "bool", :text => "判断题"
+      - group.add "essay", :text => "论述题"
+    - builder.group :time, :text => "时间" do |group|
+      - group.add "a_week",   :text => "一周内"
+      - group.add "a_month", :text => "一个月内"
+      - group.add "three_months", :text => "三个月内"
+
+  %table.table.table-hover.record-table
+    %thead.record-thead
+      %tr
+        %td.th-record-check
+          %input.flaw-checked-all{ type: "checkbox" } 全选
+        %th.th-record-one 时间
+        %th.th-record-two 题目
+        %th.th-record-three 类型
+        %th.th-record-four 做题结果
+        %th.th-record-five 操作
+    %tbody.record-tbody
+      = render :partial => "record_index_tr", locals: { question_records: @question_records }
+  .record-bottom
+    %a.btn.btn-default.batch-into-flaw{:role=>"button"}
+      %i.glyphicon.glyphicon-plus
+      %span 批量加入错题本
+    %a.btn.btn-default.batch-delete-record{:role=>"button"}
+      %i.glyphicon.glyphicon-trash
+      %span 批量删除记录

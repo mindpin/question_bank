@@ -1,0 +1,14 @@
+development:
+  sessions:
+    default:
+      database: question_bank_exam_dev
+
+      hosts:
+        - localhost:27017
+
+test:
+  sessions:
+    default:
+      database: question_bank_exam_test
+      hosts:
+        - localhost:27017

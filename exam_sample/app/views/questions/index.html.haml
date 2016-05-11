@@ -1,0 +1,89 @@
+.questionuesstion-index
+  .btn-group
+    %button{:class => "btn btn-default dropdown-toggle", :type => "button", :"data-toggle"=> "dropdown", :"aria-haspopup" => "true", :"aria-expanded" => "false"}
+      创建题
+      %span{:class =>"caret"}
+    %ul{:class => "dropdown-menu"}
+      %li
+        %a{:href=>"/questions/new_single_choice"} 单选题
+      %li
+        %a{:href=>"/questions/new_multi_choice"} 多选题
+      %li
+        %a{:href=>"/questions/new_bool"} 判断题
+      %li
+        %a{:href=>"/questions/new_fill"} 填空题
+      %li
+        %a{:href=>"/questions/new_essay"} 论述题
+      %li
+        %a{:href=>"/questions/new_mapping"} 连线题
+
+  %table{:class=>"table table-striped"}
+    %thead
+      %tr
+        %th 编号
+        %th 题目
+        %th 答案
+        %th 难度系数
+        %th 类型
+        %th 状态
+        %th 添加时间
+        %th 操作
+    %tbody
+      - @questions.each do |question|
+        %tr
+          %td
+            - question.id = question.id.to_s
+            = question.id
+          %td
+            = question.content
+            - if question.kind == "single_choice"
+              %br
+              - option_id = 1
+              - question.choices.each do |choice_code|
+                %br
+                = option_id
+                %span :
+                = choice_code
+                - option_id = option_id+1
+            - if question.kind == "multi_choice"
+              %br
+              - option_id = 1
+              - question.choices.each do |choice_code|
+                %br
+                = option_id
+                %span :
+                = choice_code
+                - option_id = option_id+1
+          %td
+            - case question.kind
+              - when "single_choice"
+                = question.choice_answer_indexs[0]+1
+              - when "multi_choice"
+                - choice_answer_indexs = question.choice_answer_indexs.map { |e| e=e+1  }
+                = choice_answer_indexs*","
+              - when "bool"
+                = question.bool_answer
+              - when "mapping"
+                - question.mapping_answer.each do |mapping_team|
+                  %br
+                  = mapping_team*","
+              - when "fill"
+                = question.fill_answer*","
+              - when "essay"
+                = question.essay_answer
+          %td
+            = question.level
+          %td
+            = question.kind
+          %td
+            = question.enabled
+          %td
+            = question.created_at
+          %td
+            .btn-group
+              %a{:role=>"button",class: "btn btn-default fix ",:href=>"/questions/#{question.id}/edit"}修改
+              %a{:role=>"button",class: "btn btn-default ban ",:href=>"javascript:;"}禁用
+              %a{:role=>"button",class: "btn btn-default delete ", :href=>"/questions/#{question.id}", :data=>{ :confirm => "确认删除吗？", :method => :delete}}删除
+              %a{:role=>"button",class: "btn btn-default find-tag ",:href=>"javascript:;"}查看版本
+
+  = custom_paginate @questions

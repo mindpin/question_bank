@@ -1,0 +1,13 @@
+#modal-questions-selector.modal.fade{tabindex:"-1", role:"dialog", aria:{labelledby:"select_address_label", hidden:"true"}}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %button.close{type:"button", data: {dismiss:"modal"}, aria: {label:"Close"} }
+          %span{aria: {hidden:"true"}} &times;
+        %h4.modal-title#select_address_label 手动选题
+      .modal-body
+        .question_selector
+
+      .modal-footer
+        %button.btn.btn-default{type:"button", data:{dismiss: "modal"}} 取消
+        %button.button-questions-selector.btn.btn-primary 确定

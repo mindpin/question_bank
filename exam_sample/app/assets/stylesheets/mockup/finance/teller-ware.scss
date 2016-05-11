@@ -1,0 +1,366 @@
+@keyframes focusarrow {
+  0% { transform: translate(0, 0);opacity:1; }
+  50% { transform: translate(-10px, 0);opacity:0.5; }
+  100% { transform: translate(0, 0);opacity:1; }
+}
+
+body.teller-ware {
+  background: url(http://i.teamkn.com/@/i/bro6GxK8.png);
+  background-color: #ddd;
+  overflow:hidden;
+}
+
+@mixin teller-ware-paper {
+  position: absolute;
+  top:0;bottom:0;left:0;right:0;
+
+  .flow-course-ware {
+    position: absolute;
+    top:0;left:0;right:0;bottom:0;
+    $header-height: 60px;
+    .header {
+      border-bottom: solid 1px #ccc;
+      background-color: #f7f7f7;
+      @include clearfix;
+      .role {
+        height:$header-height;line-height:$header-height;
+        float: left;
+        width: 240px;
+        // text-align: center;
+        border-left:solid 1px white;
+        border-right:solid 1px #ddd;
+        font-size: 16px;
+        font-weight: bold;
+        &.客户:before {
+          content: "";
+          float: left;
+          background-image: url(http://i.teamkn.com/i/xBOHyOS3.png);
+          width: 40px; height: 40px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin-top: 10px;margin-right: 10px;margin-left: 10px;
+        }
+        &.柜员:before {
+          content: "";
+          float: left;
+          background-image: url(http://i.teamkn.com/i/eIQ2nSSb.png);
+          width: 40px; height: 40px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin-top: 10px;margin-right: 10px;margin-left: 10px;
+        }
+      }
+    }
+
+    .nodes {
+      position: absolute;
+      top: $header-height + 1px;
+      left:0;right:0;bottom:0;
+      overflow-y:scroll;
+      overflow-x:hidden;
+
+      .nbox {
+        float: left;
+        canvas.ncanvas {
+          position: absolute;
+          top:0;left:0;
+        }
+      }
+
+      .role-actions {
+        position: relative;
+        float: left;
+        .action-node {
+          // -webkit-filter: blur(10px);
+          transition: transform .2s ease-out;
+          cursor: pointer;
+          &:hover {
+            transform: translate(-3px, -3px);
+            // transform: rotate(-5deg);
+          }
+
+          &.focus {
+            &:after {
+              // content: "\f063";
+              content: "\f061";
+              font-family: 'Icons';
+              position: absolute;
+              top:0;left:-20px;bottom:0;
+              font-size: 40px;
+              // color: #F18D05;
+              color:#FF4400;
+              height:40px;line-height:40px;
+              margin:auto;
+              animation: focusarrow 1s  infinite;
+            }
+          }
+
+          position: absolute;
+          background-color: #FFF;
+          box-shadow: 1px 1px 5px rgba(black, 0.2);
+          .box {
+            $pd: 5px;
+            position: absolute;
+            top:$pd;left:$pd;right:$pd;bottom:$pd;
+            padding: 10px;
+            overflow: hidden;
+            font-size: 13px;
+            line-height: 20px;
+          }
+          
+          &[data-role='客户'] .box{
+            background-color: lighten(#EDFDB5, 5%);
+          }
+          &[data-role='柜员'] .box{
+            background-color: lighten(#D7F1FD, 5%);
+          }
+
+          .box {
+            .name {
+              height: 40px;
+              line-height: 20px;
+              margin-right: 40px;
+              overflow:hidden;
+            }
+            .has-screen {
+              position: absolute;
+              top:0;right:0;bottom:30px;width:50px;
+              text-align: center;
+              line-height: 30px;
+              font-size: 24px;
+            }
+            .has-clip {
+              position: absolute;
+              top:30px;right:0;bottom:0;width:50px;
+              text-align: center;
+              line-height: 30px;
+              font-size: 24px;
+            }
+          }
+        }
+      }
+    }
+
+    .teaching-dialog {
+      position: fixed;
+      top:71px;right:30px;
+      width:320px;
+      bottom: 10px;
+      background-color: #FFF;
+      // background-color: #F7F7F7;
+      box-shadow:1px 1px 5px rgba(0, 0, 0, 0.2);
+
+      .action-name {
+        font-size: 16px;
+        height:50px;line-height:50px;
+        padding:0 15px;
+        padding-left: 0;
+        border-bottom:solid 1px #ddd;
+        background-color: #f7f7f7;
+        overflow: hidden;
+        &.客户:before {
+          content: "";
+          float: left;
+          background-image: url(http://i.teamkn.com/i/xBOHyOS3.png);
+          width: 32px; height: 32px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin-top: 9px;margin-right: 9px;margin-left: 9px;
+        }
+        &.柜员:before {
+          content: "";
+          float: left;
+          background-image: url(http://i.teamkn.com/i/eIQ2nSSb.png);
+          width: 32px; height: 32px;
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin-top: 9px;margin-right: 9px;margin-left: 9px;
+        }
+      }
+
+      .nav {
+        background-color: #f7f7f7;
+        position: absolute;
+        left:0;right:0;bottom:0;
+        a {
+          width:50%;
+          float:left;
+          border-top:solid 1px #ddd;
+          height:50px;line-height:50px;
+          text-align: center;
+          font-size: 16px;
+          color: #333;
+          text-decoration: none;
+          i {
+            margin:0 10px;
+          }
+          &:first-child {
+            border-right:solid 1px #ddd;
+          }
+          &:last-child {
+            border-left:solid 1px #fff;
+          }
+          &:hover {
+            background-color: #ffffda;
+            text-decoration: none;
+          }
+        }
+      }
+
+      .scroller {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        position: absolute;
+        top: 50px;
+        bottom: 100px;
+        left:0;right: 0;
+        padding: 1rem;
+      }
+
+      .screen-show, .clip-show{
+        border-bottom:dashed 1px #ddd;
+        .desc {margin-bottom: 10px;}
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .desc-show {
+        pre {
+          font-family: $mindpin-font-family;
+          background-color: #ffffda;
+          padding: 0.5rem;
+          word-break: break-all;
+          word-wrap: break-word;
+        }
+      }
+    }
+  }
+}
+
+.teller-course-ware {
+  position: absolute;
+  top:0;left:0;right:0;bottom:0;
+
+  $sidebar-width: 290px;
+
+  .sidebar {
+    position: absolute;
+    width: $sidebar-width;
+    top:0;bottom:0;left:0;
+    background-color: #F7F7F7;
+    border-left:solid 1px #ddd;
+    border-right:solid 1px #ccc;
+
+    .sibitem {
+      min-height: 51px;
+      border-top: solid 1px #fff;
+      border-bottom: solid 1px #ddd;
+      &:first-child {border-top: 0 none;}
+      padding: 15px;
+      line-height: 20px;
+
+      &.base {
+        padding: 5px 15px;
+        line-height: 25px;
+
+        .number {
+          font-weight: bold;
+        }
+      }
+
+      &.desc {
+        overflow-y:scroll;
+        position: absolute;
+        left:0;right:0;top:61px;bottom:0;
+        label {display: block;margin-bottom:10px;}
+
+        .relative-ware {
+          border: solid 1px #ddd;
+          display: block;
+          padding: 0.5rem;
+          background-color: white;
+          margin-left: -0.5rem;
+          margin-right: -0.5rem;
+          margin-bottom: 0.5rem;
+          color: #333;
+          // border-radius: 4px;
+          border-left: solid 4px #45BCD8;
+          color: #666;
+          .number {color: #333;margin-bottom: 0.2rem;}
+          &:hover {
+            background-color: lighten(#EFFAFE, 1%);
+          }
+        }
+      }
+    }
+  }
+
+  .paper {
+    @include teller-ware-paper;
+    top:0;bottom:0;left:$sidebar-width;right:0;
+  }
+}
+
+
+
+
+// 模拟屏幕
+.ofc-teller-screen {
+  width: 640px; height: 480px;
+  border: solid 1px #ddd;
+  position: relative;
+  background-color: #f1f1f1;
+  font-size: 12px;
+
+  .hmdm {
+    position: absolute;
+    top:5px;right:5px;
+    font-size: 12px;
+    background-color: #444;
+    // border-radius: 3px;
+    top: 3px; right: 3px;
+    color: white;
+    padding:0 5px;
+    height:18px;line-height:18px;
+    margin: 0;
+  }
+
+  .zd {
+    position: absolute;
+    height: 24px;line-height: 24px;
+    &.czfs-hide {display: none;}
+
+    label {
+      margin:0;
+      font-weight: normal;
+      margin-right: 8px;
+    }
+    input[type='text'],
+    input[type='password']
+    {
+      background-color: #fff;
+      border:solid 1px #aaa;
+      // border-radius:3px;
+      border-radius: 0;
+      height:18px;line-height:18px;
+      box-sizing:content-box;
+      &:focus:not([readonly]) {
+        background-color: #FFF548;
+      }
+      &.play_active {
+        background-color: #FFF548;
+      }
+    }
+    select {
+      background-color: #fff;
+      border:solid 1px #aaa;
+      // border-radius:3px;
+      border-radius: 0;
+      height:20px;line-height:20px;
+      box-sizing:content-box;
+      &.play_active {
+        background-color: #F3FECE;
+      }
+    }
+  }
+}

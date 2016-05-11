@@ -1,0 +1,77 @@
+@import "semantic-ui";
+
+@mixin clearfix {
+  &:after {
+    content: " ";
+    display: block;
+    clear: both;
+    height: 0;
+  }
+}
+
+$text-color: rgba(black, 0.87);
+$desc-text-color: rgba(black, 0.66);
+$rem: 14px;
+
+$mindpin-font-family: "Segoe UI", "Helvetica Neue", "Helvetica", "Arial", "sans-serif", "微软雅黑" !important;
+
+// $number-font-family: "Lato", "Helvetica Neue", "Arial", "Helvetica", "sans-serif" !important;
+$number-font-family: "Helvetica Neue", "Arial", "Helvetica", "sans-serif" !important;
+
+@import 'mockup/layout';
+@import 'mockup/ui';
+@import 'mockup/widgets';
+@import 'mockup/manager';
+
+@import 'mockup/finance/auth';
+@import 'mockup/finance/manager';
+@import 'mockup/finance/ui';
+
+body {
+  background-color: #F8F8F8;
+}
+
+body,
+
+.ui.menu,
+
+.ui.cards > .card > .content > .header, 
+.ui.card > .content > .header,
+
+.ui.header,
+
+.ui.button,
+
+h1,h2,h3,h4,h5,h6,
+{
+  font-family: $mindpin-font-family;
+}
+
+.ui.cards > .card > :first-child, 
+.ui.card > :first-child,
+
+.ui.segment,
+{
+  border-radius: 0 !important;
+}
+
+.ui.segment.noshadow {
+  box-shadow: none;
+  border-color: #CACACA;
+}
+
+.ui.segment.nomtop {
+  margin-top: 0;
+}
+
+.ui.pagination.menu {
+  i.icon {margin-right: 0;}
+}
+
+.ui.form input, .ui.input input{
+  font-family: $mindpin-font-family;
+}
+
+.ui.button.pill {
+  border-radius: 100px;
+}
