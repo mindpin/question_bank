@@ -1,0 +1,53 @@
+body.bank-auth {
+  background-color: #BEEDE2;
+  background-image: url(http://i.teamkn.com/i/EG3sqSVH.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+
+  .ui.segment {
+    box-shadow: none !important;
+    border: 0 none !important;
+    padding: 2rem;
+    background-color: rgba(white, 0.5);
+  }
+
+  .auth-bank-sign-in-page {
+    .product-logo {
+      .logo-img {
+        height: 3.5rem;
+        background-image: url(http://i.teamkn.com/i/p9JthlkG.png);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
+      }
+    }
+
+    .customer-logo {
+      height: 190px;
+      margin-top: 2rem;
+
+      // background-image: url(http://i.teamkn.com/i/SZ1qDe5u.png);
+      background-image: url(http://i.teamkn.com/i/vKOjyhgb.png);
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+    }
+
+    .ui.container {
+      margin-top: 10rem;
+      width: 60rem;
+    }
+
+    .head {
+      font-size: 16px;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+body.bank-auth.manager-auth {
+  background-color: #CCF1E3;
+  // background-image: url(http://i.teamkn.com/i/NmwQFctm.jpg);
+  background-image: none;
+}

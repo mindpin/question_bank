@@ -1,0 +1,113 @@
+!!!
+%html{ lang: "zh" }
+  %head
+    %meta{ content: "text/html; charset=utf-8", http:{ equiv: "Content-Type" } }
+    %meta{ content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no", name: "viewport"}
+
+    %title rails engine: question_bank
+
+    = csrf_meta_tags
+
+    = stylesheet_link_tag :application, :'data-turbolinks-track' => true
+    = javascript_include_tag :application, :'data-turbolinks-track' => true
+
+  %body.manager
+
+    :ruby
+      manager_sidebar_data = {
+        current_func: @current_func,
+
+        dashboard: {
+          id: 'dashboard',
+          name: '总控面板',
+          url: "/",
+          icon: 'dashboard'
+        },
+
+        scenes: [
+          {
+            name: "题库",
+            funcs: [
+              {
+                name: "题库管理",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "组卷",
+                url: test_papers_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "做题记录",
+                url: question_records_path,
+                icon: 'grid layout'
+              },
+            ]
+          },
+          {
+            name: "考试科目管理",
+            funcs: [
+              {
+                name: "考试列表",
+                url: root_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+              {
+                name: "考试列表",
+                url: questions_path,
+                icon: 'grid layout'
+              },
+            ]
+          }
+        ]
+      }
+
+      #top_menu_data = {
+      #  sign_out_url: auth.logout_path,
+      #  sign_out_to_url: root_path
+      #}
+      #current_user_data = DataFormer.new(current_user).data
+
+    = react_component 'LayoutManagerSidebar', data: manager_sidebar_data
+
+    -#= react_component 'LayoutManagerTopMenu', data: top_menu_data, current_user_data: current_user_data
+
+    .manager-page-content
+      .func-content.ui.segment.basic
+        = yield

@@ -1,0 +1,56 @@
+body.course-ware {
+  overflow: hidden;
+}
+
+.layout-top-menu {
+  .item.logo {
+    padding: 0 1em;
+    .logo-i {
+      height:50px;
+      width:150px;
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+.layout-page-content {
+  position: relative;
+  padding-top: 51px + 2 * $rem;
+}
+
+.layout-page-footer {
+  background-color: #FFF;
+  border-top: solid 1px #ddd;
+  min-height: 14em;
+  position: relative;
+  margin-top: 2 * $rem;
+
+  .description {
+    color: $desc-text-color;
+  }
+
+  .links {
+    @include clearfix;
+    margin-bottom: 2em;
+    .link {
+      float: left;
+      margin-right: 1em;
+      margin-bottom: 1em;
+      border-bottom: transparent solid 1px;
+      &:hover {
+        border-bottom: solid 1px #4183c4;
+      }
+    }
+  }
+
+  .logo {
+    .lbg {
+      min-height: 7em;
+      background-size: contain;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+  }
+}

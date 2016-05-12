@@ -1,0 +1,333 @@
+.courses-page {
+  padding-bottom: 3em;
+
+  .top-cover {
+    height: 14em;
+    position: relative;
+    margin-bottom: 1em;
+    background-size: cover;
+    background-position: center center;
+    background-color: #4E4E4E;
+
+    color: white;
+    .ui.header {
+      color: white;
+      margin-top: 1em;
+    }
+    .description {
+      font-size: 16px;
+    }
+  }
+
+  .cards-bg {
+    // background-color: #E6E6E6;
+    // padding: 1em;
+  }
+
+  .card {
+    border-radius: 0 !important;
+    box-shadow: 1px 2px 5px #ccc !important;
+    .image {
+      height: 150px;
+      position: relative;
+      overflow: hidden;
+      .ig {
+        position: absolute;
+        top:0;left:0;right:0;bottom:0;
+        background-size: cover;
+        background-position: center center;
+        -webkit-filter: blur(0) grayscale(0);
+        filter: blur(0) grayscale(0);
+      }
+      .btnoverlay {
+        transition: opacity ease .2s;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        top:0;left:0;right:0;bottom:0;
+        background-color: rgba(black, 0.6);
+        text-align: center;
+        .button {
+          margin-right: 0;
+          margin-top: 3em;
+          pointer-events: none;
+        }
+      }
+    }
+    .content {
+      border-top:0 none !important;
+
+      .header {
+        // font-size: 16px !important;
+      }
+    }
+
+    &:hover {
+      .image .ig {
+        -webkit-filter: blur(5px) grayscale(0.7);
+        filter: blur(5px) grayscale(0.7);
+      }
+      .image .btnoverlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  .pagination-bar {
+    margin-top: 2em;
+    @include clearfix;
+    text-align: center;
+  }
+}
+
+
+.course-show-page {
+  // $bgc: #2185D0;
+  $bgc: #2A70E8;
+
+  .c-head {
+    background-color: lighten($bgc, 10%);
+    // background-color: rgba($bgc, 0.7);
+
+    .c-info {
+      background-color: #FFF;
+      padding: 1em;
+      @include clearfix;
+
+      $w: 24em;
+      $h: $w / 16 * 10;
+
+      $w1: 16em;
+      .image {
+        width: $w;
+        height: $h;
+        background-size: cover;
+        background-position: center center;
+        float: left;
+      }
+
+      .detail {
+        margin-left: $w + 2em;
+        margin-right: $w1 + 2em;
+        max-height: 11em;
+        .ui.header {
+          font-weight: normal !important;
+        }
+        .description {
+          font-size: 16px;
+          color: $desc-text-color;
+        }
+      }
+
+      .publisher {
+        margin-left: $w + 2em;
+        margin-right: $w1 + 2em;
+        margin-top: 2em;
+        color: rgba(black, 0.4);
+        .instructor {
+          font-size: 16px;
+          margin-right: 1em;
+        }
+        .published_at {
+          font-size: 16px;
+        }
+      }
+
+      .ops {
+        float: right;
+        width: $w1;
+        height: $h;
+        text-align: center;
+        background-color: rgba($bgc, 0.05);
+        .start {
+          width: 160px;
+          margin-top: 3em;
+          margin-right: 0;
+        }
+        .fav {
+          margin-top: 1em;
+          margin-right: 0;
+          .label {
+            width: 70px;
+            text-align: center;
+            display: block;
+            line-height: 1.5em;
+          }
+          .button {
+            width: 90px;
+            padding-left: 10px;
+            padding-right: 10px;
+          }
+        }
+      }
+    }
+  }
+  .c-body {
+    .contents {
+      .ui.header {
+        font-size: 1.5rem;
+        font-weight: normal;
+        // margin-left: 10px;
+      }
+    }
+  }
+}
+
+.ware-show-page {
+  position: absolute;
+  top:0;left:0;right:0;bottom:0;
+
+  $contents-width: 260px;
+  $comments-width: 320px;
+
+  $w: $contents-width;
+  .ware-show-contents {
+    position: absolute;
+    top:0;bottom:0;left:0;width:$w;
+    background-color: #FFF;
+
+    transition: left ease-in .2s;
+    &.close {
+      left: 14px - $w;
+    }
+
+    .clist {
+      .course-title {
+        line-height: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-bottom: 1rem;
+        display: block;
+        margin-left: 1.5rem;
+        color: $text-color;
+        font-weight: bold;
+
+        i {
+          width:20px;
+          margin-left: -20px;
+          margin-right: 0;
+        }
+      }
+    }
+
+    .contents-toggle {
+      position: absolute;
+      top:1rem;right:-30px;
+      width:30px;height:30px;line-height: 30px;
+      text-align: center;
+      background-color: #dfdfdf;
+      border-radius: 0 3px 3px 0;
+      font-size: 18px;
+      color: $text-color;
+      transition: background-color ease .2s;
+      i {margin-right: 0;}
+      &:hover {
+        background-color: #fff;
+      }
+    }
+  }
+
+  $w: $comments-width;
+  .ware-show-comments {
+    position: absolute;
+    top:0;bottom:0;right:0;width:$w;
+    background-color: #FFF;
+
+    transition: right ease-in .2s;
+    .clist {
+      transition: opacity ease-in .2s;
+    }
+
+    &.close {
+      right:14px - $w;
+      .clist {
+        opacity: 0;
+      }
+    }
+
+    .comments-toggle {
+      position: absolute;
+      top:1rem;left:-30px;
+      width:30px;height:30px;line-height: 30px;
+      text-align: center;
+      background-color: #dfdfdf;
+      border-radius: 3px 0 0 3px;
+      font-size: 18px;
+      color: $text-color;
+      transition: background-color ease .2s;
+      i {margin-right: 0;}
+      &:hover {
+        background-color: #fff;
+      }
+    }
+  }
+
+  .ware-show-shower {
+    position: absolute;
+    top:0;bottom:0;
+    left:$contents-width;
+    right:$comments-width;
+    transition: left ease-in .2s, right ease-in .2s;
+    &.contents-close {
+      left:14px;
+    }
+    &.comments-close {
+      right:14px;
+    }
+    background-color: #333;
+
+    $h1: 30px + 28px;
+    $h2: (30px + 28px) * 2;
+    .shower-head {
+      position: absolute;
+      left:0;top:0;right:0;
+      height: $h1;
+    }
+    .shower-main {
+      position: absolute;
+      left:0;right:0;top:$h1;bottom:$h2;
+
+      .video-box {
+        position: absolute;
+        top:1em;left:1em;right:1em;bottom:1em;
+      }
+    }
+    .shower-foot {
+      position: absolute;
+      left:0;right:0;bottom:0;height:$h2;
+    }
+  }
+}
+
+.sign-in-page {
+  // background-color: #F7FAFC;
+  background-color: #FFF;
+  padding-top: 1em;
+  padding-bottom: 3em;
+  border-top: solid 1px #DDDDDD;
+  border-bottom: solid 1px #DDDDDD;
+
+  .head {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    .link {
+      display: inline-block;
+      margin:0 1rem;
+      font-size: 18px;
+      color: #555;
+      opacity: 0.7;
+      transition: opacity ease .2s;
+      line-height: 2em;
+      padding:0 0.2rem;
+
+      &:hover {
+        opacity: 1;
+      }
+      &.active {
+        opacity: 1;
+        color: #3291d9;
+        border-bottom: solid 2px #5F98C4;
+      }
+    }
+  }
+}

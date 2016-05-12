@@ -1,0 +1,66 @@
+.question-content
+  %span{:class=>'question-title-1'} 题目：
+  %span{:class=>'question-title-2'}
+    = @question.content
+.do-question-msg
+  %p
+- case @question.kind
+  - when "single_choice"
+    .question-single-choice
+      %form{:action => do_question_validation_question_path(@question), :method => :post}
+        - @question.choice_answer.each_with_index do |option_text, index|
+          .div
+            %input{:type => "radio", :name => "answer", :value => index}
+            = option_text[0]
+        %input{:type => "submit"}
+
+  - when "multi_choice"
+    .question-multi-choice
+      %form{:action => do_question_validation_question_path(@question), :method => :post}
+        - @question.choice_answer.each_with_index do |option_text, index|
+          .div
+            %input{:type => "hidden", :name => "answer[#{index}]", :value => "false"}
+            %input{:type => "checkbox", :name => "answer[#{index}]", :value => "true"}
+            = option_text[0]
+        %input{:type => "submit"}
+
+  - when "mapping"
+    .question-mapping
+      %form{:action => do_question_validation_question_path(@question), :method => :post}
+        - left_mapping_options  = @question.left_mapping_options
+        - right_mapping_options = @question.right_mapping_options
+        - left_mapping_options.each_with_index do |left_option, index|
+          .select-pair
+            %input{:type => "hidden", :name => "answer[#{index}][]", :value => left_option}
+            = left_option
+            %select{:name => "answer[#{index}][]",:class=>'select form-control'}
+              %option{:value => '空'} 空
+              - right_mapping_options.each do |right_option|
+                %option{:value => right_option}= right_option
+        %input{:type => "submit"}
+
+  - when "bool"
+    .question-bool
+      %form{:action => do_question_validation_question_path(@question), :method => :post}
+        .div
+          %input{:type => "radio", :name => "answer", :value => "true"}
+          正确
+        .div
+          %input{:type => "radio", :name => "answer", :value => "false"}
+          错误
+        %input{:type => "submit"}
+
+  - when "fill"
+    .question-fill-list
+      %form{:action => do_question_validation_question_path(@question), :method => :post}
+        - @question.fill_count.times do |index|
+          .div
+            = "填空#{index+1}"
+            %input{:type => "text", :name => "answer[]"}
+        %input{:type => "submit"}
+
+  - when "essay"
+    .question-essay
+    %form{:action => do_question_validation_question_path(@question), :method => :post}
+      %textarea{:name => "answer"}
+      %input{:type => "submit"}

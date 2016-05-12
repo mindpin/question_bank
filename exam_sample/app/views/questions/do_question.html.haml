@@ -1,0 +1,6 @@
+.do-question-page
+  %h2 某学科相关练习题
+  .question-border
+    = render :partial => "do_question_mod", locals: { question: @question}
+    .next
+      %a{:class => "btn btn-default next hidden" ,:href => "/questions/do_question"} 下一题

@@ -1,0 +1,100 @@
+.finance-course-select-wizard {
+  min-height: 600px;
+
+  .wizard-header {
+    border-bottom: solid 1px #ddd;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    @include clearfix;
+
+    .title, .step {
+      float: left;
+      margin-right: 3rem;
+      font-size: 16px;
+      height: 37px;
+      line-height: 37px;
+    }
+    .step {
+      i {
+        display: inline-block;
+        background-color: #32D2FF;
+        color: white;
+        width: 30px; height: 30px; line-height: 30px;
+        border-radius: 100px;
+        text-align: center;
+        font-weight: bold;
+        font-style: normal;
+        margin-right: 0.5rem;
+        &:not(.icon) {
+          background-color: lighten(#32D2FF, 35%);
+          color: darken(#32D2FF, 10%);
+        }
+      }
+    }
+  }
+
+  h3.ui.header {
+    margin-bottom: 2rem;
+    height: 30px;
+    line-height: 30px;
+
+    a.back {
+      font-size: 20px;
+      float: left;
+      margin-right: 0.5rem;
+      height: 30px;
+      line-height: 30px;
+      i {margin-right: 0;}
+    }
+  }
+
+  .posts {
+    @include clearfix;
+    $w: 10rem;
+    .post {
+      background-color: darken(#21B5FF, 15%);
+      width: $w;
+      height: $w;
+      color: white;
+      margin: 0 1rem 1rem 0;
+      float: left;
+      padding: 1rem;
+      border-radius: 0.5rem;
+
+      &:hover {
+        background-color: darken(#21B5FF, 10%);
+      }
+
+      .number {
+        opacity: 0.7;
+        font-size: 3rem;
+        line-height: 3rem;
+        font-weight: bold;
+        margin-top: 0rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .name {
+        display: block;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .levels {
+    .level {
+      color: #333;
+      font-size: 16px;
+      line-height: 2rem;
+      .number {
+        color: #008DD4;
+        font-weight: bold;
+      }
+      .icon {
+        color: #008DD4;
+        font-size: 12px;
+      }
+    }
+  }
+}

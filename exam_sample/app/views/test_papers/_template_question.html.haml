@@ -1,0 +1,13 @@
+.template.question
+  %li.hidden{data: {id: "{{question_id}}"}}
+    .row
+      .col-md-10
+        .content {{content}}
+      .col-md-2.ops-group
+        .ops
+          %a.question_move_up{href: 'javascript:;'}
+            %i.glyphicon.glyphicon-arrow-up
+          %a.question_move_down{href: 'javascript:;'}
+            %i.glyphicon.glyphicon-arrow-down
+          %a.question_destroy{href: 'javascript:;'}
+            %i.glyphicon.glyphicon-remove.red
