@@ -22,22 +22,26 @@
 
     hours + ':' + minutes + ':' + seconds
 
+  refresh_page: ->
+    window.location.reload()
+
   toggle_play: ->
     if @state.play
       @tick_stop()
     else
       @tick_start()
 
-    @setState
-      play: !@state.play
-
   tick_start: ->
-    @interval = setInterval(@tick, 1000)
+    unless @interval
+      @interval = setInterval(@tick, 1000)
+      @setState
+        play: true
 
   tick_stop: ->
-    console.log @interval
     clearInterval @interval if @interval
     @interval = null
+    @setState
+      play: false
 
   tick: ->
     @setState
@@ -46,11 +50,10 @@
   mixins: [@SetIntervalMixin]
 
   getInitialState: ->
-    play: true
+    play: false
     second: 0
-
-  componentWillMount: ->
-    @tick_start()
+    question_right: 0
+    question_count: 0
 
   render: ->
     <div className="">
@@ -74,8 +77,8 @@
                       <i className="play icon"></i>
                     </a>
                 }
-                <a href="#" className="ui button icon teal">
-                  <i className="reply icon"></i>
+                <a href="javascript:;" className="ui button icon teal" onClick={@refresh_page}>
+                  <i className="refresh icon"></i>
                 </a>
               </p>
             </div>
@@ -90,9 +93,17 @@
             <div className="ui segment">
               <h4 className="ui header">正确率</h4>
               <div className="ui progress teal">
-                <div className="bar" style={{"transitionDuration": "300ms", "width": "80%"}}>
-                  <div className="progress">80%</div>
-                </div>
+                {
+                  if @state.question_count > 0
+                    percent = ( 100.0 * @state.question_right / @state.question_count)
+                    str = "#{percent}%"
+                  else
+                    percent = 0
+                    str = "未开始"
+                  <div className="bar" style={{"transitionDuration": "300ms", "width": "#{percent}%"}}>
+                    <div className="progress">{str}</div>
+                  </div>
+                }
               </div>
             </div>
           </div>
