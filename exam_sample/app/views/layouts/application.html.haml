@@ -98,15 +98,15 @@
         ]
       }
 
-      top_menu_data = {
-        sign_out_url: auth.logout_path,
-        sign_out_to_url: root_path
-      }
-      current_user_data = DataFormer.new(current_user).data
+      #top_menu_data = {
+      #  sign_out_url: auth.logout_path,
+      #  sign_out_to_url: root_path
+      #}
+      #current_user_data = DataFormer.new(current_user).data
 
     = react_component 'LayoutManagerSidebar', data: manager_sidebar_data
 
-    = react_component 'LayoutManagerTopMenu', data: top_menu_data, current_user_data: current_user_data
+    -#= react_component 'LayoutManagerTopMenu', data: top_menu_data, current_user_data: current_user_data
 
     .manager-page-content
       .func-content.ui.segment.basic

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :exercises
+
   resources :questions do
     member do
       get :redo_question

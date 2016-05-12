@@ -4,4 +4,8 @@ class DemoQuestion < QuestionBank::Question
 
   enumerize :subject, in: SUBJECTS
   validates :subject, presence: true
+
+  def self.subjects
+    SUBJECTS
+  end
 end
