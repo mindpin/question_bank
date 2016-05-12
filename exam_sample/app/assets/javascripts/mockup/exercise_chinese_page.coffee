@@ -22,6 +22,14 @@
 
     hours + ':' + minutes + ':' + seconds
 
+  valid: (evt)->
+    if evt.target.value == @state.question.answer
+      @setState
+        wrong: false
+    else
+      @setState
+        wrong: true
+
   refresh_page: ->
     window.location.reload()
 
@@ -52,8 +60,11 @@
   getInitialState: ->
     play: false
     second: 0
+    question_index: 0
     question_right: 0
-    question_count: 0
+    question_count: @props.data.questions.count
+    question: @props.data.questions[0]
+    wrong: false
 
   render: ->
     <div className="">
@@ -63,7 +74,7 @@
       </div>
       <div className="ui bottom attached tab segment active" data-tab="second">
         <div className="ui grid">
-          <div className="three wide column">
+          <div className="four wide column">
             <div className="ui segment">
               <h4 className="ui header">控制</h4>
               <p>
@@ -107,8 +118,26 @@
               </div>
             </div>
           </div>
-          <div className="three wide column">
-            中文录入
+          <div className="twelve wide column">
+            <div className="ui segment">
+              <div>
+                {
+                  @state.question.content
+                }
+              </div>
+
+              <br />
+
+              <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} />
+              </div>
+
+              <br />
+
+              <div className="ui button big teal right floated">
+                下一题
+              </div>
+            </div>
           </div>
         </div>
       </div>
