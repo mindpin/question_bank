@@ -64,6 +64,11 @@ h1,h2,h3,h4,h5,h6,
   margin-top: 0;
 }
 
+.ui.segment.panel {
+  background-color: #F7F6F8;
+  height: 91px;
+}
+
 .ui.pagination.menu {
   i.icon {margin-right: 0;}
 }
@@ -74,4 +79,12 @@ h1,h2,h3,h4,h5,h6,
 
 .ui.button.pill {
   border-radius: 100px;
+}
+
+.ui.inverted.dimmer.pause{
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.ui.inverted.dimmer > .content > *{
+  color: #33495F;
 }
