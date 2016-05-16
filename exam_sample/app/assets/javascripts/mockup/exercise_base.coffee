@@ -1,14 +1,14 @@
+SetIntervalMixin =
+  componentWillMount: ->
+    @intervals = []
+
+  setInterval: ->
+    @intervals.push setInterval.apply(null, arguments)
+
+  componentWillUnmount: ->
+    @intervals.map(clearInterval)
+
 @ExerciseBase = React.createClass
-  SetIntervalMixin:
-    componentWillMount: ->
-      @intervals = []
-
-    setInterval: ->
-      @intervals.push setInterval.apply(null, arguments)
-
-    componentWillUnmount: ->
-      @intervals.map(clearInterval)
-
   outputSeconds: ->
     @getFormattedTime @state.second
 
@@ -58,7 +58,7 @@
 
   tick_start: ->
     unless @interval
-      @interval = setInterval(@tick, 1000)
+      @interval = @setInterval(@tick, 1000)
       @setState
         play: true
         is_start: true
@@ -73,7 +73,7 @@
     @setState
       second: @state.second + 1
 
-  mixins: [@SetIntervalMixin]
+  mixins: [SetIntervalMixin]
 
   getInitialState: ->
     @question_count = @props.data.questions.length
