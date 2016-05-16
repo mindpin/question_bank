@@ -23,7 +23,7 @@
     <ExerciseBase {...params}>
       <div>
         {
-          @state.question.content
+          numeral(@state.question.content).format "0,0.00"
         }
       </div>
 

@@ -40,7 +40,7 @@ class ExercisesController < ApplicationController
           (1..10).map do |i|
             num = format % (rand * 103326588836)
             {
-              content: num.to_s,
+              content: num,
               answer: num.to_s
             }
           end
