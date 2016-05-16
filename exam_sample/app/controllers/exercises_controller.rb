@@ -17,6 +17,15 @@ class ExercisesController < ApplicationController
               answer: num.to_s
             }
           end
+      when 'address'
+        str = "南岗区人和地下购物中心"
+        @component_data[:questions] =
+          (1..10).map do |i|
+            {
+              content: str,
+              answer: str
+            }
+          end
       when 'code'
         @component_data[:questions] =
           (1..10).map do |i|
