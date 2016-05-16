@@ -24,7 +24,8 @@
 
   getRightPercentParams: ->
     if @props.question_index > 0
-      percent: ( 100.0 * @props.question_right / (@props.question_index)).toFixed(0)
+      percent = ( 100.0 * @props.question_right / (@props.question_index)).toFixed(0)
+      percent: percent
       str: "#{percent}%"
     else
       percent: 0
@@ -180,7 +181,7 @@
     RightPercent: React.createClass
       render: ->
         <div className="ui segment panel">
-          <h4 className="ui header">正确率</h4>,
+          <h4 className="ui header">正确率</h4>
           <div className="ui progress teal">
             <div className="bar" style={{"transitionDuration": "300ms", "width": "#{@props.percent}%"}}>
               <div className="progress">{@props.str}</div>
