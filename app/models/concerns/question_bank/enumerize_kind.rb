@@ -5,7 +5,7 @@ module QuestionBank
 
 
     # 题目类型 枚举: 单选题 多选题 判断题 填空题 论述题 连线题
-    KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping, :qanda]
+    KINDS = [:single_choice, :multi_choice, :bool, :fill, :essay, :mapping, :qanda, :file_upload]
 
     included do
       enumerize :kind, in: KINDS
