@@ -45,6 +45,23 @@ module QuestionBank
       end
     end
 
+    # 检查考试时间是否超时
+    validate :_check_test_paper_minutes
+    def _check_test_paper_minutes
+      return if self.test_paper_result.blank?
+
+      test_paper = self.test_paper_result.test_paper
+      mins       = test_paper.minutes
+      return if mins.blank?
+      expires_at = self.test_paper_result.created_at + mins.minutes
+      if Time.now > expires_at
+        errors.add(
+          :answer,
+          I18n.t("mongoid.errors.models.question_bank/question_record.attributes.answer.time_over"))
+      end
+
+    end
+
     validate :_check_answer_format
 
     def _check_answer_format
