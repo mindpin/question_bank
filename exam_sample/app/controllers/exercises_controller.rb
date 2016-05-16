@@ -17,6 +17,14 @@ class ExercisesController < ApplicationController
               answer: num.to_s
             }
           end
+      when 'code'
+        @component_data[:questions] =
+          (1..10).map do |i|
+            {
+              content: "借据登记薄打印",
+              answer: i.to_s * 4
+            }
+          end
       when 'summons'
         format = "%0.2f"
         @component_data[:questions] =

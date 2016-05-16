@@ -124,14 +124,36 @@ SetIntervalMixin =
 
           </div>
           <div className="twelve wide column">
-            {@props.children}
+            {
+              if @props.label
+                <div className="ui grid">
+                  <div className="three wide column">
+                  </div>
+                  <div className="thirteen wide column">
+                    {@props.children}
 
-            <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
-              <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} ref="input" />
-            </div>
+                  </div>
+                  <div className="three wide column right aligned base-label">
+                    {@props.label}：
+                  </div>
+                  <div className="thirteen wide column">
+                    <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                      <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} ref="input" />
+                    </div>
+                  </div>
+                </div>
+              else
+                <div>
+                  {@props.children}
 
+                  <br />
+
+                  <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                    <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} ref="input" />
+                  </div>
+                </div>
+            }
             <br />
-
             {
               if @props.question_index + 1 == @question_count
                 <div className="ui button big green right floated">
