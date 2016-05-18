@@ -10,9 +10,9 @@ dependencies:
     - sudo apt-get -qq update
     - sudo apt-get install -qq -y mongodb-org=2.6.9 mongodb-org-server=2.6.9 mongodb-org-shell=2.6.9 mongodb-org-mongos=2.6.9 mongodb-org-tools=2.6.9
   override:
-    - cp sample/Gemfile.travis sample/Gemfile
+    - sed -i 's/https:\/\/ruby.taobao.org/https:\/\/rubygems.org/g' sample/Gemfile
     - cd sample; bundle
-    
+
 test:
   override:
     - cd sample; bundle exec rspec
