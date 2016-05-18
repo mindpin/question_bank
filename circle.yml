@@ -17,4 +17,4 @@ test:
   override:
     - cd sample; bundle exec rspec
   post:
-    - bash <(curl -s https://codecov.io/bash)
+    - cd ..; bash <(curl -s https://codecov.io/bash)
