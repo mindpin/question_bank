@@ -16,5 +16,3 @@ dependencies:
 test:
   override:
     - cd sample; bundle exec rspec
-  post:
-    - cd ..; bash <(curl -s https://codecov.io/bash)
