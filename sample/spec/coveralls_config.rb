@@ -1,5 +1,4 @@
 require "simplecov"
-p "COVERALLS_REPO_TOKEN:  #{ENV["COVERALLS_REPO_TOKEN"]}"
 
 base_path = File.expand_path("../../../", __FILE__)
 SimpleCov.root(base_path)
