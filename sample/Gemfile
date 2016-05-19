@@ -50,4 +50,4 @@ gem 'simple-navbar', :github => 'mindpin/simple-navbar',
                      :tag => "0.0.7"
 
 gem 'timecop'
-gem 'codecov', :require => false, :group => :test
+gem 'coveralls', require: false, :group => :test
