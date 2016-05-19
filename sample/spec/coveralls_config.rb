@@ -5,8 +5,10 @@ SimpleCov.root(base_path)
 
 SimpleCov.start do
   add_filter File.join(base_path, "sample/spec")
-  add_group "Models", File.join(base_path, "app/models")
-  add_group "controller", File.join(base_path, "app/controllers")
+  add_filter File.join(base_path, "sample/config")
+  add_filter File.join(base_path, "config")
+
+  add_group "models", File.join(base_path, "app/models")
   add_group "lib",    File.join(base_path, "lib")
 end
 
