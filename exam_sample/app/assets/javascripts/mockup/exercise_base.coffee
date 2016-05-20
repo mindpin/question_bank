@@ -1,12 +1,12 @@
-SetIntervalMixin =
-  componentWillMount: ->
-    @intervals = []
+#SetIntervalMixin =
+  #componentWillMount: ->
+    #@intervals = []
 
-  setInterval: ->
-    @intervals.push setInterval.apply(null, arguments)
+  #setInterval: ->
+    #@intervals.push setInterval.apply(null, arguments)
 
-  componentWillUnmount: ->
-    @intervals.map(clearInterval)
+  #componentWillUnmount: ->
+    #@intervals.map(clearInterval)
 
 @ExerciseBase = React.createClass
   outputSeconds: ->
@@ -32,20 +32,67 @@ SetIntervalMixin =
       str: "未开始"
 
   next: ->
-    answer = @refs.input.value
+    answer = @answer_value
+    if answer == "true" or answer == "false"
+      answer = true if answer == "true"
+      answer = false if answer == "false"
+      jQuery('.ui.radio').checkbox('uncheck')
+
     @setState
       wrong: false
-    @refs.input.value = ""
+    @answer_value = null
+    @refs.input.value = "" if @refs.input
 
     @props.next(answer)
 
-  valid: (evt)->
-    if evt.target.value == @props.question.answer
-      @setState
-        wrong: false
-    else
-      @setState
-        wrong: true
+  valid: ()->
+    wrong = true
+    console.log @props.question.kind
+    console.log @answer_value
+    switch @props.question.kind
+      when "qanda"
+        wrong = false if @answer_value and @props.question.answer == @answer_value
+      when "bool"
+        wrong = false if @answer_value and @props.question.answer.toString() == @answer_value
+      when "single_choice"
+        wrong = false if @answer_value == "true"
+      when "multi_choice"
+        if @answer_value.length > 0
+          wrong  = false
+          for arr, index in @props.question.answer
+            wrong = true if arr[1] == !@answer_value[index]
+
+    console.log wrong
+    @setState
+      wrong: wrong
+
+  answer: (index) ->
+    (evt) =>
+      console.log 'answer'
+      console.log index
+      if index != undefined
+        console.log evt.target
+        console.log evt.target.checked
+        @answer_value ||= []
+        @answer_value[index] = evt.target.checked
+      else
+        @answer_value = evt.target.value
+      @valid()
+    #switch evt.target.type
+      #when "radio"
+        #if evt.target.value == @props.question.answer.toString()
+          #@setState
+            #wrong: false
+        #else
+          #@setState
+            #wrong: true
+      #when "text"
+        #if evt.target.value == @props.question.answer
+          #@setState
+            #wrong: false
+        #else
+          #@setState
+            #wrong: true
 
   refresh_page: ->
     window.location.reload()
@@ -58,7 +105,7 @@ SetIntervalMixin =
 
   tick_start: ->
     unless @interval
-      @interval = @setInterval(@tick, 1000)
+      @interval = setInterval(@tick, 1000)
       @setState
         play: true
         is_start: true
@@ -73,14 +120,20 @@ SetIntervalMixin =
     @setState
       second: @state.second + 1
 
-  mixins: [SetIntervalMixin]
+  #mixins: [SetIntervalMixin]
+
+  componentDidMount: ->
+    @tick_start() if @props.is_start
+
+  componentWillUnmount: ->
+    clearInterval @interval if @interval
 
   getInitialState: ->
     @question_count = @props.data.questions.length
-    is_start: false
-    play: false
+    is_start: @props.is_start || false
+    play: @props.is_start || false
     second: 0
-    wrong: false
+    wrong: @props.wrong || false
 
   render: ->
     <div className="">
@@ -125,33 +178,36 @@ SetIntervalMixin =
           </div>
           <div className="twelve wide column">
             {
-              if @props.label
-                <div className="ui grid">
-                  <div className="three wide column">
-                  </div>
-                  <div className="thirteen wide column">
-                    {@props.children}
+              if @props.render_question
+                @props.render_question(@props.question)
+              else
+                if @props.label
+                  <div className="ui grid">
+                    <div className="three wide column">
+                    </div>
+                    <div className="thirteen wide column">
+                      {@props.children}
 
-                  </div>
-                  <div className="three wide column right aligned base-label">
-                    {@props.label}：
-                  </div>
-                  <div className="thirteen wide column">
-                    <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
-                      <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} ref="input" />
+                    </div>
+                    <div className="three wide column right aligned base-label">
+                      {@props.label}：
+                    </div>
+                    <div className="thirteen wide column">
+                      <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                        <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@answer()} ref="input" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              else
-                <div>
-                  {@props.children}
+                else
+                  <div>
+                    {@props.children}
 
-                  <br />
+                    <br />
 
-                  <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
-                    <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} ref="input" />
+                    <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                      <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@answer()} ref="input" />
+                    </div>
                   </div>
-                </div>
             }
             <br />
             {
@@ -210,3 +266,4 @@ SetIntervalMixin =
             </div>
           </div>
         </div>
+
