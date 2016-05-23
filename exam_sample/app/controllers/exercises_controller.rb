@@ -48,6 +48,22 @@ class ExercisesController < ApplicationController
               kind: "qanda"
             }
           end
+      when "face_cal"
+        @component_data[:questions] =
+          (1..10).map do |i|
+            {
+              content: (1..20).map do |j|
+                [
+                  "#{rand(20) + 10}-#{rand(30) + 30}",
+                  rand(5) + 1
+                ]
+              end,
+              answer: (1..20).map do |j|
+                j.to_s
+              end,
+              kind: "face_cal"
+            }
+          end
       when 'theory'
         @component_data[:questions] =
           [
