@@ -8,9 +8,9 @@ module QuestionBank
     field :is_correct,     type: Boolean
     field :answer
 
-    belongs_to :question
-    belongs_to :user
-    belongs_to :test_paper_result
+    belongs_to :question, class_name: 'QuestionBank::Question'
+    belongs_to :user,     class_name: QuestionBank.user_class
+    belongs_to :test_paper_result,  class_name: 'QuestionBank::TestPaperResult'
 
     validates :question_id, presence: true
     validates :user_id,     presence: true
