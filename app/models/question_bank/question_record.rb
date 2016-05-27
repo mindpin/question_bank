@@ -95,6 +95,7 @@ module QuestionBank
     end
 
     def _set_correct_of_multi_choice
+      self.answer = [] if self.answer.blank?
       correct_answer = self.question.answer["corrects"].sort
       input_answer   = self.answer.sort
       self.is_correct = (correct_answer == input_answer)
