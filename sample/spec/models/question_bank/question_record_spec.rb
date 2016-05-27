@@ -132,6 +132,28 @@ RSpec.describe QuestionBank::QuestionRecord, type: :model do
       }
     end
 
+    describe "回答错误，传 nil" do
+      before :all do
+        @record = @question.question_records.create(
+          :user   => @user,
+          :answer => nil
+        )
+      end
+      it{
+        @record.valid?
+        expect(@record.valid?).to eq(true)
+      }
+      it{
+        expect(@record.kind).to eq(@question.kind)
+      }
+      it{
+        expect(@record.is_correct).to eq(false)
+      }
+      it{
+        expect(@record.answer).to eq([])
+      }
+    end
+
     describe "答案格式不正确" do
       it{
         choice_answer = [
