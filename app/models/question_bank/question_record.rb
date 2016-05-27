@@ -95,7 +95,6 @@ module QuestionBank
     end
 
     def _set_correct_of_multi_choice
-      self.answer = [] if self.answer.blank?
       correct_answer = self.question.answer["corrects"].sort
       input_answer   = self.answer.sort
       self.is_correct = (correct_answer == input_answer)
@@ -127,6 +126,7 @@ module QuestionBank
     end
 
     def _check_answer_format_of_multi_choice
+      self.answer = [] if self.answer.nil?
       return _add_answer_format_error if !self.answer.is_a?(Array)
 
       ids = self.question.answer["choices"].map{|choice|choice["id"]}
