@@ -6,6 +6,7 @@ module QuestionBank
     include QuestionBank::EnumerizeKind
     include QuestionBank::TimeKindScope
     include QuestionBank::AnswerValidate
+    include QuestionBank::Point::QuestionMethods
 
     # 题目正文
     field :content,  type: String
