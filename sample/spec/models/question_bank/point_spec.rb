@@ -8,11 +8,6 @@ RSpec.describe QuestionBank::Point, type: :model do
     expect(@point.respond_to?(:name)).to be true
   end
 
-  it "关系" do
-    @point = create(:point)
-    expect(@point.respond_to?(:questions)).to be true
-  end
-
   describe "方法" do
     describe QuestionBank::Point::QuestionMethods, type: :module do
       it "question.points" do
