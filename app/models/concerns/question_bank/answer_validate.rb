@@ -4,6 +4,15 @@ module QuestionBank
 
     included do
       validate :_check_answer_format
+      before_validation :_set_answer_of_essay_and_file_upload
+    end
+
+    def _set_answer_of_essay_and_file_upload
+      if [:fill, :essay].include?(self.kind.to_sym)
+        if self.answer.blank?
+          self.answer = "zhanwei"
+        end
+      end
     end
 
     def _check_answer_format
