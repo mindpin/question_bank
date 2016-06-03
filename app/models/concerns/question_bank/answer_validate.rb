@@ -8,7 +8,7 @@ module QuestionBank
     end
 
     def _set_answer_of_essay_and_file_upload
-      if [:fill, :essay].include?(self.kind.to_sym)
+      if [:file_upload, :essay].include?(self.kind.to_sym)
         if self.answer.blank?
           self.answer = "zhanwei"
         end
