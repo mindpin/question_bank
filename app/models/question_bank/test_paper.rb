@@ -21,7 +21,7 @@ module QuestionBank
 
     has_many :test_paper_results, class_name: 'QuestionBank::TestPaperResult'
 
-    has_many :sections,           class_name: 'QuestionBank::Section', inverse_of: :test_paper
+    has_many :sections,           class_name: 'QuestionBank::Section', inverse_of: :test_paper, order: "created_at asc"
     accepts_nested_attributes_for :sections, allow_destroy: true
   end
 end

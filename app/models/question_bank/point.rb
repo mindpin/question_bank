@@ -11,7 +11,7 @@ module QuestionBank
     module QuestionMethods
       extend ActiveSupport::Concern
       included do
-        has_and_belongs_to_many :points, class_name: "QuestionBank::Point", inverse_of: nil
+        has_and_belongs_to_many :points, class_name: "QuestionBank::Question"
         scope :with_point, ->(point_name) {
           id = QuestionBank::Point.where(:name => point_name).first.try(:id)
           where(:point_ids.in => [id])
