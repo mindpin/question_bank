@@ -4,13 +4,23 @@ module QuestionBank
     include Mongoid::Timestamps
     extend Enumerize
 
-    enumerize :status, in: [:running, :finished, :review_completed], default: :running
+    enumerize :_status, in: [:RUNNING, :REVIEW_COMPLETED], default: :RUNNING
 
     belongs_to :user,       class_name: QuestionBank.user_class
     belongs_to :test_paper, class_name: "QuestionBank::TestPaper"
 
     has_many :question_records, class_name: 'QuestionBank::QuestionRecord'
     accepts_nested_attributes_for :question_records, allow_destroy: true
+
+    def status
+      return "REVIEW_COMPLETED" if self._status.REVIEW_COMPLETED?
+      return "FINISHED" if Time.now >= (self.created_at + self.test_paper.minutes.minutes)
+      return "RUNNING"
+    end
+
+    def review_complete!
+      self.update_attributes("_status" => "REVIEW_COMPLETED")
+    end
 
     def subjective_question_score(question)
       return 0 if [:single_choice, :multi_choice, :bool].include?(question.kind.to_sym)
