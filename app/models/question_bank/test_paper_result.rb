@@ -79,6 +79,7 @@ module QuestionBank
 
         sections_data.push({
           id: section.id.to_s,
+          kind: section.kind,
           section_total_score: section_total_score,
           per_question_max_score:  section.score,
           questions: questions_data
