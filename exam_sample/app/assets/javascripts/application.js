@@ -7,4 +7,8 @@
 
 //= require semantic-ui
 
+// vendor
+//= require numeral.min
+// end
+
 //= require_tree ./mockup

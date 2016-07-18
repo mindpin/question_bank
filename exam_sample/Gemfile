@@ -35,7 +35,8 @@ end
 
 gem 'mongoid', '~> 4.0.2'
 gem 'haml'
-gem 'semantic-ui-sass', '~> 2.1.8.0', github: 'doabit/semantic-ui-sass'
+gem 'semantic-ui-sass', '~> 2.1.8.0', github: 'destinyd/semantic-ui-sass',
+  ref: "e585f26"
 gem 'react-rails', '~> 1.5.0'
 gem 'coffee-react'
 gem 'sprockets-coffee-react'

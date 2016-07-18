@@ -1,14 +1,14 @@
+#SetIntervalMixin =
+  #componentWillMount: ->
+    #@intervals = []
+
+  #setInterval: ->
+    #@intervals.push setInterval.apply(null, arguments)
+
+  #componentWillUnmount: ->
+    #@intervals.map(clearInterval)
+
 @ExerciseBase = React.createClass
-  SetIntervalMixin:
-    componentWillMount: ->
-      @intervals = []
-
-    setInterval: ->
-      @intervals.push setInterval.apply(null, arguments)
-
-    componentWillUnmount: ->
-      @intervals.map(clearInterval)
-
   outputSeconds: ->
     @getFormattedTime @state.second
 
@@ -24,27 +24,75 @@
 
   getRightPercentParams: ->
     if @props.question_index > 0
-      percent: ( 100.0 * @props.question_right / (@props.question_index)).toFixed(0)
+      percent = ( 100.0 * @props.question_right / (@props.question_index)).toFixed(0)
+      percent: percent
       str: "#{percent}%"
     else
       percent: 0
       str: "未开始"
 
   next: ->
-    answer = @refs.input.value
+    answer = @answer_value
+    if answer == "true" or answer == "false"
+      answer = true if answer == "true"
+      answer = false if answer == "false"
+      jQuery('.ui.radio').checkbox('uncheck')
+
     @setState
       wrong: false
-    @refs.input.value = ""
+    @answer_value = null
+    @refs.input.value = "" if @refs.input
 
     @props.next(answer)
 
-  valid: (evt)->
-    if evt.target.value == @props.question.answer
-      @setState
-        wrong: false
-    else
-      @setState
-        wrong: true
+  valid: ()->
+    wrong = true
+    console.log @props.question.kind
+    console.log @answer_value
+    switch @props.question.kind
+      when "qanda"
+        wrong = false if @answer_value and @props.question.answer == @answer_value
+      when "bool"
+        wrong = false if @answer_value and @props.question.answer.toString() == @answer_value
+      when "single_choice"
+        wrong = false if @answer_value == "true"
+      when "multi_choice"
+        if @answer_value.length > 0
+          wrong  = false
+          for arr, index in @props.question.answer
+            wrong = true if arr[1] == !@answer_value[index]
+
+    console.log wrong
+    @setState
+      wrong: wrong
+
+  answer: (index) ->
+    (evt) =>
+      console.log 'answer'
+      console.log index
+      if index != undefined
+        console.log evt.target
+        console.log evt.target.checked
+        @answer_value ||= []
+        @answer_value[index] = evt.target.checked
+      else
+        @answer_value = evt.target.value
+      @valid()
+    #switch evt.target.type
+      #when "radio"
+        #if evt.target.value == @props.question.answer.toString()
+          #@setState
+            #wrong: false
+        #else
+          #@setState
+            #wrong: true
+      #when "text"
+        #if evt.target.value == @props.question.answer
+          #@setState
+            #wrong: false
+        #else
+          #@setState
+            #wrong: true
 
   refresh_page: ->
     window.location.reload()
@@ -72,14 +120,20 @@
     @setState
       second: @state.second + 1
 
-  mixins: [@SetIntervalMixin]
+  #mixins: [SetIntervalMixin]
+
+  componentDidMount: ->
+    @tick_start() if @props.is_start
+
+  componentWillUnmount: ->
+    clearInterval @interval if @interval
 
   getInitialState: ->
     @question_count = @props.data.questions.length
-    is_start: false
-    play: false
+    is_start: @props.is_start || false
+    play: @props.is_start || false
     second: 0
-    wrong: false
+    wrong: @props.wrong || false
 
   render: ->
     <div className="">
@@ -123,14 +177,39 @@
 
           </div>
           <div className="twelve wide column">
-            {@props.children}
+            {
+              if @props.render_question
+                @props.render_question(@props.question)
+              else
+                if @props.label
+                  <div className="ui grid">
+                    <div className="three wide column">
+                    </div>
+                    <div className="thirteen wide column">
+                      {@props.children}
 
-            <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
-              <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@valid} ref="input" />
-            </div>
+                    </div>
+                    <div className="three wide column right aligned base-label">
+                      {@props.label}：
+                    </div>
+                    <div className="thirteen wide column">
+                      <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                        <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@answer()} ref="input" />
+                      </div>
+                    </div>
+                  </div>
+                else
+                  <div>
+                    {@props.children}
 
+                    <br />
+
+                    <div className="ui fluid input #{if @state.wrong then 'error' else ''}">
+                      <input type="text" name="" id="" placeholder="输入后自动开始计时" onKeyUp={@tick_start} onBlur={@answer()} ref="input" />
+                    </div>
+                  </div>
+            }
             <br />
-
             {
               if @props.question_index + 1 == @question_count
                 <div className="ui button big green right floated">
@@ -180,10 +259,11 @@
     RightPercent: React.createClass
       render: ->
         <div className="ui segment panel">
-          <h4 className="ui header">正确率</h4>,
+          <h4 className="ui header">正确率</h4>
           <div className="ui progress teal">
             <div className="bar" style={{"transitionDuration": "300ms", "width": "#{@props.percent}%"}}>
               <div className="progress">{@props.str}</div>
             </div>
           </div>
         </div>
+
